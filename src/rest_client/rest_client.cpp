@@ -1,9 +1,6 @@
 #include "rest_client.h"
 
-RestClient::RestClient(String _baseUrl, String wifiSsid, String wifiPassword) {
-  baseUrl = _baseUrl;
-  connectToWifi(wifiSsid, wifiPassword);
-}
+RestClient::RestClient(String _baseUrl) { baseUrl = _baseUrl; }
 
 int RestClient::get(String path, String* response) {
   return sendRequest("GET", path, NULL, response);
@@ -29,6 +26,16 @@ int RestClient::sendRequest(String method, String path, const char* body,
                             String* response) {
   HTTPClient http;
 
+  Serial.println("------------------------------");
+  Serial.print("url: ");
+  Serial.println(baseUrl + path);
+
+  Serial.print("method: ");
+  Serial.println(method);
+
+  Serial.print("body: ");
+  Serial.println(body);
+
   http.begin(baseUrl + path);
   http.addHeader("Content-Type", "application/json");
 
@@ -37,19 +44,23 @@ int RestClient::sendRequest(String method, String path, const char* body,
     response->concat(http.getString());
   }
 
+  Serial.print("responseCode: ");
+  Serial.println(responseCode);
+  Serial.println("------------------------------");
+
   http.end();
 
   return responseCode;
 }
 
 void RestClient::connectToWifi(String ssid, String password) {
-  REST_CLIENT_DEBUG_PRINT("Connect to WiFi");
+  Serial.println("Connecing to WiFi");
 
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    REST_CLIENT_DEBUG_PRINT(".");
+    Serial.print(".");
   }
 
-  REST_CLIENT_DEBUG_PRINT("Connected!");
+  Serial.println("\nConnected!");
 }
