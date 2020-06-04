@@ -17,7 +17,7 @@ class RestClient {
   int put(String path, String body);
   int put(String path, String body, String* response);
 
-  void connectToWifi(String ssid, String password);
+  IPAddress connectToWifi(String ssid, String password);
 
  private:
   String baseUrl;

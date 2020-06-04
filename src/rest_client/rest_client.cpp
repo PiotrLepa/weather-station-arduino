@@ -24,37 +24,34 @@ int RestClient::put(String path, String body, String* response) {
 
 int RestClient::sendRequest(String method, String path, const char* body,
                             String* response) {
-  HTTPClient http;
-
-  Serial.println("------------------------------");
+  Serial.println("\n-------------------------------------------------------\n");
   Serial.print("url: ");
   Serial.println(baseUrl + path);
-
   Serial.print("method: ");
   Serial.println(method);
-
   Serial.print("body: ");
   Serial.println(body);
 
-  http.begin(baseUrl + path);
-  http.addHeader("Content-Type", "application/json");
+  HTTPClient httpClient;
 
-  int responseCode = http.sendRequest(method.c_str(), body);
+  httpClient.begin(baseUrl + path);
+  httpClient.addHeader("Content-Type", "application/json");
+  int responseCode = httpClient.sendRequest(method.c_str(), body);
   if (response != NULL) {
-    response->concat(http.getString());
+    response->concat(httpClient.getString());
   }
+
+  httpClient.end();
 
   Serial.print("responseCode: ");
   Serial.println(responseCode);
-  Serial.println("------------------------------");
-
-  http.end();
+  Serial.println("\n-------------------------------------------------------\n");
 
   return responseCode;
 }
 
-void RestClient::connectToWifi(String ssid, String password) {
-  Serial.println("Connecing to WiFi");
+IPAddress RestClient::connectToWifi(String ssid, String password) {
+  Serial.println("Connecting to WiFi");
 
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -62,5 +59,8 @@ void RestClient::connectToWifi(String ssid, String password) {
     Serial.print(".");
   }
 
-  Serial.println("\nConnected!");
+  Serial.print("\nConnected! Ip address: ");
+  Serial.println(WiFi.localIP());
+
+  return WiFi.localIP();
 }
