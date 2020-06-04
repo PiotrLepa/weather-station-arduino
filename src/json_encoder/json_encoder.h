@@ -1,4 +1,5 @@
 #ifndef JSON_ENCODER_H
+#define JSON_ENCODER_H
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -15,7 +16,7 @@
 
 class JsonEncoder {
  public:
-  String JsonEncoder::encodeWeatherModel(WeatherModel model);
+  String encodeWeatherModel(WeatherModel model);
 };
 
 #endif

@@ -1,4 +1,5 @@
 #ifndef REST_CLIENT_H
+#define REST_CLIENT_H
 
 #include <Arduino.h>
 #include <ESP8266HTTPClient.h>
