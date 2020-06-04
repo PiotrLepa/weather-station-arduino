@@ -1,10 +1,10 @@
 #ifndef REST_CLIENT_H
 
-#include <ArduinoJson.h>
+#include <Arduino.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 
-#ifdef REST_CLIENT
+#ifdef REST_CLIENT_DEBUG
 #define REST_CLIENT_DEBUG_PRINT(string) (Serial.print(string))
 #endif
 
