@@ -4,12 +4,12 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 
-#ifdef RESUT_CLIENT
-#define RESUT_CLIENT_DEBUG_PRINT(string) (Serial.print(string))
+#ifdef REST_CLIENT
+#define REST_CLIENT_DEBUG_PRINT(string) (Serial.print(string))
 #endif
 
-#ifndef RESUT_CLIENT_DEBUG
-#define RESUT_CLIENT_DEBUG_PRINT(string)
+#ifndef REST_CLIENT_DEBUG
+#define REST_CLIENT_DEBUG_PRINT(string)
 #endif
 
 class RestClient {

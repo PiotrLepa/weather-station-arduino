@@ -43,13 +43,13 @@ int RestClient::sendRequest(String method, String path, const char* body,
 }
 
 void RestClient::connectToWifi(String ssid, String password) {
-  RESUT_CLIENT_DEBUG_PRINT("Connect to WiFi");
+  REST_CLIENT_DEBUG_PRINT("Connect to WiFi");
 
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    RESUT_CLIENT_DEBUG_PRINT(".");
+    REST_CLIENT_DEBUG_PRINT(".");
   }
 
-  RESUT_CLIENT_DEBUG_PRINT("Connected!");
+  REST_CLIENT_DEBUG_PRINT("Connected!");
 }
