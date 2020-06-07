@@ -2,7 +2,7 @@
 #define WEATHER_REPOSITORY_H
 
 #include "../json_encoder/json_encoder.h"
-#include "../model/weather_model.h"
+#include "../model/weather/weather_model.h"
 #include "../rest_client/rest_client.h"
 
 #ifdef WEATHER_REPOSITORY

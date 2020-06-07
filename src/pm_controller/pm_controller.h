@@ -4,14 +4,14 @@
 #include <Arduino.h>
 #include <PMserial.h>
 
-#include "../model/pm_model/pm_model.h"
+#include "../model/air_quality/air_quality_model.h"
 
 class PmController {
  public:
   PmController(HardwareSerial &serial);
   void begin();
   bool read();
-  PmModel getData();
+  AirQualityModel getData();
   String getErrorMessage();
 
  private:

@@ -9,8 +9,8 @@ bool PmController::read() {
   return pms;
 }
 
-PmModel PmController::getData() {
-  return PmModel(pms.pm01, pms.pm25, pms.pm10);
+AirQualityModel PmController::getData() {
+  return AirQualityModel(pms.pm01, pms.pm25, pms.pm10);
 }
 
 String PmController::getErrorMessage() {

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
-#include "../model/weather_model.h"
+#include "../model/weather/weather_model.h"
 
 #ifdef JSON_ENCODER_DEBUG
 #define JSON_ENCODER_DEBUG_PRINT(string) (Serial.print(string))

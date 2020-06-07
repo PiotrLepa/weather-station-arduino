@@ -15,25 +15,27 @@ void setup() {
 
 int i = 0;
 void loop() {
-  // i++;
-  // Serial.println(i);
-  // WeatherModel model = WeatherModel(i);
-  // weatherRepository.sendWeatherData(model);
+  i++;
+  Serial.println(i);
+  TemperatureModel temperatureModel = TemperatureModel(i);
 
   if (pmController.read()) {
-    PmModel pmModel = pmController.getData();
-    Serial.print(F("PM1.0 "));
-    Serial.print(pmModel.pm1);
+    AirQualityModel airQualityModel = pmController.getData();
+    Serial.print(F("\nPM1.0 "));
+    Serial.print(airQualityModel.pm1);
     Serial.print(F(", "));
     Serial.print(F("PM2.5 "));
-    Serial.print(pmModel.pm25);
+    Serial.print(airQualityModel.pm25);
     Serial.print(F(", "));
     Serial.print(F("PM10 "));
-    Serial.print(pmModel.pm10);
+    Serial.print(airQualityModel.pm10);
     Serial.println(F(" [ug/m3]"));
   } else {
     Serial.println(pmController.getErrorMessage());
   }
+
+  WeatherModel model = WeatherModel(temperatureModel, pmController.getData());
+  weatherRepository.sendWeatherData(model);
 
   delay(10000);
 }
