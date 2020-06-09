@@ -33,5 +33,7 @@ String PmController::getErrorMessage() {
       return PMS_ERROR_MSG_CKSUM;
     case SerialPM::STATUS::ERROR_PMS_TYPE:
       return PMS_ERROR_PMS_TYPE;
+    default:
+      return "No errors";
   }
 }

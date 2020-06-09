@@ -7,14 +7,16 @@
 #include <Wire.h>
 
 #include "../../model/temperature/temperature_model.h"
+#include "../sensor_controller.h"
 
-class DhtController {
+class DhtController : public SensorController<TemperatureModel> {
  public:
   DhtController(uint8_t pin);
-  void begin();
-  bool read();
-  TemperatureModel getData();
-  String getErrorMessage();
+
+  void begin() override;
+  bool read() override;
+  TemperatureModel getData() override;
+  String getErrorMessage() override;
 
  private:
   DHT dht;

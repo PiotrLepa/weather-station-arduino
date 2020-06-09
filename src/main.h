@@ -7,6 +7,7 @@
 #include "config/private_config.h"
 #include "controller/dht_controller/dht_controller.h"
 #include "controller/pm_controller/pm_controller.h"
+#include "controller/sensor_controller.h"
 #include "json_encoder/json_encoder.h"
 #include "model/air_quality/air_quality_model.h"
 #include "model/temperature/temperature_model.h"

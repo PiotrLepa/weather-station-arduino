@@ -5,14 +5,16 @@
 #include <PMserial.h>
 
 #include "../../model/air_quality/air_quality_model.h"
+#include "../sensor_controller.h"
 
-class PmController {
+class PmController : public SensorController<AirQualityModel> {
  public:
   PmController(HardwareSerial &serial);
-  void begin();
-  bool read();
-  AirQualityModel getData();
-  String getErrorMessage();
+
+  void begin() override;
+  bool read() override;
+  AirQualityModel getData() override;
+  String getErrorMessage() override;
 
  private:
   SerialPM pms;

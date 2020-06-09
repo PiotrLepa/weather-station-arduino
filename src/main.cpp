@@ -4,6 +4,7 @@ RestClient restClient = RestClient(API_URL);
 JsonEncoder jsonEncoder = JsonEncoder();
 WeatherRepository weatherRepository =
     WeatherRepository(restClient, jsonEncoder);
+
 PmController pmController = PmController(Serial);
 DhtController dhtController = DhtController(DHT_PIN);
 
@@ -50,6 +51,5 @@ void printAirQuality(AirQualityModel model) {
   Serial.print(F("\nPM2.5: "));
   Serial.print(model.pm25);
   Serial.print(F("\nPM10: "));
-  Serial.print(model.pm10);
-  Serial.println(F("\n [ug/m3]"));
+  Serial.println(model.pm10);
 }
