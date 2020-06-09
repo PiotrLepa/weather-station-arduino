@@ -1,11 +1,11 @@
-#include "dht_controller.h"
+#include "temperature_reader.h"
 
-DhtController::DhtController(uint8_t pin)
+TemperatureReader::TemperatureReader(uint8_t pin)
     : dht(pin, DHT22), readModel(-1, -1), errorMessage("No errors") {}
 
-void DhtController::begin() { dht.begin(); }
+void TemperatureReader::begin() { dht.begin(); }
 
-bool DhtController::read() {
+bool TemperatureReader::read() {
   float temperature = dht.readTemperature();
   float humidity = dht.readHumidity();
 
@@ -17,6 +17,6 @@ bool DhtController::read() {
   return true;
 }
 
-TemperatureModel DhtController::getData() { return readModel; }
+TemperatureModel TemperatureReader::getData() { return readModel; }
 
-String DhtController::getErrorMessage() { return errorMessage; }
+String TemperatureReader::getErrorMessage() { return errorMessage; }

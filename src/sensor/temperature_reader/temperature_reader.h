@@ -1,5 +1,5 @@
-#ifndef DHT_CONTROLLER_H
-#define DHT_CONTROLLER_H
+#ifndef TEMPERATURE_READER_H
+#define TEMPERATURE_READER_H
 
 #include <Arduino.h>
 #include <DHT.h>
@@ -7,11 +7,11 @@
 #include <Wire.h>
 
 #include "../../model/temperature/temperature_model.h"
-#include "../sensor_controller.h"
+#include "../sensor_reader.h"
 
-class DhtController : public SensorController<TemperatureModel> {
+class TemperatureReader : public SensorReader<TemperatureModel> {
  public:
-  DhtController(uint8_t pin);
+  TemperatureReader(uint8_t pin);
 
   void begin() override;
   bool read() override;

@@ -1,15 +1,15 @@
-#ifndef PM_CONTROLLER_H
-#define PM_CONTROLLER_H
+#ifndef AIR_QUALITY_READER_H
+#define AIR_QUALITY_READER_H
 
 #include <Arduino.h>
 #include <PMserial.h>
 
 #include "../../model/air_quality/air_quality_model.h"
-#include "../sensor_controller.h"
+#include "../sensor_reader.h"
 
-class PmController : public SensorController<AirQualityModel> {
+class AirQualityReader : public SensorReader<AirQualityModel> {
  public:
-  PmController(HardwareSerial &serial);
+  AirQualityReader(HardwareSerial &serial);
 
   void begin() override;
   bool read() override;

@@ -1,8 +1,8 @@
-#ifndef SEONSOR_CONTROLLER_H
-#define SEONSOR_CONTROLLER_H
+#ifndef SENSOR_READER_H
+#define SENSOR_READER_H
 
 template <typename T>
-class SensorController {
+class SensorReader {
  public:
   virtual void begin();
   virtual bool read();

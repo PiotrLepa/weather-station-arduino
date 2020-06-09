@@ -5,37 +5,37 @@ JsonEncoder jsonEncoder = JsonEncoder();
 WeatherRepository weatherRepository =
     WeatherRepository(restClient, jsonEncoder);
 
-PmController pmController = PmController(Serial);
-DhtController dhtController = DhtController(DHT_PIN);
+AirQualityReader airQualityReader = AirQualityReader(Serial);
+TemperatureReader tempReader = TemperatureReader(DHT_PIN);
 
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
   restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
-  dhtController.begin();
-  pmController.begin();
+  tempReader.begin();
+  airQualityReader.begin();
 }
 
 void loop() {
-  if (dhtController.read()) {
-    TemperatureModel temperatureModel = dhtController.getData();
+  if (tempReader.read()) {
+    TemperatureModel temperatureModel = tempReader.getData();
     printTemperature(temperatureModel);
   } else {
-    Serial.println(dhtController.getErrorMessage());
+    Serial.println(tempReader.getErrorMessage());
   }
 
-  if (pmController.read()) {
-    AirQualityModel airQualityModel = pmController.getData();
+  if (airQualityReader.read()) {
+    AirQualityModel airQualityModel = airQualityReader.getData();
     printAirQuality(airQualityModel);
   } else {
-    Serial.println(pmController.getErrorMessage());
+    Serial.println(airQualityReader.getErrorMessage());
   }
 
   WeatherModel model =
-      WeatherModel(dhtController.getData(), pmController.getData());
+      WeatherModel(tempReader.getData(), airQualityReader.getData());
   weatherRepository.sendWeatherData(model);
 
-  delay(10000);
+  delay(5 * 60 * 1000);
 }
 
 void printTemperature(TemperatureModel model) {

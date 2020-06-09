@@ -1,19 +1,20 @@
-#include "pm_controller.h"
+#include "air_quality_reader.h"
 
-PmController::PmController(HardwareSerial &serial) : pms(PMSx003, serial) {}
+AirQualityReader::AirQualityReader(HardwareSerial &serial)
+    : pms(PMSx003, serial) {}
 
-void PmController::begin() { pms.init(); }
+void AirQualityReader::begin() { pms.init(); }
 
-bool PmController::read() {
+bool AirQualityReader::read() {
   pms.read();
   return pms;
 }
 
-AirQualityModel PmController::getData() {
+AirQualityModel AirQualityReader::getData() {
   return AirQualityModel(pms.pm01, pms.pm25, pms.pm10);
 }
 
-String PmController::getErrorMessage() {
+String AirQualityReader::getErrorMessage() {
   switch (pms.status) {
     case SerialPM::STATUS::OK:
       return "No errors";
