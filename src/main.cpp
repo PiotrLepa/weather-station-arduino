@@ -5,37 +5,51 @@ JsonEncoder jsonEncoder = JsonEncoder();
 WeatherRepository weatherRepository =
     WeatherRepository(restClient, jsonEncoder);
 PmController pmController = PmController(Serial);
+DhtController dhtController = DhtController(DHT_PIN);
 
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
   restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
+  dhtController.begin();
   pmController.begin();
 }
 
-int i = 0;
 void loop() {
-  i++;
-  Serial.println(i);
-  TemperatureModel temperatureModel = TemperatureModel(i);
+  if (dhtController.read()) {
+    TemperatureModel temperatureModel = dhtController.getData();
+    printTemperature(temperatureModel);
+  } else {
+    Serial.println(dhtController.getErrorMessage());
+  }
 
   if (pmController.read()) {
     AirQualityModel airQualityModel = pmController.getData();
-    Serial.print(F("\nPM1.0 "));
-    Serial.print(airQualityModel.pm1);
-    Serial.print(F(", "));
-    Serial.print(F("PM2.5 "));
-    Serial.print(airQualityModel.pm25);
-    Serial.print(F(", "));
-    Serial.print(F("PM10 "));
-    Serial.print(airQualityModel.pm10);
-    Serial.println(F(" [ug/m3]"));
+    printAirQuality(airQualityModel);
   } else {
     Serial.println(pmController.getErrorMessage());
   }
 
-  WeatherModel model = WeatherModel(temperatureModel, pmController.getData());
+  WeatherModel model =
+      WeatherModel(dhtController.getData(), pmController.getData());
   weatherRepository.sendWeatherData(model);
 
   delay(10000);
+}
+
+void printTemperature(TemperatureModel model) {
+  Serial.print(F("\nTemp: "));
+  Serial.print(model.temperature);
+  Serial.print(F("\nHumidity: "));
+  Serial.println(model.humidity);
+}
+
+void printAirQuality(AirQualityModel model) {
+  Serial.print(F("\nPM1.0: "));
+  Serial.print(model.pm1);
+  Serial.print(F("\nPM2.5: "));
+  Serial.print(model.pm25);
+  Serial.print(F("\nPM10: "));
+  Serial.print(model.pm10);
+  Serial.println(F("\n [ug/m3]"));
 }

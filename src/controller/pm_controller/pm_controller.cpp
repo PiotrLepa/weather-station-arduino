@@ -1,6 +1,6 @@
 #include "pm_controller.h"
 
-PmController::PmController(HardwareSerial &_serial) : pms(PMSx003, _serial) {}
+PmController::PmController(HardwareSerial &serial) : pms(PMSx003, serial) {}
 
 void PmController::begin() { pms.init(); }
 

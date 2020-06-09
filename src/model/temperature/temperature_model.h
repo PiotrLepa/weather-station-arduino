@@ -2,9 +2,11 @@
 #define TEMPERATURE_MODEL_H
 
 struct TemperatureModel {
-  int temperature;
+  float temperature;
+  float humidity;
 
-  TemperatureModel(int _temperature) : temperature(_temperature) {}
+  TemperatureModel(float _temperature, float _humidity)
+      : temperature(_temperature), humidity(_humidity) {}
 };
 
 #endif

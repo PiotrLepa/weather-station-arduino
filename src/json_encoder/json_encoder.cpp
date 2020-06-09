@@ -3,6 +3,7 @@
 String JsonEncoder::encodeWeatherModel(WeatherModel model) {
   StaticJsonDocument<200> doc;
   doc["temperature"] = model.temperature.temperature;
+  doc["humidity"] = model.temperature.humidity;
   doc["pm1"] = model.airQuality.pm1;
   doc["pm25"] = model.airQuality.pm25;
   doc["pm10"] = model.airQuality.pm10;

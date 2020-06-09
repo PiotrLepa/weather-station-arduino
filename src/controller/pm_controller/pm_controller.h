@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <PMserial.h>
 
-#include "../model/air_quality/air_quality_model.h"
+#include "../../model/air_quality/air_quality_model.h"
 
 class PmController {
  public:
