@@ -7,6 +7,8 @@ struct TemperatureModel {
 
   TemperatureModel(float _temperature, float _humidity)
       : temperature(_temperature), humidity(_humidity) {}
+
+  TemperatureModel() : temperature(-1), humidity(-1) {}
 };
 
 #endif

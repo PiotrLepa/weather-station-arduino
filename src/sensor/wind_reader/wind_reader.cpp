@@ -24,7 +24,6 @@ void WindReader::startReading() {
   status = ACTIVE;
   measurementCounter = 0;
   windSpeedMax = -1;
-  windSpeedMin = -1;
   windSpeeds.clear();
   errorMessage = "No errors";
 
@@ -57,10 +56,6 @@ void WindReader::updateWindSpeed() {
 
   float wind = calculateWindSpeed();
 
-  if (windSpeedMin == -1 || wind < windSpeedMin) {
-    windSpeedMin = wind;
-  }
-
   if (windSpeedMax == -1 || wind > windSpeedMax) {
     windSpeedMax = wind;
   }
@@ -81,7 +76,7 @@ float WindReader::calculateWindSpeed() {
 WindModel WindReader::getData() {
   float sum = std::accumulate(windSpeeds.begin(), windSpeeds.end(),
                               decltype(windSpeeds)::value_type(0));
-  return WindModel(windSpeedMax, windSpeedMin, sum / measurementCounter);
+  return WindModel(windSpeedMax, sum / measurementCounter);
 }
 
 String WindReader::getErrorMessage() { return errorMessage; }

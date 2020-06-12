@@ -41,7 +41,6 @@ class WindReader {
   unsigned long bounceTime;
   int measurementCounter;
 
-  float windSpeedMin;
   float windSpeedMax;
   std::vector<float> windSpeeds;
 

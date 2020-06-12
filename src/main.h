@@ -21,7 +21,10 @@
 
 void setup();
 void loop();
-void printTemperature(TemperatureModel model);
-void printAirQuality(AirQualityModel model);
+void begin();
+void startSensors();
+void gatherWeatherData();
+void sendWeatherDataToServer(TemperatureModel temperature,
+                             AirQualityModel airQuality, WindModel wind);
 
 #endif
