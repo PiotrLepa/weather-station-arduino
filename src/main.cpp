@@ -6,16 +6,22 @@ WeatherRepository weatherRepository =
     WeatherRepository(restClient, jsonEncoder);
 
 AirQualityReader airQualityReader = AirQualityReader(Serial);
-TemperatureReader tempReader = TemperatureReader(DHT_PIN);
+TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
+
+void printWindData();
+
+Ticker windTimer = Ticker(printWindData, 15000);
 
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
+  windTimer.start();
   // restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
   // tempReader.begin();
   // airQualityReader.begin();
   windReader.begin();
+  windReader.startReading();
 }
 
 void loop() {
@@ -38,14 +44,27 @@ void loop() {
   // weatherRepository.sendWeatherData(model);
 
   // delay(5 * 60 * 1000);
+  windTimer.update();
+  windReader.update();
+}
 
-  windReader.startReading(15);
-  WindModel model = windReader.getData();
-  Serial.println(model.windSpeedMax);
-  Serial.println(model.windSpeedMin);
-  Serial.println(model.windSpeedAvg);
+void printWindData() {
+  Serial.println("WIND");
 
-  delay(15000);
+  Serial.println("STOP\n");
+  windReader.stopReading();
+
+  WindModel windModel = windReader.getData();
+  Serial.println(windModel.windSpeedMax);
+  Serial.println(windModel.windSpeedMin);
+  Serial.println(windModel.windSpeedAvg);
+  Serial.println();
+
+  Serial.println("DELAY\n");
+  delay(10000);
+
+  Serial.println("START\n");
+  windReader.startReading();
 }
 
 void printTemperature(TemperatureModel model) {

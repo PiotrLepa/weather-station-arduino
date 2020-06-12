@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 
 #include <Arduino.h>
+#include <Ticker.h>
 
 #include "config/config.h"
 #include "config/private_config.h"
@@ -15,7 +16,7 @@
 #include "sensor/wind_reader/wind_reader.h"
 #include "weather_repository/weather_repository.h"
 
-#define DHT_PIN D1
+#define TEMPERATURE_SENSOR_PIN D1
 #define WIND_SENSOR_PIN D2
 
 void setup();

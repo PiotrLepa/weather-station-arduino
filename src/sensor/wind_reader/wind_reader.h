@@ -1,33 +1,44 @@
 #ifndef WIND_READER_H
 #define WIND_READER_H
 
-#define SINGE_MEASURE_SECONDS 3
+#define SINGE_MEASURE_SECONDS 5
 
 #include <Arduino.h>
+#include <Ticker.h>
 
 #include <vector>
 
 #include "../../model/wind/wind_model.h"
 #include "../sensor_reader.h"
 
-class WindReader : public SensorReader<WindModel> {
+class WindReader {
  public:
-  WindReader(uint8_t _windSensorPin, int readingSeconds);
+  WindReader(uint8_t _windSensorPin);
 
-  void begin() override;
-  bool read() override;
-  WindModel getData() override;
-  String getErrorMessage() override;
+  void begin();
+  void startReading();
+  void stopReading();
+  void update();
+  void updateWindSpeed();
+  WindModel getData();
+  String getErrorMessage();
 
   void ICACHE_RAM_ATTR countRotations();
+
+  enum Status {
+    ACTIVE,
+    INACTIVE,
+    COMPUTING,
+  };
 
  private:
   uint8_t windSensorPin;
 
+  Ticker timer;
+  Status status;
   int rotations;
   int interval;
   unsigned long bounceTime;
-  int numberOrMeasurements;
   int measurementCounter;
 
   float windSpeedMin;
@@ -37,8 +48,6 @@ class WindReader : public SensorReader<WindModel> {
   String errorMessage;
 
   float calculateWindSpeed();
-  void updateWindsSpeed(float wind);
-  void measure();
 };
 
 #endif
