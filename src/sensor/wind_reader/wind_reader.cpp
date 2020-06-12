@@ -24,11 +24,9 @@ void WindReader::startReading() {
   status = ACTIVE;
   measurementCounter = 0;
   windSpeedMax = -1;
+  rotations = 0;
   windSpeeds.clear();
   errorMessage = "No errors";
-
-  measurementCounter++;
-  rotations = 0;
 
   timer.start();
   attachInterrupt(digitalPinToInterrupt(windSensorPin), handlePinInterrupt,
@@ -44,14 +42,14 @@ void WindReader::update() { timer.update(); }
 
 void ICACHE_RAM_ATTR WindReader::countRotations() {
   if (status == ACTIVE && (millis() - bounceTime) > 15) {
-    Serial.println(rotations);
     rotations++;
     bounceTime = millis();
   }
 }
 
 void WindReader::updateWindSpeed() {
-  Serial.println("updateWindSpeed");
+  measurementCounter++;
+
   status = COMPUTING;
 
   float wind = calculateWindSpeed();
