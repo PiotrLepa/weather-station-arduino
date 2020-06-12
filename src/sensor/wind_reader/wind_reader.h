@@ -2,6 +2,8 @@
 #define WIND_READER_H
 
 #define SINGE_MEASURE_SECONDS 5
+#define ROTATION_DEBOUNCE_TIME 15
+#define ROTATION_TO_WIND_SPEED_CONST 2.4
 
 #include <Arduino.h>
 #include <Ticker.h>
@@ -37,7 +39,6 @@ class WindReader {
   Ticker timer;
   Status status;
   int rotations;
-  int interval;
   unsigned long bounceTime;
   int measurementCounter;
 

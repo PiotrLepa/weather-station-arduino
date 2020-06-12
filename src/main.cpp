@@ -8,8 +8,9 @@ WeatherRepository weatherRepository =
 AirQualityReader airQualityReader = AirQualityReader(Serial);
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
+RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 
-Ticker windTimer = Ticker(gatherWeatherData, 15000);
+Ticker serverRequestTimer = Ticker(gatherWeatherData, 15000);
 
 void setup() {
   Serial.begin(9600);
@@ -17,14 +18,14 @@ void setup() {
 
   restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
 
-  windTimer.start();
+  serverRequestTimer.start();
 
   begin();
   startSensors();
 }
 
 void loop() {
-  windTimer.update();
+  serverRequestTimer.update();
   windReader.update();
 }
 
@@ -32,12 +33,17 @@ void begin() {
   tempReader.begin();
   airQualityReader.begin();
   windReader.begin();
+  rainGaugeReader.begin();
 }
 
-void startSensors() { windReader.startReading(); }
+void startSensors() {
+  windReader.startReading();
+  rainGaugeReader.startReading();
+}
 
 void gatherWeatherData() {
   windReader.stopReading();
+  rainGaugeReader.stopReading();
 
   TemperatureModel temperatureModel;
   if (tempReader.read()) {
@@ -54,14 +60,17 @@ void gatherWeatherData() {
   }
 
   WindModel windModel = windReader.getData();
+  RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
 
-  sendWeatherDataToServer(temperatureModel, airQualityModel, windModel);
+  sendWeatherDataToServer(temperatureModel, airQualityModel, windModel,
+                          rainGaugeModel);
 
   startSensors();
 }
 
 void sendWeatherDataToServer(TemperatureModel temperature,
-                             AirQualityModel airQuality, WindModel wind) {
-  WeatherModel model = WeatherModel(temperature, airQuality, wind);
+                             AirQualityModel airQuality, WindModel wind,
+                             RainGaugeModel rainGauge) {
+  WeatherModel model = WeatherModel(temperature, airQuality, wind, rainGauge);
   weatherRepository.sendWeatherData(model);
 }

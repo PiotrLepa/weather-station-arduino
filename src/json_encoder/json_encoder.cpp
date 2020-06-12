@@ -10,6 +10,7 @@ String JsonEncoder::encodeWeatherModel(WeatherModel model) {
   doc["pm10"] = model.airQuality.pm10;
   doc["windSpeedMax"] = model.wind.windSpeedMax;
   doc["windSpeedAvg"] = model.wind.windSpeedAvg;
+  doc["rainGauge"] = model.rainGauge.amountOfPrecipitation;
 
   String json;
   serializeJsonPretty(doc, json);

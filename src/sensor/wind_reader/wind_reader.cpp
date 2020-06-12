@@ -1,21 +1,22 @@
 #include "wind_reader.h"
 
-WindReader* instance = NULL;
+WindReader* windReaderInstance = NULL;
 
-void ICACHE_RAM_ATTR handlePinInterrupt() { instance->countRotations(); }
+void ICACHE_RAM_ATTR handleWindSendorPinInterrupt() {
+  windReaderInstance->countRotations();
+}
 
-void calculate() { instance->updateWindSpeed(); }
+void calculate() { windReaderInstance->updateWindSpeed(); }
 
 WindReader::WindReader(uint8_t _windSensorPin)
     : windSensorPin(_windSensorPin),
       timer(calculate, 5000),
       status(INACTIVE),
       rotations(0),
-      interval(0),
       bounceTime(0),
       measurementCounter(0),
       errorMessage("No errors") {
-  instance = this;
+  windReaderInstance = this;
 }
 
 void WindReader::begin() {}
@@ -29,8 +30,8 @@ void WindReader::startReading() {
   errorMessage = "No errors";
 
   timer.start();
-  attachInterrupt(digitalPinToInterrupt(windSensorPin), handlePinInterrupt,
-                  RISING);
+  attachInterrupt(digitalPinToInterrupt(windSensorPin),
+                  handleWindSendorPinInterrupt, RISING);
 }
 
 void WindReader::stopReading() {
@@ -41,7 +42,7 @@ void WindReader::stopReading() {
 void WindReader::update() { timer.update(); }
 
 void ICACHE_RAM_ATTR WindReader::countRotations() {
-  if (status == ACTIVE && (millis() - bounceTime) > 15) {
+  if (status == ACTIVE && (millis() - bounceTime) > ROTATION_DEBOUNCE_TIME) {
     rotations++;
     bounceTime = millis();
   }
@@ -68,7 +69,8 @@ void WindReader::updateWindSpeed() {
 }
 
 float WindReader::calculateWindSpeed() {
-  return (float)rotations / (float)SINGE_MEASURE_SECONDS * 2.4;
+  return (float)rotations / (float)SINGE_MEASURE_SECONDS *
+         ROTATION_TO_WIND_SPEED_CONST;
 }
 
 WindModel WindReader::getData() {
