@@ -33,9 +33,10 @@ void loop() {
 
   WeatherModel model =
       WeatherModel(tempReader.getData(), airQualityReader.getData());
-  weatherRepository.sendWeatherData(model);
+  // weatherRepository.sendWeatherData(model);
 
-  delay(5 * 60 * 1000);
+  // delay(5 * 60 * 1000);
+  delay(15000);
 }
 
 void printTemperature(TemperatureModel model) {
