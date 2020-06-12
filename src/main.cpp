@@ -7,35 +7,44 @@ WeatherRepository weatherRepository =
 
 AirQualityReader airQualityReader = AirQualityReader(Serial);
 TemperatureReader tempReader = TemperatureReader(DHT_PIN);
+WindReader windReader = WindReader(WIND_SENSOR_PIN);
 
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
-  restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
-  tempReader.begin();
-  airQualityReader.begin();
+  // restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
+  // tempReader.begin();
+  // airQualityReader.begin();
+  windReader.begin();
 }
 
 void loop() {
-  if (tempReader.read()) {
-    TemperatureModel temperatureModel = tempReader.getData();
-    printTemperature(temperatureModel);
-  } else {
-    Serial.println(tempReader.getErrorMessage());
-  }
+  // if (tempReader.read()) {
+  //   TemperatureModel temperatureModel = tempReader.getData();
+  //   printTemperature(temperatureModel);
+  // } else {
+  //   Serial.println(tempReader.getErrorMessage());
+  // }
 
-  if (airQualityReader.read()) {
-    AirQualityModel airQualityModel = airQualityReader.getData();
-    printAirQuality(airQualityModel);
-  } else {
-    Serial.println(airQualityReader.getErrorMessage());
-  }
+  // if (airQualityReader.read()) {
+  //   AirQualityModel airQualityModel = airQualityReader.getData();
+  //   printAirQuality(airQualityModel);
+  // } else {
+  //   Serial.println(airQualityReader.getErrorMessage());
+  // }
 
-  WeatherModel model =
-      WeatherModel(tempReader.getData(), airQualityReader.getData());
+  // WeatherModel model =
+  //     WeatherModel(tempReader.getData(), airQualityReader.getData());
   // weatherRepository.sendWeatherData(model);
 
   // delay(5 * 60 * 1000);
+
+  windReader.startReading(15);
+  WindModel model = windReader.getData();
+  Serial.println(model.windSpeedMax);
+  Serial.println(model.windSpeedMin);
+  Serial.println(model.windSpeedAvg);
+
   delay(15000);
 }
 

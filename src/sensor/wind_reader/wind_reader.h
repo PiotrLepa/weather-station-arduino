@@ -5,18 +5,21 @@
 
 #include <Arduino.h>
 
-#include "../../model/wind/wind_model.h"
-#include "../periodic_sensor_reader.h"
+#include <vector>
 
-class WindReader : public PeriodicSensorReader<WindModel> {
+#include "../../model/wind/wind_model.h"
+#include "../sensor_reader.h"
+
+class WindReader : public SensorReader<WindModel> {
  public:
-  WindReader(uint8_t _windSensorPin);
+  WindReader(uint8_t _windSensorPin, int readingSeconds);
 
   void begin() override;
-  bool startReading() override;
-  bool stopReading() override;
+  bool read() override;
   WindModel getData() override;
   String getErrorMessage() override;
+
+  void ICACHE_RAM_ATTR countRotations();
 
  private:
   uint8_t windSensorPin;
@@ -24,16 +27,18 @@ class WindReader : public PeriodicSensorReader<WindModel> {
   int rotations;
   int interval;
   unsigned long bounceTime;
+  int numberOrMeasurements;
+  int measurementCounter;
 
   float windSpeedMin;
   float windSpeedMax;
-  float windSpeedAvg;
+  std::vector<float> windSpeeds;
 
   String errorMessage;
 
-  void ICACHE_RAM_ATTR countRotations();
   float calculateWindSpeed();
   void updateWindsSpeed(float wind);
+  void measure();
 };
 
 #endif
