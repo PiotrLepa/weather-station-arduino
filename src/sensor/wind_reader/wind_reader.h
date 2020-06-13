@@ -11,19 +11,19 @@
 #include <vector>
 
 #include "../../model/wind/wind_model.h"
-#include "../sensor_reader.h"
+#include "../continuous_sensor_reader.h"
 
-class WindReader {
+class WindReader : public ContinuousSensorReader<WindModel> {
  public:
   WindReader(uint8_t _windSensorPin);
 
-  void begin();
-  void startReading();
-  void stopReading();
-  void update();
+  void begin() override;
+  void startReading() override;
+  void stopReading() override;
+  WindModel getData() override;
+  String getErrorMessage() override;
   void updateWindSpeed();
-  WindModel getData();
-  String getErrorMessage();
+  void update();
 
   void ICACHE_RAM_ATTR countRotations();
 
