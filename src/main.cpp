@@ -11,7 +11,7 @@ AirQualityReader airQualityReader = AirQualityReader(Serial);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 
-Ticker serverRequestTimer = Ticker(gatherWeatherData, 10000);
+Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
 
 void setup() {
   Serial.begin(9600);

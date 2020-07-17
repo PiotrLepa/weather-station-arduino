@@ -24,6 +24,8 @@
 #define WIND_SENSOR_PIN D6
 #define RAIN_GAUGE_SENSOR_PIN D7
 
+#define SERVER_REQUEST_DELAY 30000
+
 void setup();
 void loop();
 void begin();
