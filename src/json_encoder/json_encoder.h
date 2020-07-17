@@ -17,6 +17,9 @@
 class JsonEncoder {
  public:
   String encodeWeatherModel(WeatherModel model);
+
+ private:
+  double formatTemperature(double temp1, double temp2);
 };
 
 #endif
