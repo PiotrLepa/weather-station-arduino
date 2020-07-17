@@ -5,12 +5,13 @@ JsonEncoder jsonEncoder = JsonEncoder();
 WeatherRepository weatherRepository =
     WeatherRepository(restClient, jsonEncoder);
 
-AirQualityReader airQualityReader = AirQualityReader(Serial);
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
+PressureReader pressureReader = PressureReader();
+AirQualityReader airQualityReader = AirQualityReader(Serial);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 
-Ticker serverRequestTimer = Ticker(gatherWeatherData, 15000);
+Ticker serverRequestTimer = Ticker(gatherWeatherData, 10000);
 
 void setup() {
   Serial.begin(9600);
@@ -31,6 +32,7 @@ void loop() {
 
 void begin() {
   tempReader.begin();
+  pressureReader.begin();
   airQualityReader.begin();
   windReader.begin();
   rainGaugeReader.begin();
@@ -52,6 +54,13 @@ void gatherWeatherData() {
     Serial.println(tempReader.getErrorMessage());
   }
 
+  PressureModel pressureModel;
+  if (pressureReader.read()) {
+    pressureModel = pressureReader.getData();
+  } else {
+    Serial.println(pressureReader.getErrorMessage());
+  }
+
   AirQualityModel airQualityModel;
   if (airQualityReader.read()) {
     airQualityModel = airQualityReader.getData();
@@ -62,15 +71,17 @@ void gatherWeatherData() {
   WindModel windModel = windReader.getData();
   RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
 
-  sendWeatherDataToServer(temperatureModel, airQualityModel, windModel,
-                          rainGaugeModel);
+  sendWeatherDataToServer(temperatureModel, pressureModel, airQualityModel,
+                          windModel, rainGaugeModel);
 
   startSensors();
 }
 
 void sendWeatherDataToServer(TemperatureModel temperature,
+                             PressureModel pressureModel,
                              AirQualityModel airQuality, WindModel wind,
                              RainGaugeModel rainGauge) {
-  WeatherModel model = WeatherModel(temperature, airQuality, wind, rainGauge);
+  WeatherModel model =
+      WeatherModel(temperature, pressureModel, airQuality, wind, rainGauge);
   weatherRepository.sendWeatherData(model);
 }

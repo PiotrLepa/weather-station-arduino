@@ -3,20 +3,14 @@
 PressureReader::PressureReader()
     : bme(), readModel(-1, -1), errorMessage("No errors") {}
 
-void PressureReader::begin() {
-  if (!bme.begin(BME280_ADDRESS_ALTERNATE)) {
-    Serial.println("Could not find a valid BMP280 sensor, check wiring!");
-    while (1)
-      ;
-  }
-}
+void PressureReader::begin() { bme.begin(BME280_ADDRESS_ALTERNATE); }
 
 bool PressureReader::read() {
   float temperature = bme.readTemperature();
   float pressure = bme.readPressure();
 
   if (isnan(temperature) || isnan(pressure)) {
-    errorMessage = "Failed to read from DHT sensor!";
+    errorMessage = "Failed to read from BME sensor!";
     return false;
   }
   readModel = PressureModel(temperature, pressure);
