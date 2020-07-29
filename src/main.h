@@ -7,6 +7,7 @@
 #include "config/private_config.h"
 #include "json_encoder/json_encoder.h"
 #include "model/air_quality/air_quality_model.h"
+#include "model/location/location_model.h"
 #include "model/pressure/pressure_model.h"
 #include "model/rain_gauge/rain_gauge_model.h"
 #include "model/temperature/temperature_model.h"
@@ -14,6 +15,7 @@
 #include "model/wind/wind_model.h"
 #include "rest_client/rest_client.h"
 #include "sensor/air_quality_reader/air_quality_reader.h"
+#include "sensor/location_reader/location_reader.h"
 #include "sensor/pressure_reader/pressure_reader.h"
 #include "sensor/rain_gauge/rain_gauge_reader.h"
 #include "sensor/temperature_reader/temperature_reader.h"
@@ -21,8 +23,12 @@
 #include "weather_repository/weather_repository.h"
 
 #define TEMPERATURE_SENSOR_PIN D5
-#define WIND_SENSOR_PIN D6
-#define RAIN_GAUGE_SENSOR_PIN D7
+// #define WIND_SENSOR_PIN D6
+// #define RAIN_GAUGE_SENSOR_PIN D7
+#define WIND_SENSOR_PIN D2
+#define RAIN_GAUGE_SENSOR_PIN D2
+#define GPS_SENSOR_RX_PIN D6
+#define GPS_SENSOR_TX_PIN D7
 
 #define SERVER_REQUEST_DELAY 10000
 

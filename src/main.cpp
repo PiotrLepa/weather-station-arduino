@@ -10,6 +10,8 @@ PressureReader pressureReader = PressureReader();
 AirQualityReader airQualityReader = AirQualityReader(Serial);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
+LocationReader locationReader =
+    LocationReader(GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_PIN);
 
 Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
 
@@ -17,17 +19,17 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
 
-  restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
+  // restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
 
   serverRequestTimer.start();
 
   begin();
-  startSensors();
+  // startSensors();
 }
 
 void loop() {
   serverRequestTimer.update();
-  windReader.update();
+  // windReader.update();
 }
 
 void begin() {
@@ -36,6 +38,7 @@ void begin() {
   airQualityReader.begin();
   windReader.begin();
   rainGaugeReader.begin();
+  locationReader.begin();
 }
 
 void startSensors() {
@@ -44,37 +47,50 @@ void startSensors() {
 }
 
 void gatherWeatherData() {
-  windReader.stopReading();
-  rainGaugeReader.stopReading();
+  // windReader.stopReading();
+  // rainGaugeReader.stopReading();
 
-  TemperatureModel temperatureModel;
-  if (tempReader.read()) {
-    temperatureModel = tempReader.getData();
+  // TemperatureModel temperatureModel;
+  // if (tempReader.read()) {
+  //   temperatureModel = tempReader.getData();
+  // } else {
+  //   Serial.println(tempReader.getErrorMessage());
+  // }
+
+  // PressureModel pressureModel;
+  // if (pressureReader.read()) {
+  //   pressureModel = pressureReader.getData();
+  // } else {
+  //   Serial.println(pressureReader.getErrorMessage());
+  // }
+
+  // AirQualityModel airQualityModel;
+  // if (airQualityReader.read()) {
+  //   airQualityModel = airQualityReader.getData();
+  // } else {
+  //   Serial.println(airQualityReader.getErrorMessage());
+  // }
+
+  LocationModel locationModel;
+  if (locationReader.read()) {
+    locationModel = locationReader.getData();
   } else {
-    Serial.println(tempReader.getErrorMessage());
+    Serial.println(locationReader.getErrorMessage());
   }
 
-  PressureModel pressureModel;
-  if (pressureReader.read()) {
-    pressureModel = pressureReader.getData();
-  } else {
-    Serial.println(pressureReader.getErrorMessage());
-  }
+  Serial.print("Latitude: ");
+  Serial.println(locationModel.latitude);
 
-  AirQualityModel airQualityModel;
-  if (airQualityReader.read()) {
-    airQualityModel = airQualityReader.getData();
-  } else {
-    Serial.println(airQualityReader.getErrorMessage());
-  }
+  Serial.print("Longitude: ");
+  Serial.println(locationModel.longitude);
 
-  WindModel windModel = windReader.getData();
-  RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
+  // WindModel windModel = windReader.getData();
+  // RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
 
-  sendWeatherDataToServer(temperatureModel, pressureModel, airQualityModel,
-                          windModel, rainGaugeModel);
+  // sendWeatherDataToServer(temperatureModel, pressureModel, airQualityModel,
+  //                         windModel, rainGaugeModel);
 
-  startSensors();
+  // startSensors();
 }
 
 void sendWeatherDataToServer(TemperatureModel temperature,
