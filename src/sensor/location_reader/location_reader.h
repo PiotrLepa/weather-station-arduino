@@ -18,7 +18,7 @@ class LocationReader : public SensorReader<LocationModel> {
 
  private:
   TinyGPSPlus gps;
-  // SoftwareSerial *gpsSerial;
+  SoftwareSerial *gpsSerial;
   LocationModel readModel;
   String errorMessage;
 };
