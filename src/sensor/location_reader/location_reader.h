@@ -15,6 +15,7 @@ class LocationReader : public SensorReader<LocationModel> {
   bool read() override;
   LocationModel getData() override;
   String getErrorMessage() override;
+  void update();
 
  private:
   TinyGPSPlus gps;

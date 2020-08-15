@@ -5,25 +5,15 @@ LocationReader::LocationReader(uint8_t rxPin, uint8_t txPin)
   gpsSerial = new SoftwareSerial(rxPin, txPin);
 }
 
-void LocationReader::begin() {
-  gpsSerial->begin(9600);
+void LocationReader::begin() { gpsSerial->begin(9600); }
+
+void LocationReader::update() {
+  while (gpsSerial->available()) {
+    gps.encode(gpsSerial->read());
+  }
 }
 
 bool LocationReader::read() {
-  // SoftwareSerial gpsSerial(D6, D7);
-  // gpsSerial->begin(9600);
-
-  // while (!gpsSerial->available()) {
-  //   delay(500);
-  //   Serial.print(".");
-  // }
-
-  Serial.print("available: ");
-  Serial.println(gpsSerial->available());
-
-  int data = gpsSerial->read();
-  Serial.println(data);
-  gps.encode(data);
   TinyGPSLocation location = gps.location;
 
   if (!location.isValid()) {

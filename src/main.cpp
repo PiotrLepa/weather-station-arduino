@@ -30,6 +30,7 @@ void setup() {
 void loop() {
   serverRequestTimer.update();
   // windReader.update();
+  locationReader.update();
 }
 
 void begin() {
