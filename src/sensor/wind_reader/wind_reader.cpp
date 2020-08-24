@@ -2,7 +2,7 @@
 
 WindReader* windReaderInstance = NULL;
 
-void ICACHE_RAM_ATTR handleWindSendorPinInterrupt() {
+void handleWindSendorPinInterrupt() {
   windReaderInstance->countRotations();
 }
 
@@ -41,7 +41,7 @@ void WindReader::stopReading() {
 
 void WindReader::update() { timer.update(); }
 
-void ICACHE_RAM_ATTR WindReader::countRotations() {
+void WindReader::countRotations() {
   if (status == ACTIVE && (millis() - bounceTime) > ROTATION_DEBOUNCE_TIME) {
     rotations++;
     bounceTime = millis();

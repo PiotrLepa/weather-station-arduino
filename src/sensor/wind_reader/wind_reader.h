@@ -25,7 +25,7 @@ class WindReader : public ContinuousSensorReader<WindModel> {
   void updateWindSpeed();
   void update();
 
-  void ICACHE_RAM_ATTR countRotations();
+  void countRotations();
 
   enum Status {
     ACTIVE,
