@@ -22,11 +22,11 @@
 #include "sensor/wind_reader/wind_reader.h"
 #include "weather_repository/weather_repository.h"
 
-#define TEMPERATURE_SENSOR_PIN 34
-#define WIND_SENSOR_PIN 35
-#define RAIN_GAUGE_SENSOR_PIN 32
-#define GPS_SENSOR_RX_PIN 33
-#define GPS_SENSOR_TX_PIN 25
+#define TEMPERATURE_SENSOR_PIN 32
+#define WIND_SENSOR_PIN 33
+#define RAIN_GAUGE_SENSOR_PIN 25
+#define GPS_SENSOR_RX_PIN 26
+#define GPS_SENSOR_TX_PIN 27
 
 #define SERVER_REQUEST_DELAY 10000
 

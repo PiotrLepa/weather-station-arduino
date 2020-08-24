@@ -20,6 +20,7 @@ class JsonEncoder {
 
  private:
   double formatTemperature(double temp1, double temp2);
+  double formatPressure(double pressure);
 };
 
 #endif

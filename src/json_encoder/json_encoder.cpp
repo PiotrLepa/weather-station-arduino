@@ -6,7 +6,7 @@ String JsonEncoder::encodeWeatherModel(WeatherModel model) {
   doc["temperature"] = formatTemperature(model.temperature.temperature,
                                          model.pressure.temperature);
   doc["humidity"] = model.temperature.humidity;
-  doc["pressure"] = round(model.pressure.pressure / 10);
+  doc["pressure"] = formatPressure(model.pressure.pressure);
   doc["pm1"] = model.airQuality.pm1;
   doc["pm25"] = model.airQuality.pm25;
   doc["pm10"] = model.airQuality.pm10;
@@ -39,4 +39,12 @@ double JsonEncoder::formatTemperature(double temp1, double temp2) {
   }
 
   return resultTemp;
+}
+
+double JsonEncoder::formatPressure(double pressure) {
+  if (pressure != -1) {
+    return round(pressure / 10);
+  } else {
+    return -1;
+  }
 }
