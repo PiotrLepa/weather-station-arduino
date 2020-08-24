@@ -1,9 +1,9 @@
 #ifndef WEATHER_REPOSITORY_H
 #define WEATHER_REPOSITORY_H
 
+#include "../rest_client/rest_client.h"
 #include "../json_encoder/json_encoder.h"
 #include "../model/weather/weather_model.h"
-#include "../rest_client/rest_client.h"
 
 #ifdef WEATHER_REPOSITORY
 #define WEATHER_REPOSITORY_DEBUG_PRINT(string) (Serial.print(string))

@@ -1,6 +1,5 @@
 #ifndef LOCATION_READER_H
 #define LOCATION_READER_H
-#include <ESP8266WiFi.h>
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
 

@@ -50,7 +50,7 @@ int RestClient::sendRequest(String method, String path, const char* body,
   return responseCode;
 }
 
-IPAddress RestClient::connectToWifi(String ssid, String password) {
+IPAddress RestClient::connectToWifi(const char* ssid, const char* password) {
   Serial.println("Connecting to WiFi");
 
   WiFi.begin(ssid, password);
