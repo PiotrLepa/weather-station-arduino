@@ -23,10 +23,10 @@
 #include "weather_repository/weather_repository.h"
 
 #define TEMPERATURE_SENSOR_PIN 32
-#define WIND_SENSOR_PIN 23
-#define RAIN_GAUGE_SENSOR_PIN 22
-#define GPS_SENSOR_RX_PIN 26
-#define GPS_SENSOR_TX_PIN 27
+#define WIND_SENSOR_PIN 13
+#define RAIN_GAUGE_SENSOR_PIN 23
+#define GPS_SENSOR_RX_PIN 12
+#define GPS_SENSOR_TX_PIN 14
 
 #define SERVER_REQUEST_DELAY 10000
 
