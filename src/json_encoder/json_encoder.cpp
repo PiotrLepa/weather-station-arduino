@@ -43,7 +43,7 @@ double JsonEncoder::formatTemperature(double temp1, double temp2) {
 
 double JsonEncoder::formatPressure(double pressure) {
   if (pressure != -1) {
-    return round(pressure / 10);
+    return round(pressure / 100);
   } else {
     return -1;
   }

@@ -9,7 +9,7 @@ bool PressureReader::read() {
   float temperature = bme.readTemperature();
   float pressure = bme.readPressure();
 
-  if (pressure == 0) {
+  if (pressure == 0 || isnan(pressure)) {
     readModel = PressureModel(-1, -1);
     errorMessage = "Failed to read from BME sensor!";
     return false;
