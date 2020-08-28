@@ -3,48 +3,51 @@
 String JsonEncoder::encodeWeatherModel(WeatherModel model) {
   StaticJsonDocument<200> doc;
 
-  doc["temperature"] = formatTemperature(model.temperature.temperature,
-                                         model.pressure.temperature);
-  doc["humidity"] = model.temperature.humidity;
-  doc["pressure"] = formatPressure(model.pressure.pressure);
-  doc["pm1"] = model.airQuality.pm1;
-  doc["pm25"] = model.airQuality.pm25;
-  doc["pm10"] = model.airQuality.pm10;
-  doc["windSpeedMax"] = model.wind.windSpeedMax;
-  doc["windSpeedAvg"] = model.wind.windSpeedAvg;
-  doc["rainGauge"] = model.rainGauge.amountOfPrecipitation;
+  doc["temperature"] = formatTemperature(model.temperature, model.pressure);
+  doc["humidity"] =
+      model.temperature.hasError ? NAN : model.temperature.humidity;
+  doc["pressure"] = formatPressure(model.pressure);
+  doc["pm1"] = model.airQuality.hasError ? NAN : model.airQuality.pm1;
+  doc["pm25"] = model.airQuality.hasError ? NAN : model.airQuality.pm25;
+  doc["pm10"] = model.airQuality.hasError ? NAN : model.airQuality.pm10;
+  doc["windSpeedMax"] = model.wind.hasError ? NAN : model.wind.windSpeedMax;
+  doc["windSpeedAvg"] = model.wind.hasError ? NAN : model.wind.windSpeedAvg;
+  doc["rainGauge"] =
+      model.rainGauge.hasError ? NAN : model.rainGauge.amountOfPrecipitation;
 
   String json;
   serializeJsonPretty(doc, json);
   return json;
 }
 
-double JsonEncoder::formatTemperature(double temp1, double temp2) {
+double JsonEncoder::formatTemperature(TemperatureModel temp1,
+                                      PressureModel temp2) {
   double resultTemp = 0;
   int tempReadCounter = 0;
-  if (temp1 != -1) {
-    resultTemp += temp1;
+  if (!temp1.hasError) {
+    resultTemp += temp1.temperature;
     tempReadCounter++;
   }
-  if (temp2 != -1) {
-    resultTemp += temp2;
+  if (!temp2.hasError) {
+    resultTemp += temp2.temperature;
     tempReadCounter++;
   }
 
   if (tempReadCounter == 0) {
-    resultTemp = -1;
+    return NAN;
   } else {
     resultTemp /= tempReadCounter;
-    resultTemp = round(resultTemp * 100) / 100;  // round to 2 decimal point
-  }
 
-  return resultTemp;
+    // round to 2 decimal point
+    int temp = round(resultTemp * 100);
+    return temp / 100;
+  }
 }
 
-double JsonEncoder::formatPressure(double pressure) {
-  if (pressure != -1) {
-    return round(pressure / 100);
+double JsonEncoder::formatPressure(PressureModel model) {
+  if (!model.hasError) {
+    return round(model.pressure / 100);
   } else {
-    return -1;
+    return NAN;
   }
 }

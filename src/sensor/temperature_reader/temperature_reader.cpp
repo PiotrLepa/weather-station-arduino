@@ -10,7 +10,7 @@ bool TemperatureReader::read() {
   float humidity = dht.readHumidity();
 
   if (isnan(temperature) || isnan(humidity)) {
-    readModel = TemperatureModel(-1, -1);
+    readModel = TemperatureModel::error();
     errorMessage = "Failed to read from DHT sensor!";
     return false;
   }

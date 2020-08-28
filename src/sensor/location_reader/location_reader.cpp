@@ -17,7 +17,7 @@ bool LocationReader::read() {
   TinyGPSLocation location = gps.location;
 
   if (!location.isValid()) {
-    readModel = LocationModel(-1, -1);
+    readModel = LocationModel::error();
     errorMessage = "Failed to read from GPS sensor!";
     return false;
   }

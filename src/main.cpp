@@ -79,12 +79,6 @@ void gatherWeatherData() {
     Serial.println(locationReader.getErrorMessage());
   }
 
-  Serial.print("Latitude: ");
-  Serial.println(locationModel.latitude);
-
-  Serial.print("Longitude: ");
-  Serial.println(locationModel.longitude);
-
   WindModel windModel = windReader.getData();
   RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
 

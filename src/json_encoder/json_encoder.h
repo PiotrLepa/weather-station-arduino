@@ -19,8 +19,8 @@ class JsonEncoder {
   String encodeWeatherModel(WeatherModel model);
 
  private:
-  double formatTemperature(double temp1, double temp2);
-  double formatPressure(double pressure);
+  double formatTemperature(TemperatureModel temp1, PressureModel temp2);
+  double formatPressure(PressureModel model);
 };
 
 #endif

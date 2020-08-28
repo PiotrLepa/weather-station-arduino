@@ -4,11 +4,16 @@
 struct WindModel {
   float windSpeedMax;
   float windSpeedAvg;
+  bool hasError;
 
   WindModel(float _windSpeedMax, float _windSpeedAvg)
-      : windSpeedMax(_windSpeedMax), windSpeedAvg(_windSpeedAvg) {}
+      : windSpeedMax(_windSpeedMax),
+        windSpeedAvg(_windSpeedAvg),
+        hasError(false) {}
 
-  WindModel() : windSpeedMax(-1), windSpeedAvg(-1) {}
+  WindModel() : windSpeedMax(-1), windSpeedAvg(-1), hasError(true) {}
+
+  WindModel static error() { return WindModel(); }
 };
 
 #endif

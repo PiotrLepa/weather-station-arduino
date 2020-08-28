@@ -11,6 +11,9 @@ bool AirQualityReader::read() {
 }
 
 AirQualityModel AirQualityReader::getData() {
+  if (pms.pm25 == -1) {
+    return AirQualityModel::error();
+  }
   return AirQualityModel(pms.pm01, pms.pm25, pms.pm10);
 }
 
