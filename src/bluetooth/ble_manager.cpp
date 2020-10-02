@@ -19,9 +19,15 @@ class CharacteristicCallbacks : public BLECharacteristicCallbacks {
     // }
   }
 
-  void onRead(BLECharacteristic *pCharacteristic) {
-    callbacks->scanAvailablesWifi();
-  }
+  // void onRead(BLECharacteristic *pCharacteristic) {
+  //   callbacks->scanAvailablesWifi();
+  // }
+};
+
+class ServerCallbacks : public BLEServerCallbacks {
+  void onConnect(BLEServer *pServer) { callbacks->scanAvailablesWifi(); };
+
+  void onDisconnect(BLEServer *pServer) {}
 };
 
 BleManager::BleManager(JsonCoder _jsonCoder) : jsonCoder(_jsonCoder) {}
@@ -31,15 +37,16 @@ void BleManager::begin(BleCallbacks *_callbacks) {
 
   BLEDevice::init(BLE_NAME);
   BLEServer *pServer = BLEDevice::createServer();
+  pServer->setCallbacks(new ServerCallbacks());
+
   BLEService *pService = pServer->createService(SERVICE_UUID);
 
-  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-      CHARACTERISTIC_UUID,
-      BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+  pCharacteristic = pService->createCharacteristic(
+      CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_NOTIFY |
+                               BLECharacteristic::PROPERTY_READ |
+                               BLECharacteristic::PROPERTY_WRITE);
   pCharacteristic->setCallbacks(new CharacteristicCallbacks());
-  pCharacteristic->setValue(
-      "[{\"name\": \"test1\"},{\"name\": \"test2\"}, {\"name\": \"test3\"}]");
-
+  pCharacteristic->addDescriptor(new BLE2902());
   pService->start();
 
   BLEAdvertising *pAdvertising = pServer->getAdvertising();
@@ -48,5 +55,7 @@ void BleManager::begin(BleCallbacks *_callbacks) {
 
 void BleManager::sendAvailableWifiList(std::vector<WifiNameModel> models) {
   String json = jsonCoder.encodeWifiNameList(models);
-  Serial.println(json);
+  pCharacteristic->setValue(json.c_str());
+  Serial.println("NOTIFY");
+  pCharacteristic->notify();
 }

@@ -31,13 +31,14 @@
 #define GPS_SENSOR_TX_PIN 14
 
 // #define SERVER_REQUEST_DELAY 10000
-#define SERVER_REQUEST_DELAY 1000000
+#define SEND_WIFI_LIST_DELAY 5000
 
 void setup();
 void loop();
 void begin();
 void startSensors();
 void gatherWeatherData();
+void sendWifiList();
 void sendWeatherDataToServer(TemperatureModel temperature,
                              PressureModel pressureModel,
                              AirQualityModel airQuality, WindModel wind,

@@ -14,19 +14,25 @@ LocationReader locationReader =
 
 BleManager bleManager = BleManager(jsonCoder);
 
-Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
+// Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
+
+Ticker serverRequestTimer = Ticker(sendWifiList, SEND_WIFI_LIST_DELAY);
 
 class MyBleCallbacks : public BleCallbacks {
   void scanAvailablesWifi() {
-    Serial.println("scanAvailablesWifi");
-    std::vector<WifiNameModel> vectors;
-    vectors.push_back(WifiNameModel("testowa żółć"));
-    vectors.push_back(WifiNameModel("testowa 222 nazwa"));
-    bleManager.sendAvailableWifiList(vectors);
+    Serial.println("\nscanAvailablesWifi");
+    sendWifiList();
   }
 
   void connectToWifi() { Serial.println("connectToWifi"); }
 };
+
+void sendWifiList() {
+std::vector<WifiNameModel> vectors;
+    vectors.push_back(WifiNameModel("testowa żółć"));
+    vectors.push_back(WifiNameModel("test222 nazwa"));
+    bleManager.sendAvailableWifiList(vectors);
+}
 
 void setup() {
   Serial.begin(9600);

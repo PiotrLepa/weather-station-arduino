@@ -26,13 +26,13 @@ String JsonCoder::encodeWifiNameList(std::vector<WifiNameModel> models) {
 
   JsonArray array = doc.to<JsonArray>();
 
-  for (int i =0; i< models.size(); i++) {
+  for (int i = 0; i < models.size(); i++) {
     JsonObject nested = array.createNestedObject();
     nested["name"] = models[i].name;
   }
 
   String json;
-  serializeJsonPretty(array, json);
+  serializeJson(array, json);
   return json;
 }
 

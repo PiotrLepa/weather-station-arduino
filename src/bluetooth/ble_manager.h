@@ -2,6 +2,7 @@
 #define BLE_MANAGER_H
 
 #include <Adafruit_Sensor.h>
+#include <BLE2902.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
