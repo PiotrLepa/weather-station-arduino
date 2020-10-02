@@ -1,5 +1,11 @@
 #include "main.h"
 
+class MyBleCallbacks : public BleCallbacks {
+  void scanAvailablesWifi() { Serial.println("scanAvailablesWifi"); }
+
+  void connectToWifi() { Serial.println("connectToWifi"); }
+};
+
 RestClient restClient = RestClient(API_URL);
 JsonEncoder jsonEncoder = JsonEncoder();
 WeatherRepository weatherRepository =
@@ -12,6 +18,8 @@ WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 LocationReader locationReader =
     LocationReader(GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_PIN);
+
+BleManager bleManager = BleManager(new MyBleCallbacks());
 
 Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
 
@@ -40,6 +48,7 @@ void begin() {
   windReader.begin();
   rainGaugeReader.begin();
   locationReader.begin();
+  bleManager.begin();
 }
 
 void startSensors() {

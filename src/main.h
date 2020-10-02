@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <Ticker.h>
 
+#include "bluetooth/ble_callbacks.h"
+#include "bluetooth/ble_manager.h"
 #include "config/config.h"
 #include "config/private_config.h"
 #include "json_encoder/json_encoder.h"
