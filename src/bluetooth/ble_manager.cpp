@@ -24,9 +24,11 @@ class CharacteristicCallbacks : public BLECharacteristicCallbacks {
   }
 };
 
-BleManager::BleManager(BleCallbacks *_callbacks) { callbacks = _callbacks; }
+BleManager::BleManager(JsonCoder _jsonCoder) : jsonCoder(_jsonCoder) {}
 
-void BleManager::begin() {
+void BleManager::begin(BleCallbacks *_callbacks) {
+  callbacks = _callbacks;
+
   BLEDevice::init(BLE_NAME);
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
@@ -42,4 +44,9 @@ void BleManager::begin() {
 
   BLEAdvertising *pAdvertising = pServer->getAdvertising();
   pAdvertising->start();
+}
+
+void BleManager::sendAvailableWifiList(std::vector<WifiNameModel> models) {
+  String json = jsonCoder.encodeWifiNameList(models);
+  Serial.println(json);
 }

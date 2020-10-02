@@ -7,7 +7,7 @@
 #include "bluetooth/ble_manager.h"
 #include "config/config.h"
 #include "config/private_config.h"
-#include "json_encoder/json_encoder.h"
+#include "json_coder/json_coder.h"
 #include "model/air_quality/air_quality_model.h"
 #include "model/location/location_model.h"
 #include "model/pressure/pressure_model.h"
@@ -30,7 +30,8 @@
 #define GPS_SENSOR_RX_PIN 12
 #define GPS_SENSOR_TX_PIN 14
 
-#define SERVER_REQUEST_DELAY 10000
+// #define SERVER_REQUEST_DELAY 10000
+#define SERVER_REQUEST_DELAY 1000000
 
 void setup();
 void loop();

@@ -2,7 +2,7 @@
 #define WEATHER_REPOSITORY_H
 
 #include "../rest_client/rest_client.h"
-#include "../json_encoder/json_encoder.h"
+#include "../json_coder/json_coder.h"
 #include "../model/weather/weather_model.h"
 
 #ifdef WEATHER_REPOSITORY
@@ -15,13 +15,13 @@
 
 class WeatherRepository {
  public:
-  WeatherRepository(RestClient& _client, JsonEncoder& _jsonEncoder);
+  WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder);
 
   int sendWeatherData(WeatherModel model);
 
  private:
   RestClient& client;
-  JsonEncoder& jsonEncoder;
+  JsonCoder& jsonCoder;
 };
 
 #endif

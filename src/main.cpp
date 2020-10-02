@@ -1,15 +1,8 @@
 #include "main.h"
 
-class MyBleCallbacks : public BleCallbacks {
-  void scanAvailablesWifi() { Serial.println("scanAvailablesWifi"); }
-
-  void connectToWifi() { Serial.println("connectToWifi"); }
-};
-
 RestClient restClient = RestClient(API_URL);
-JsonEncoder jsonEncoder = JsonEncoder();
-WeatherRepository weatherRepository =
-    WeatherRepository(restClient, jsonEncoder);
+JsonCoder jsonCoder = JsonCoder();
+WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
@@ -19,9 +12,21 @@ RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 LocationReader locationReader =
     LocationReader(GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_PIN);
 
-BleManager bleManager = BleManager(new MyBleCallbacks());
+BleManager bleManager = BleManager(jsonCoder);
 
 Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
+
+class MyBleCallbacks : public BleCallbacks {
+  void scanAvailablesWifi() {
+    Serial.println("scanAvailablesWifi");
+    std::vector<WifiNameModel> vectors;
+    vectors.push_back(WifiNameModel("testowa żółć"));
+    vectors.push_back(WifiNameModel("testowa 222 nazwa"));
+    bleManager.sendAvailableWifiList(vectors);
+  }
+
+  void connectToWifi() { Serial.println("connectToWifi"); }
+};
 
 void setup() {
   Serial.begin(9600);
@@ -48,7 +53,7 @@ void begin() {
   windReader.begin();
   rainGaugeReader.begin();
   locationReader.begin();
-  bleManager.begin();
+  bleManager.begin(new MyBleCallbacks());
 }
 
 void startSensors() {

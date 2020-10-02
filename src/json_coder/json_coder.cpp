@@ -1,6 +1,6 @@
-#include "json_encoder.h"
+#include "json_coder.h"
 
-String JsonEncoder::encodeWeatherModel(WeatherModel model) {
+String JsonCoder::encodeWeatherModel(WeatherModel model) {
   StaticJsonDocument<200> doc;
 
   doc["temperature"] = formatTemperature(model.temperature, model.pressure);
@@ -20,8 +20,24 @@ String JsonEncoder::encodeWeatherModel(WeatherModel model) {
   return json;
 }
 
-double JsonEncoder::formatTemperature(TemperatureModel temp1,
-                                      PressureModel temp2) {
+String JsonCoder::encodeWifiNameList(std::vector<WifiNameModel> models) {
+  size_t capacity = JSON_ARRAY_SIZE(models.size() * 10);
+  DynamicJsonDocument doc(capacity);
+
+  JsonArray array = doc.to<JsonArray>();
+
+  for (int i =0; i< models.size(); i++) {
+    JsonObject nested = array.createNestedObject();
+    nested["name"] = models[i].name;
+  }
+
+  String json;
+  serializeJsonPretty(array, json);
+  return json;
+}
+
+double JsonCoder::formatTemperature(TemperatureModel temp1,
+                                    PressureModel temp2) {
   double resultTemp = 0;
   int tempReadCounter = 0;
   if (!temp1.hasError) {
@@ -44,7 +60,7 @@ double JsonEncoder::formatTemperature(TemperatureModel temp1,
   }
 }
 
-double JsonEncoder::formatPressure(PressureModel model) {
+double JsonCoder::formatPressure(PressureModel model) {
   if (!model.hasError) {
     return round(model.pressure / 100);
   } else {
