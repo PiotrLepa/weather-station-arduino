@@ -17,24 +17,27 @@ LocationReader locationReader =
     LocationReader(GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_PIN);
 
 Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
-Ticker scanWifiTimer = Ticker(sendWifiList, SEND_WIFI_LIST_DELAY);
+Ticker startScanWifiTimer = Ticker(scanAndSendWifiList, START_SCAN_WIFI_DELAY);
+// Ticker scanWifiTimer = Ticker(scanAndSendWifiList, SEND_WIFI_LIST_DELAY);
 
 class MyBleCallbacks : public BleCallbacks {
   void scanAvailablesWifi() {
     Serial.println("\nscanAvailablesWifi");
-    sendWifiList();
-    scanWifiTimer.start();
+    // scanAndSendWifiList();
+    startScanWifiTimer.start();
+    // scanWifiTimer.start();
   }
 
   void connectToWifi() {
     Serial.println("connectToWifi");
-    scanWifiTimer.stop();
+    // scanWifiTimer.stop();
   }
 };
 
-void sendWifiList() {
+void scanAndSendWifiList() {
+  startScanWifiTimer.stop();
   std::vector<WifiModel> wifiList = wifiClient.scanWifi();
-  bleManager.sendAvailableWifiList(wifiList);
+  bleManager.sendWifiList(wifiList);
 }
 
 void setup() {
@@ -53,7 +56,8 @@ void loop() {
   serverRequestTimer.update();
   windReader.update();
   locationReader.update();
-  scanWifiTimer.update();
+  startScanWifiTimer.update();
+  // scanWifiTimer.update();
 }
 
 void begin() {

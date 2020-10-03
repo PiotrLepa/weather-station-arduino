@@ -3,6 +3,8 @@
 
 #include <WiFi.h>
 
+#include <list>
+
 #include "../model/wifi/wifi_model.h"
 
 class WifiClient {

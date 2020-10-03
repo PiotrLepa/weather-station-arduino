@@ -31,11 +31,11 @@ String JsonCoder::encodeWifiNameList(std::vector<WifiModel> models) {
   for (int i = 0; i < models.size(); i++) {
     JsonObject nested = array.createNestedObject();
     nested["name"] = models[i].name;
-    nested["encryption"] = models[i].encryption;
+    nested["encryption"] = encryptionToString(models[i].encryption);
     nested["rssi"] = models[i].rssi;
   }
 
-  printJson(array);
+  // printJson(array);
 
   String json;
   serializeJson(array, json);

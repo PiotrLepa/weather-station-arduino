@@ -7,24 +7,31 @@
 #include <BLEServer.h>
 #include <BLEUtils.h>
 
+#include <list>
+
 #include "../json_coder/json_coder.h"
 #include "../model/wifi/wifi_model.h"
 #include "ble_callbacks.h"
 
-#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 #define BLE_NAME "ESP-32 WeatherStation"
+#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define WIFI_SCAN_CHARACTERISTIC "53ce635f-255d-4cdb-9ece-dc8ba92180aa"
+#define WIFI_LIST_CHARACTERISTIC "db7a9839-79a5-455f-a213-736f25691050"
 
 class BleManager {
  public:
+  BleCallbacks* callbacks;
+  std::list<String> partsToSend;
+  String nextPart = "END";
+
   BleManager(JsonCoder _jsonCoder);
 
   void begin(BleCallbacks* _callbacks);
-  void sendAvailableWifiList(std::vector<WifiModel> models);
+  void sendWifiList(std::vector<WifiModel> models);
 
  private:
   JsonCoder jsonCoder;
-  BLECharacteristic* pCharacteristic;
+  BLECharacteristic* wifiListCharacteristic;
 };
 
 #endif

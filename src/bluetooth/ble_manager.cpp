@@ -1,61 +1,85 @@
 #include "ble_manager.h"
 
-BleCallbacks *callbacks;
+BleManager *instance = NULL;
 
-class CharacteristicCallbacks : public BLECharacteristicCallbacks {
+// class ServerCallbacks : public BLEServerCallbacks {
+//   void onConnect(BLEServer *pServer) {
+//   instance->callbacks->scanAvailablesWifi(); };
+
+//   void onDisconnect(BLEServer *pServer) {}
+// };
+
+class ScanWifiCallbacks : public BLECharacteristicCallbacks {
+  void onRead(BLECharacteristic *pCharacteristic) {
+    instance->callbacks->scanAvailablesWifi();
+  }
+};
+
+class WifiListCallbacks : public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *pCharacteristic) {
     std::string value = pCharacteristic->getValue();
-    callbacks->connectToWifi();
-    // if (value.length() > 0) {
-    //   Serial.println("*********");
-
-    //   Serial.println("old: ");
-    //   Serial.println(value.c_str());
-    //   Serial.print("New value: ");
-    //   for (int i = 0; i < value.length(); i++) Serial.print(value[i]);
-
-    //   Serial.println();
-    //   Serial.println("*********");
-    // }
+    instance->callbacks->connectToWifi();
   }
 
-  // void onRead(BLECharacteristic *pCharacteristic) {
-  //   callbacks->scanAvailablesWifi();
-  // }
+  void onRead(BLECharacteristic *pCharacteristic) {
+    if (instance->nextPart == "START") {
+    } else if (instance->nextPart == "END") {
+    } else {
+    }
+    pCharacteristic->setValue(instance->partsToSend.front().c_str());
+    instance->partsToSend.pop_front();
+
+    if (!instance->partsToSend.empty()) {
+      pCharacteristic->notify();
+    }
+  }
 };
 
-class ServerCallbacks : public BLEServerCallbacks {
-  void onConnect(BLEServer *pServer) { callbacks->scanAvailablesWifi(); };
-
-  void onDisconnect(BLEServer *pServer) {}
-};
-
-BleManager::BleManager(JsonCoder _jsonCoder) : jsonCoder(_jsonCoder) {}
+BleManager::BleManager(JsonCoder _jsonCoder) : jsonCoder(_jsonCoder) {
+  instance = this;
+}
 
 void BleManager::begin(BleCallbacks *_callbacks) {
   callbacks = _callbacks;
 
   BLEDevice::init(BLE_NAME);
   BLEServer *pServer = BLEDevice::createServer();
-  pServer->setCallbacks(new ServerCallbacks());
+  // pServer->setCallbacks(new ServerCallbacks());
 
   BLEService *pService = pServer->createService(SERVICE_UUID);
 
-  pCharacteristic = pService->createCharacteristic(
-      CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_NOTIFY |
-                               BLECharacteristic::PROPERTY_READ |
-                               BLECharacteristic::PROPERTY_WRITE);
-  pCharacteristic->setCallbacks(new CharacteristicCallbacks());
-  pCharacteristic->addDescriptor(new BLE2902());
+  BLECharacteristic *startScanCharacteristic = pService->createCharacteristic(
+      WIFI_SCAN_CHARACTERISTIC, BLECharacteristic::PROPERTY_READ);
+  startScanCharacteristic->setCallbacks(new ScanWifiCallbacks());
+  startScanCharacteristic->addDescriptor(new BLE2902());
+  startScanCharacteristic->setValue("OK");
+
+  wifiListCharacteristic = pService->createCharacteristic(
+      WIFI_LIST_CHARACTERISTIC, BLECharacteristic::PROPERTY_NOTIFY |
+                                    BLECharacteristic::PROPERTY_READ |
+                                    BLECharacteristic::PROPERTY_WRITE);
+  wifiListCharacteristic->setCallbacks(new WifiListCallbacks());
+  wifiListCharacteristic->addDescriptor(new BLE2902());
+
   pService->start();
 
   BLEAdvertising *pAdvertising = pServer->getAdvertising();
   pAdvertising->start();
 }
 
-void BleManager::sendAvailableWifiList(std::vector<WifiModel> models) {
+void BleManager::sendWifiList(std::vector<WifiModel> models) {
+  partsToSend.clear();
+
   String json = jsonCoder.encodeWifiNameList(models);
-  pCharacteristic->setValue(json.c_str());
-  Serial.println("NOTIFY");
-  pCharacteristic->notify();
+
+  int partSize = 200;
+  int partsCount = json.length() / partSize;
+
+  for (int i = 0; i <= partsCount; i++) {
+    String jsonPart = json.substring(i * partSize, (i + 1) * partSize);
+    partsToSend.push_back(jsonPart);
+  }
+
+  nextPart = "START";
+  wifiListCharacteristic->notify();
 }

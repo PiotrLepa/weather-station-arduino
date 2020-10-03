@@ -5,6 +5,21 @@
 
 enum WifiEncryption { OPEN, WEP, WPA, WPA2 };
 
+inline const char* encryptionToString(WifiEncryption encryption) {
+  switch (encryption) {
+    case OPEN:
+      return "open";
+    case WEP:
+      return "wep";
+    case WPA:
+      return "wpa";
+    case WPA2:
+      return "wpa2";
+    default:
+      return "open";
+  }
+}
+
 struct WifiModel {
   String name;
   WifiEncryption encryption;
