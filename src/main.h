@@ -23,6 +23,7 @@
 #include "sensor/temperature_reader/temperature_reader.h"
 #include "sensor/wind_reader/wind_reader.h"
 #include "weather_repository/weather_repository.h"
+#include "wifi_client/wifi_client.h"
 
 #define TEMPERATURE_SENSOR_PIN 32
 #define WIND_SENSOR_PIN 13
@@ -31,6 +32,7 @@
 #define GPS_SENSOR_TX_PIN 14
 
 // #define SERVER_REQUEST_DELAY 10000
+#define SERVER_REQUEST_DELAY 1000000
 #define SEND_WIFI_LIST_DELAY 5000
 
 void setup();

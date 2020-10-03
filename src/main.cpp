@@ -1,7 +1,11 @@
 #include "main.h"
 
+WifiClient wifiClient = WifiClient();
 RestClient restClient = RestClient(API_URL);
 JsonCoder jsonCoder = JsonCoder();
+
+BleManager bleManager = BleManager(jsonCoder);
+
 WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
@@ -12,33 +16,32 @@ RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 LocationReader locationReader =
     LocationReader(GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_PIN);
 
-BleManager bleManager = BleManager(jsonCoder);
-
-// Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
-
-Ticker serverRequestTimer = Ticker(sendWifiList, SEND_WIFI_LIST_DELAY);
+Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
+Ticker scanWifiTimer = Ticker(sendWifiList, SEND_WIFI_LIST_DELAY);
 
 class MyBleCallbacks : public BleCallbacks {
   void scanAvailablesWifi() {
     Serial.println("\nscanAvailablesWifi");
     sendWifiList();
+    scanWifiTimer.start();
   }
 
-  void connectToWifi() { Serial.println("connectToWifi"); }
+  void connectToWifi() {
+    Serial.println("connectToWifi");
+    scanWifiTimer.stop();
+  }
 };
 
 void sendWifiList() {
-std::vector<WifiNameModel> vectors;
-    vectors.push_back(WifiNameModel("testowa żółć"));
-    vectors.push_back(WifiNameModel("test222 nazwa"));
-    bleManager.sendAvailableWifiList(vectors);
+  std::vector<WifiModel> wifiList = wifiClient.scanWifi();
+  bleManager.sendAvailableWifiList(wifiList);
 }
 
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
 
-  restClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
+  wifiClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
 
   serverRequestTimer.start();
 
@@ -50,6 +53,7 @@ void loop() {
   serverRequestTimer.update();
   windReader.update();
   locationReader.update();
+  scanWifiTimer.update();
 }
 
 void begin() {

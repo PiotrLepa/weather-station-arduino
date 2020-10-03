@@ -15,12 +15,14 @@ String JsonCoder::encodeWeatherModel(WeatherModel model) {
   doc["rainGauge"] =
       model.rainGauge.hasError ? NAN : model.rainGauge.amountOfPrecipitation;
 
+  printJson(doc);
+
   String json;
-  serializeJsonPretty(doc, json);
+  serializeJson(doc, json);
   return json;
 }
 
-String JsonCoder::encodeWifiNameList(std::vector<WifiNameModel> models) {
+String JsonCoder::encodeWifiNameList(std::vector<WifiModel> models) {
   size_t capacity = JSON_ARRAY_SIZE(models.size() * 10);
   DynamicJsonDocument doc(capacity);
 
@@ -29,7 +31,11 @@ String JsonCoder::encodeWifiNameList(std::vector<WifiNameModel> models) {
   for (int i = 0; i < models.size(); i++) {
     JsonObject nested = array.createNestedObject();
     nested["name"] = models[i].name;
+    nested["encryption"] = models[i].encryption;
+    nested["rssi"] = models[i].rssi;
   }
+
+  printJson(array);
 
   String json;
   serializeJson(array, json);
@@ -66,4 +72,18 @@ double JsonCoder::formatPressure(PressureModel model) {
   } else {
     return NAN;
   }
+}
+
+void JsonCoder::printJson(JsonDocument &source) {
+  String json;
+  serializeJsonPretty(source, json);
+  Serial.print("Json: ");
+  Serial.println(json);
+}
+
+void JsonCoder::printJson(JsonArray &source) {
+  String json;
+  serializeJsonPretty(source, json);
+  Serial.print("Json: ");
+  Serial.println(json);
 }

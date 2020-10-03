@@ -53,7 +53,7 @@ void BleManager::begin(BleCallbacks *_callbacks) {
   pAdvertising->start();
 }
 
-void BleManager::sendAvailableWifiList(std::vector<WifiNameModel> models) {
+void BleManager::sendAvailableWifiList(std::vector<WifiModel> models) {
   String json = jsonCoder.encodeWifiNameList(models);
   pCharacteristic->setValue(json.c_str());
   Serial.println("NOTIFY");

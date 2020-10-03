@@ -8,6 +8,7 @@
 #include <BLEUtils.h>
 
 #include "../json_coder/json_coder.h"
+#include "../model/wifi/wifi_model.h"
 #include "ble_callbacks.h"
 
 #define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
@@ -19,7 +20,7 @@ class BleManager {
   BleManager(JsonCoder _jsonCoder);
 
   void begin(BleCallbacks* _callbacks);
-  void sendAvailableWifiList(std::vector<WifiNameModel> models);
+  void sendAvailableWifiList(std::vector<WifiModel> models);
 
  private:
   JsonCoder jsonCoder;

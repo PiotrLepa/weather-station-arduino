@@ -49,18 +49,3 @@ int RestClient::sendRequest(String method, String path, const char* body,
 
   return responseCode;
 }
-
-IPAddress RestClient::connectToWifi(const char* ssid, const char* password) {
-  Serial.println("Connecting to WiFi");
-
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-
-  Serial.print("\nConnected! Ip address: ");
-  Serial.println(WiFi.localIP());
-
-  return WiFi.localIP();
-}

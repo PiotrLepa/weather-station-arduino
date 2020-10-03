@@ -5,22 +5,16 @@
 #include <ArduinoJson.h>
 
 #include "../model/weather/weather_model.h"
-#include "../model/wifi_name/wifi_name_model.h"
-
-#ifdef JSON_CODER_DEBUG
-#define JSON_CODER_DEBUG_PRINT(string) (Serial.print(string))
-#endif
-
-#ifndef JSON_CODER_DEBUG
-#define JSON_CODER_DEBUG_PRINT(string)
-#endif
+#include "../model/wifi/wifi_model.h"
 
 class JsonCoder {
  public:
   String encodeWeatherModel(WeatherModel model);
-  String encodeWifiNameList(std::vector<WifiNameModel> models);
+  String encodeWifiNameList(std::vector<WifiModel> models);
 
  private:
+  void printJson(JsonDocument &source);
+  void printJson(JsonArray &source);
   double formatTemperature(TemperatureModel temp1, PressureModel temp2);
   double formatPressure(PressureModel model);
 };
