@@ -18,7 +18,11 @@
 #define WIFI_SCAN_CHARACTERISTIC "53ce635f-255d-4cdb-9ece-dc8ba92180aa"
 #define WIFI_LIST_CHARACTERISTIC "db7a9839-79a5-455f-a213-736f25691050"
 
+#define PART_SIZE 500
+
 class BleManager {
+  enum MessageType { START, END, PART };
+
  public:
   BleCallbacks* callbacks;
   std::list<String> partsToSend;

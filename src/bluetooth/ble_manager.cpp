@@ -22,14 +22,22 @@ class WifiListCallbacks : public BLECharacteristicCallbacks {
   }
 
   void onRead(BLECharacteristic *pCharacteristic) {
-    if (instance->nextPart == "START") {
-    } else if (instance->nextPart == "END") {
-    } else {
-    }
-    pCharacteristic->setValue(instance->partsToSend.front().c_str());
-    instance->partsToSend.pop_front();
+    pCharacteristic->setValue(instance->nextPart.c_str());
 
-    if (!instance->partsToSend.empty()) {
+    if (instance->nextPart == "START") {
+      instance->nextPart = instance->partsToSend.front();
+      instance->partsToSend.pop_front();
+      pCharacteristic->notify();
+    } else if (instance->nextPart == "END") {
+      instance->nextPart = "START";
+    } else {
+      if (instance->partsToSend.empty()) {
+        instance->nextPart = "END";
+      } else {
+        instance->nextPart = instance->partsToSend.front();
+        instance->partsToSend.pop_front();
+      }
+
       pCharacteristic->notify();
     }
   }
@@ -72,11 +80,11 @@ void BleManager::sendWifiList(std::vector<WifiModel> models) {
 
   String json = jsonCoder.encodeWifiNameList(models);
 
-  int partSize = 200;
-  int partsCount = json.length() / partSize;
+  int partsCount = json.length() / PART_SIZE;
 
   for (int i = 0; i <= partsCount; i++) {
-    String jsonPart = json.substring(i * partSize, (i + 1) * partSize);
+    int startIndex = i * PART_SIZE;
+    String jsonPart = json.substring(startIndex, startIndex + PART_SIZE);
     partsToSend.push_back(jsonPart);
   }
 

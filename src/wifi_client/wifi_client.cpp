@@ -19,7 +19,7 @@ std::vector<WifiModel> WifiClient::scanWifi() {
   int n = WiFi.scanNetworks();
 
   std::vector<WifiModel> wifiList;
-  for (int j = 0; j < 10; j++) {
+  for (int j = 0; j < 50; j++) {
     for (int i = 0; i < n; i++) {
       WifiModel wifi = getWifiInfo(i);
       wifiList.push_back(wifi);
