@@ -24,6 +24,7 @@ class BleManager {
   enum MessageType { START, END, PART };
 
  public:
+  JsonCoder jsonCoder;
   BleCallbacks* callbacks;
   std::list<String> partsToSend;
   String nextPart = "END";
@@ -34,7 +35,6 @@ class BleManager {
   void sendWifiList(std::vector<WifiModel> models);
 
  private:
-  JsonCoder jsonCoder;
   BLECharacteristic* wifiListCharacteristic;
 
   void setupScanWifiCharacetistic(BLEService *service);

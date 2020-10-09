@@ -17,8 +17,9 @@ class ScanWifiCallbacks : public BLECharacteristicCallbacks {
 
 class WifiListCallbacks : public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *characteristic) {
-    std::string value = characteristic->getValue();
-    instance->callbacks->connectToWifi();
+    std::string json = characteristic->getValue();
+    WifiCredentialsModel credentials = instance->jsonCoder.decodeWifiCredentials(json.c_str());
+    instance->callbacks->connectToWifi(credentials);
   }
 
   void onRead(BLECharacteristic *characteristic) {

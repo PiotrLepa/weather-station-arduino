@@ -6,11 +6,13 @@
 
 #include "../model/weather/weather_model.h"
 #include "../model/wifi/wifi_model.h"
+#include "../model/wifi_credentials/wifi_credentials_model.h"
 
 class JsonCoder {
  public:
   String encodeWeatherModel(WeatherModel model);
   String encodeWifiNameList(std::vector<WifiModel> models);
+  WifiCredentialsModel decodeWifiCredentials(String json);
 
  private:
   void printJson(JsonDocument &source);

@@ -1,7 +1,7 @@
 #include "json_coder.h"
 
 String JsonCoder::encodeWeatherModel(WeatherModel model) {
-  StaticJsonDocument<200> doc;
+  StaticJsonDocument<256> doc;
 
   doc["temperature"] = formatTemperature(model.temperature, model.pressure);
   doc["humidity"] =
@@ -35,11 +35,17 @@ String JsonCoder::encodeWifiNameList(std::vector<WifiModel> models) {
     nested["rssi"] = models[i].rssi;
   }
 
-  // printJson(array);
+  printJson(array);
 
   String json;
   serializeJson(array, json);
   return json;
+}
+
+WifiCredentialsModel JsonCoder::decodeWifiCredentials(String json) {
+  StaticJsonDocument<128> doc;
+  deserializeJson(doc, json);
+  return WifiCredentialsModel(doc["name"], doc["password"]);
 }
 
 double JsonCoder::formatTemperature(TemperatureModel temp1,
