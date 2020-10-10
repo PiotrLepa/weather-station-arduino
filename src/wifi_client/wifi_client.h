@@ -9,7 +9,7 @@
 
 class WifiClient {
  public:
-  IPAddress connectToWifi(const char* ssid, const char* password);
+  IPAddress connectToWifi(String ssid, String password);
   std::vector<WifiModel> scanWifi();
 
  private:

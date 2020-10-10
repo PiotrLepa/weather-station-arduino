@@ -87,7 +87,6 @@ void BleManager::setupScanWifiCharacetistic(BLEService *service) {
       SCAN_WIFI_CHARACTERISTIC, BLECharacteristic::PROPERTY_READ);
   startScanCharacteristic->setCallbacks(new ScanWifiCallbacks());
   startScanCharacteristic->addDescriptor(new BLE2902());
-  startScanCharacteristic->setValue("OK");  // TODO needed?
 }
 
 void BleManager::setupWifiListCharacetistic(BLEService *service) {

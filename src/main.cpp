@@ -26,7 +26,7 @@ class MyBleCallbacks : public BleCallbacks {
   }
 
   void connectToWifi(WifiCredentialsModel credentials) {
-    
+    wifiClient.connectToWifi(credentials.name, credentials.password);
   }
 };
 
@@ -40,8 +40,6 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
 
-  wifiClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD);
-
   serverRequestTimer.start();
 
   begin();
@@ -53,7 +51,6 @@ void loop() {
   windReader.update();
   locationReader.update();
   startScanWifiTimer.update();
-  // scanWifiTimer.update();
 }
 
 void begin() {

@@ -45,6 +45,9 @@ String JsonCoder::encodeWifiNameList(std::vector<WifiModel> models) {
 WifiCredentialsModel JsonCoder::decodeWifiCredentials(String json) {
   StaticJsonDocument<128> doc;
   deserializeJson(doc, json);
+
+  printJson(doc);
+
   return WifiCredentialsModel(doc["name"], doc["password"]);
 }
 

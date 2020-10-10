@@ -1,9 +1,9 @@
 #include "wifi_client.h"
 
-IPAddress WifiClient::connectToWifi(const char* ssid, const char* password) {
+IPAddress WifiClient::connectToWifi(String ssid, String password) {
   Serial.println("Connecting to WiFi");
 
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid.c_str(), password.c_str());
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
