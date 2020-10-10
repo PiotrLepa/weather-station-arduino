@@ -20,14 +20,14 @@
 
 #define PART_SIZE 500
 
-class BleManager {
-  enum MessageType { START, END, PART };
+enum MessageType { START, END, PART };
 
+class BleManager {
  public:
   JsonCoder jsonCoder;
   BleCallbacks* callbacks;
   std::list<String> partsToSend;
-  String nextPart = "END";
+  MessageType nextMessageType;
 
   BleManager(JsonCoder _jsonCoder);
 
