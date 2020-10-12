@@ -25,8 +25,8 @@ class MyBleCallbacks : public BleCallbacks {
     startScanWifiTimer.start();
   }
 
-  void connectToWifi(WifiCredentialsModel credentials) {
-    wifiClient.connectToWifi(credentials.name, credentials.password);
+  bool connectToWifi(WifiCredentialsModel credentials) {
+    return wifiClient.connectToWifi(credentials.name, credentials.password);
   }
 };
 

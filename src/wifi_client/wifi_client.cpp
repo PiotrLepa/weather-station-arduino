@@ -1,18 +1,24 @@
 #include "wifi_client.h"
 
-IPAddress WifiClient::connectToWifi(String ssid, String password) {
+ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
   Serial.println("Connecting to WiFi");
 
   WiFi.begin(ssid.c_str(), password.c_str());
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+
+  ConnectionResult result = ERROR;
+  for (int i = 0; i < 5; i++) {
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.print("\nConnected! Ip address: ");
+      Serial.println(WiFi.localIP());
+
+      result = CONNECTED;
+    } else {
+      delay(500);
+      Serial.print(".");
+    }
   }
 
-  Serial.print("\nConnected! Ip address: ");
-  Serial.println(WiFi.localIP());
-
-  return WiFi.localIP();
+  return result;
 }
 
 std::vector<WifiModel> WifiClient::scanWifi() {

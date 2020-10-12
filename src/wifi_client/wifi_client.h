@@ -7,9 +7,11 @@
 
 #include "../model/wifi/wifi_model.h"
 
+enum ConnectionResult { CONNECTED, ERROR };
+
 class WifiClient {
  public:
-  IPAddress connectToWifi(String ssid, String password);
+  ConnectionResult connectToWifi(String ssid, String password);
   std::vector<WifiModel> scanWifi();
 
  private:

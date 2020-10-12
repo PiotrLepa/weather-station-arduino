@@ -57,12 +57,35 @@ void BleManager::begin(BleCallbacks *_callbacks) {
   // pServer->setCallbacks(new ServerCallbacks());
 
   BLEService *service = server->createService(SERVICE_UUID);
-  setupScanWifiCharacetistic(service);
-  setupWifiListCharacetistic(service);
+  setupScanWifiCharacteristic(service);
+  setupWifiListCharacteristic(service);
   service->start();
 
   BLEAdvertising *advertising = server->getAdvertising();
   advertising->start();
+}
+
+void BleManager::setupScanWifiCharacteristic(BLEService *service) {
+  BLECharacteristic *characteristic = service->createCharacteristic(
+      SCAN_WIFI_CHARACTERISTIC, BLECharacteristic::PROPERTY_READ);
+  characteristic->setCallbacks(new ScanWifiCallbacks());
+  characteristic->addDescriptor(new BLE2902());
+}
+
+void BleManager::setupWifiListCharacteristic(BLEService *service) {
+  wifiListCharacteristic = service->createCharacteristic(
+      WIFI_LIST_CHARACTERISTIC, BLECharacteristic::PROPERTY_NOTIFY |
+                                    BLECharacteristic::PROPERTY_READ |
+                                    BLECharacteristic::PROPERTY_WRITE);
+  wifiListCharacteristic->setCallbacks(new WifiListCallbacks());
+  wifiListCharacteristic->addDescriptor(new BLE2902());
+}
+
+void BleManager::setupConnectToWifiResultCharacteristic(BLEService *service) {
+  connectToWifiResultCharacteristic =
+      service->createCharacteristic(CONNECT_TO_WIFI_RESULT_CHARACTERISTIC,
+                                    BLECharacteristic::PROPERTY_NOTIFY);
+  connectToWifiResultCharacteristic->addDescriptor(new BLE2902());
 }
 
 void BleManager::sendWifiList(std::vector<WifiModel> models) {
@@ -82,18 +105,14 @@ void BleManager::sendWifiList(std::vector<WifiModel> models) {
   wifiListCharacteristic->notify();
 }
 
-void BleManager::setupScanWifiCharacetistic(BLEService *service) {
-  BLECharacteristic *startScanCharacteristic = service->createCharacteristic(
-      SCAN_WIFI_CHARACTERISTIC, BLECharacteristic::PROPERTY_READ);
-  startScanCharacteristic->setCallbacks(new ScanWifiCallbacks());
-  startScanCharacteristic->addDescriptor(new BLE2902());
-}
-
-void BleManager::setupWifiListCharacetistic(BLEService *service) {
-  wifiListCharacteristic = service->createCharacteristic(
-      WIFI_LIST_CHARACTERISTIC, BLECharacteristic::PROPERTY_NOTIFY |
-                                    BLECharacteristic::PROPERTY_READ |
-                                    BLECharacteristic::PROPERTY_WRITE);
-  wifiListCharacteristic->setCallbacks(new WifiListCallbacks());
-  wifiListCharacteristic->addDescriptor(new BLE2902());
+void BleManager::sendConnectToWifiResult(ConnectionResult status) {
+  switch (status) {
+    case CONNECTED:
+      connectToWifiResultCharacteristic->setValue("connected");
+      break;
+    case ERROR:
+      connectToWifiResultCharacteristic->setValue("error");
+      break;
+  }
+  connectToWifiResultCharacteristic->notify();
 }

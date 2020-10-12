@@ -6,7 +6,7 @@
 class BleCallbacks {
  public:
   virtual void scanAvailablesWifi();
-  virtual void connectToWifi(WifiCredentialsModel credentials);
+  virtual bool connectToWifi(WifiCredentialsModel credentials);
 };
 
 #endif
