@@ -32,7 +32,8 @@ class WifiListCallbacks : public BLECharacteristicCallbacks {
     std::string json = characteristic->getValue();
     WifiCredentialsModel credentials =
         bleManager->jsonCoder.decodeWifiCredentials(json.c_str());
-    bleManager->callbacks->connectToWifi(credentials);
+    ConnectionResult result = bleManager->callbacks->connectToWifi(credentials);
+    bleManager->sendConnectToWifiResult(result);
   }
 
   void onRead(BLECharacteristic *characteristic) {
@@ -69,6 +70,7 @@ void BleManager::begin(BleCallbacks *_callbacks) {
   BLEService *service = server->createService(SERVICE_UUID);
   setupScanWifiCharacteristic(service);
   setupWifiListCharacteristic(service);
+  setupConnectToWifiResultCharacteristic(service);
   service->start();
 
   BLEAdvertising *advertising = server->getAdvertising();
@@ -118,9 +120,11 @@ void BleManager::sendWifiList(std::vector<WifiModel> models) {
 void BleManager::sendConnectToWifiResult(ConnectionResult status) {
   switch (status) {
     case CONNECTED:
+      Serial.println("Wifi status: connected");
       connectToWifiResultCharacteristic->setValue("connected");
       break;
     case ERROR:
+      Serial.println("Wifi status: error");
       connectToWifiResultCharacteristic->setValue("error");
       break;
   }
