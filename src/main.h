@@ -34,7 +34,6 @@
 // #define SERVER_REQUEST_DELAY 10000
 #define SERVER_REQUEST_DELAY 1000000
 #define START_SCAN_WIFI_DELAY 2000
-#define SEND_WIFI_LIST_DELAY 30000
 
 void setup();
 void loop();

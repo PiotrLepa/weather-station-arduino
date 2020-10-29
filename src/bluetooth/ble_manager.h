@@ -6,6 +6,7 @@
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
+#include <Ticker.h>
 
 #include <list>
 
@@ -21,6 +22,8 @@
 #define CONNECT_TO_WIFI_RESULT_CHARACTERISTIC \
   "e5b9a6f3-2d49-447b-a924-b2d116ca8e3f"
 
+#define DISCONNECT_DELAY 1200000 // 2 min
+
 #define PART_SIZE 500
 
 enum MessageType { START, END, PART };
@@ -31,14 +34,21 @@ class BleManager {
   BleCallbacks* callbacks;
   std::list<String> partsToSend;
   MessageType nextMessageType;
+  Ticker disconnectTimer;
 
   BleManager(JsonCoder _jsonCoder);
 
   void begin(BleCallbacks* _callbacks);
+  void update();
   void sendWifiList(std::vector<WifiModel> models);
   void sendConnectToWifiResult(ConnectionResult status);
+  void startDisconnectTimer();
+  void stopDisconnectTimer();
+  void restartDisconnectTimer();
+  void disconnect();
 
  private:
+  BLEServer* server;
   BLECharacteristic* wifiListCharacteristic;
   BLECharacteristic* connectToWifiResultCharacteristic;
 

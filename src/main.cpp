@@ -51,6 +51,7 @@ void loop() {
   windReader.update();
   locationReader.update();
   startScanWifiTimer.update();
+  bleManager.update();
 }
 
 void begin() {

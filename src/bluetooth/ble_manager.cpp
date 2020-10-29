@@ -1,15 +1,17 @@
 #include "ble_manager.h"
 
-// class ServerCallbacks : public BLEServerCallbacks {
-//   BleManager *bleManager;
+BleManager *instance;
 
-//  public:
-//   ServerCallbacks(BleManager *_bleManager) : bleManager(_bleManager) {}
+class ServerCallbacks : public BLEServerCallbacks {
+  BleManager *bleManager;
 
-//   void onConnect(BLEServer *server) {}
+ public:
+  ServerCallbacks(BleManager *_bleManager) : bleManager(_bleManager) {}
 
-//   void onDisconnect(BLEServer *server) {}
-// };
+  void onConnect(BLEServer *server) { instance->startDisconnectTimer(); }
+
+  void onDisconnect(BLEServer *server) { instance->stopDisconnectTimer(); }
+};
 
 class ScanWifiCallbacks : public BLECharacteristicCallbacks {
   BleManager *bleManager;
@@ -18,6 +20,8 @@ class ScanWifiCallbacks : public BLECharacteristicCallbacks {
   ScanWifiCallbacks(BleManager *_bleManager) : bleManager(_bleManager) {}
 
   void onRead(BLECharacteristic *pCharacteristic) {
+    instance->restartDisconnectTimer();
+
     bleManager->callbacks->scanAvailablesWifi();
   }
 };
@@ -29,6 +33,8 @@ class WifiListCallbacks : public BLECharacteristicCallbacks {
   WifiListCallbacks(BleManager *_bleManager) : bleManager(_bleManager) {}
 
   void onWrite(BLECharacteristic *characteristic) {
+    instance->restartDisconnectTimer();
+
     std::string json = characteristic->getValue();
     WifiCredentialsModel credentials =
         bleManager->jsonCoder.decodeWifiCredentials(json.c_str());
@@ -37,6 +43,8 @@ class WifiListCallbacks : public BLECharacteristicCallbacks {
   }
 
   void onRead(BLECharacteristic *characteristic) {
+    instance->restartDisconnectTimer();
+
     switch (bleManager->nextMessageType) {
       case START:
         bleManager->nextMessageType = PART;
@@ -58,14 +66,19 @@ class WifiListCallbacks : public BLECharacteristicCallbacks {
   }
 };
 
-BleManager::BleManager(JsonCoder _jsonCoder) : jsonCoder(_jsonCoder) {}
+void onDisconnect() { instance->disconnect(); }
+
+BleManager::BleManager(JsonCoder _jsonCoder)
+    : jsonCoder(_jsonCoder), disconnectTimer(onDisconnect, DISCONNECT_DELAY) {
+  instance = this;
+}
 
 void BleManager::begin(BleCallbacks *_callbacks) {
   callbacks = _callbacks;
 
   BLEDevice::init(BLE_NAME);
-  BLEServer *server = BLEDevice::createServer();
-  // server->setCallbacks(new ServerCallbacks());
+  server = BLEDevice::createServer();
+  server->setCallbacks(new ServerCallbacks(this));
 
   BLEService *service = server->createService(SERVICE_UUID);
   setupScanWifiCharacteristic(service);
@@ -73,8 +86,23 @@ void BleManager::begin(BleCallbacks *_callbacks) {
   setupConnectToWifiResultCharacteristic(service);
   service->start();
 
-  BLEAdvertising *advertising = server->getAdvertising();
-  advertising->start();
+  server->startAdvertising();
+}
+
+void BleManager::update() { disconnectTimer.update(); }
+
+void BleManager::startDisconnectTimer() { disconnectTimer.start(); }
+
+void BleManager::stopDisconnectTimer() { disconnectTimer.stop(); }
+
+void BleManager::restartDisconnectTimer() {
+  disconnectTimer.stop();
+  disconnectTimer.start();
+}
+
+void BleManager::disconnect() {
+  disconnectTimer.stop();
+  server->disconnect(server->getConnId());
 }
 
 void BleManager::setupScanWifiCharacteristic(BLEService *service) {
