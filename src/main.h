@@ -16,6 +16,7 @@
 #include "model/weather/weather_model.h"
 #include "model/wind/wind_model.h"
 #include "rest_client/rest_client.h"
+#include "sd_card/sd_card_manager.h"
 #include "sensor/air_quality_reader/air_quality_reader.h"
 #include "sensor/location_reader/location_reader.h"
 #include "sensor/pressure_reader/pressure_reader.h"
@@ -27,12 +28,13 @@
 
 #define TEMPERATURE_SENSOR_PIN 32
 #define WIND_SENSOR_PIN 13
-#define RAIN_GAUGE_SENSOR_PIN 23
+// #define RAIN_GAUGE_SENSOR_PIN 23
+#define RAIN_GAUGE_SENSOR_PIN 4  // check if this pin works
 #define GPS_SENSOR_RX_PIN 12
 #define GPS_SENSOR_TX_PIN 14
 
-// #define SERVER_REQUEST_DELAY 10000
-#define SERVER_REQUEST_DELAY 1000000
+#define SERVER_REQUEST_DELAY 10000
+// #define SERVER_REQUEST_DELAY 1000000
 #define START_SCAN_WIFI_DELAY 2000
 
 void setup();

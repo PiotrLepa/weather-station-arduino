@@ -5,8 +5,10 @@ RestClient restClient = RestClient(API_URL);
 JsonCoder jsonCoder = JsonCoder();
 
 BleManager bleManager = BleManager(jsonCoder);
+SdCardManager sdCardManager = SdCardManager();
 
-WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder);
+WeatherRepository weatherRepository =
+    WeatherRepository(restClient, jsonCoder, sdCardManager);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
@@ -40,6 +42,8 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
 
+  while (!Serial)
+    ;
   serverRequestTimer.start();
 
   begin();
@@ -55,6 +59,10 @@ void loop() {
 }
 
 void begin() {
+  while (!Serial)
+    ;
+
+  sdCardManager.begin();
   tempReader.begin();
   pressureReader.begin();
   airQualityReader.begin();
