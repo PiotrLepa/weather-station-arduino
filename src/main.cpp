@@ -1,5 +1,6 @@
 #include "main.h"
 
+DateTime dateTime = DateTime();
 WifiClient wifiClient = WifiClient();
 RestClient restClient = RestClient(API_URL);
 JsonCoder jsonCoder = JsonCoder();
@@ -8,7 +9,7 @@ BleManager bleManager = BleManager(jsonCoder);
 SdCardManager sdCardManager = SdCardManager();
 
 WeatherRepository weatherRepository =
-    WeatherRepository(restClient, jsonCoder, sdCardManager);
+    WeatherRepository(restClient, jsonCoder, sdCardManager, dateTime);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
@@ -28,7 +29,12 @@ class MyBleCallbacks : public BleCallbacks {
   }
 
   ConnectionResult connectToWifi(WifiCredentialsModel credentials) {
-    return wifiClient.connectToWifi(credentials.name, credentials.password);
+    ConnectionResult result =
+        wifiClient.connectToWifi(credentials.name, credentials.password);
+    if (result == CONNECTED) {
+      dateTime.begin();
+    }
+    return result;
   }
 };
 

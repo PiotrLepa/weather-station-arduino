@@ -21,11 +21,11 @@ void SdCardManager::write(String path, String value) {
 }
 
 String SdCardManager::readFromFile(File file) {
-  String fileValue = "";
+  String value = "";
   while (file.available()) {
-    fileValue += (char)file.read();
+    value += (char)file.read();
   }
-  return fileValue;
+  return value;
 }
 
 std::vector<String> SdCardManager::readAllInDirectory(String path) {

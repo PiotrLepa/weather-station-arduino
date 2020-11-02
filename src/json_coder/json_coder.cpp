@@ -2,19 +2,17 @@
 
 String JsonCoder::encodeWeatherModel(WeatherModel model) {
   StaticJsonDocument<256> doc;
+  encodeWeatherModelIntoJsonDocument(doc, model);
+  printJson(doc);
+  String json;
+  serializeJson(doc, json);
+  return json;
+}
 
-  doc["temperature"] = formatTemperature(model.temperature, model.pressure);
-  doc["humidity"] =
-      model.temperature.hasError ? NAN : model.temperature.humidity;
-  doc["pressure"] = formatPressure(model.pressure);
-  doc["pm1"] = model.airQuality.hasError ? NAN : model.airQuality.pm1;
-  doc["pm25"] = model.airQuality.hasError ? NAN : model.airQuality.pm25;
-  doc["pm10"] = model.airQuality.hasError ? NAN : model.airQuality.pm10;
-  doc["windSpeedMax"] = model.wind.hasError ? NAN : model.wind.windSpeedMax;
-  doc["windSpeedAvg"] = model.wind.hasError ? NAN : model.wind.windSpeedAvg;
-  doc["rainGauge"] =
-      model.rainGauge.hasError ? NAN : model.rainGauge.amountOfPrecipitation;
-
+String JsonCoder::encodeCachedWeatherModel(CachedWeatherModel model) {
+  StaticJsonDocument<256> doc;
+  encodeWeatherModelIntoJsonDocument(doc, model.weather);
+  doc["timestamp"] = model.timestamp;
   printJson(doc);
 
   String json;
@@ -50,6 +48,21 @@ WifiCredentialsModel JsonCoder::decodeWifiCredentials(String json) {
 
   return WifiCredentialsModel(doc["name"], doc["password"]);
 }
+
+void JsonCoder::encodeWeatherModelIntoJsonDocument(JsonDocument& doc, WeatherModel model) {
+  doc["temperature"] = formatTemperature(model.temperature, model.pressure);
+  doc["humidity"] =
+      model.temperature.hasError ? NAN : model.temperature.humidity;
+  doc["pressure"] = formatPressure(model.pressure);
+  doc["pm1"] = model.airQuality.hasError ? NAN : model.airQuality.pm1;
+  doc["pm25"] = model.airQuality.hasError ? NAN : model.airQuality.pm25;
+  doc["pm10"] = model.airQuality.hasError ? NAN : model.airQuality.pm10;
+  doc["windSpeedMax"] = model.wind.hasError ? NAN : model.wind.windSpeedMax;
+  doc["windSpeedAvg"] = model.wind.hasError ? NAN : model.wind.windSpeedAvg;
+  doc["rainGauge"] =
+      model.rainGauge.hasError ? NAN : model.rainGauge.amountOfPrecipitation;
+}
+
 
 double JsonCoder::formatTemperature(TemperatureModel temp1,
                                     PressureModel temp2) {

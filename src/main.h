@@ -6,7 +6,7 @@
 #include "bluetooth/ble_callbacks.h"
 #include "bluetooth/ble_manager.h"
 #include "config/config.h"
-#include "config/private_config.h"
+#include "date_time/date_time.h"
 #include "json_coder/json_coder.h"
 #include "model/air_quality/air_quality_model.h"
 #include "model/location/location_model.h"
