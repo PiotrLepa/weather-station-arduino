@@ -2,9 +2,7 @@
 
 SdCardManager::SdCardManager() {}
 
-bool SdCardManager::begin() {
-  return SD.begin();
-}
+bool SdCardManager::begin() { return SD.begin(); }
 
 bool SdCardManager::createFileDirs(String path) {
   int dirsEnd = path.lastIndexOf("/");
@@ -14,7 +12,7 @@ bool SdCardManager::createFileDirs(String path) {
 
 void SdCardManager::write(String path, String value) {
   createFileDirs(path);
-  
+
   File file = SD.open(path, FILE_WRITE);
   file.print(value);
   file.close();
@@ -47,3 +45,5 @@ std::vector<String> SdCardManager::readAllInDirectory(String path) {
 
   return filesData;
 }
+
+bool SdCardManager::remove(String path) { return SD.remove(path); }

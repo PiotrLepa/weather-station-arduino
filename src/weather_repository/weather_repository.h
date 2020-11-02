@@ -20,6 +20,9 @@ class WeatherRepository {
   JsonCoder& jsonCoder;
   SdCardManager& sdCardManager;
   DateTime& dateTime;
+
+  void cacheWeather(WeatherModel weather);
+  void sendCachedWeathers();
 };
 
 #endif

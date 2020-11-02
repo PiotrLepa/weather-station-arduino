@@ -5,6 +5,9 @@
 #include <SD.h>
 #include <SPI.h>
 
+const String TXT_EXT = ".txt";
+const String CACHED_WEATHERS_PATH = "/cached_weathers";
+
 class SdCardManager {
  public:
   SdCardManager();
@@ -14,6 +17,7 @@ class SdCardManager {
   void write(String path, String value);
   String readFromFile(File file);
   std::vector<String> readAllInDirectory(String path);
+  bool remove(String path);
 
  private:
 };
