@@ -19,8 +19,6 @@ class JsonCoder {
  private:
   void printJson(JsonDocument &source);
   void printJson(JsonArray &source);
-  void encodeWeatherModelIntoJsonDocument(JsonDocument &doc,
-                                          WeatherModel model);
   double formatTemperature(TemperatureModel temp1, PressureModel temp2);
   double formatPressure(PressureModel model);
 };

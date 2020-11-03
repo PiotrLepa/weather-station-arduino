@@ -13,7 +13,7 @@ String DateTime::now() {
   return String(timeinfo.tm_year + 1900) + "-" + formatNumber(timeinfo.tm_mon) +
          "-" + formatNumber(timeinfo.tm_mday) + "T" +
          formatNumber(timeinfo.tm_hour) + ":" + formatNumber(timeinfo.tm_min) +
-         ":" + formatNumber(timeinfo.tm_sec);
+         ":" + formatNumber(timeinfo.tm_sec) + ".000";
 }
 
 String DateTime::formatNumber(int number) {

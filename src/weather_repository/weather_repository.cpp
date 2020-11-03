@@ -14,14 +14,17 @@ bool WeatherRepository::sendWeatherData(WeatherModel weather) {
   if (resultCode == 201) {
     sendCachedWeathers();
     return true;
+  } else {
+    cacheWeather(weather);
+    return false;
   }
-
-  return false;
 }
 
 void WeatherRepository::cacheWeather(WeatherModel weather) {
-  CachedWeatherModel cachedWeatherModel =
-      CachedWeatherModel(weather, dateTime.now());
+  String timestamp = dateTime.now();
+  if (timestamp == "") return;
+
+  CachedWeatherModel cachedWeatherModel = CachedWeatherModel(weather, timestamp);
   String fileName = CACHED_WEATHERS_PATH + "/" + String(millis()) + TXT_EXT;
   String json = jsonCoder.encodeCachedWeatherModel(cachedWeatherModel);
   sdCardManager.write(fileName, json);

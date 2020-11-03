@@ -2,7 +2,19 @@
 
 String JsonCoder::encodeWeatherModel(WeatherModel model) {
   StaticJsonDocument<256> doc;
-  encodeWeatherModelIntoJsonDocument(doc, model);
+
+  doc["temperature"] = formatTemperature(model.temperature, model.pressure);
+  doc["humidity"] =
+      model.temperature.hasError ? NAN : model.temperature.humidity;
+  doc["pressure"] = formatPressure(model.pressure);
+  doc["pm1"] = model.airQuality.hasError ? NAN : model.airQuality.pm1;
+  doc["pm25"] = model.airQuality.hasError ? NAN : model.airQuality.pm25;
+  doc["pm10"] = model.airQuality.hasError ? NAN : model.airQuality.pm10;
+  doc["windSpeedMax"] = model.wind.hasError ? NAN : model.wind.windSpeedMax;
+  doc["windSpeedAvg"] = model.wind.hasError ? NAN : model.wind.windSpeedAvg;
+  doc["rainGauge"] =
+      model.rainGauge.hasError ? NAN : model.rainGauge.amountOfPrecipitation;
+
   printJson(doc);
   String json;
   serializeJson(doc, json);
@@ -11,7 +23,29 @@ String JsonCoder::encodeWeatherModel(WeatherModel model) {
 
 String JsonCoder::encodeCachedWeatherModel(CachedWeatherModel model) {
   StaticJsonDocument<256> doc;
-  encodeWeatherModelIntoJsonDocument(doc, model.weather);
+
+  JsonObject weather = doc.createNestedObject("weather");
+  WeatherModel weatherModel = model.weather;
+  weather["temperature"] =
+      formatTemperature(weatherModel.temperature, weatherModel.pressure);
+  weather["humidity"] = weatherModel.temperature.hasError
+                            ? NAN
+                            : weatherModel.temperature.humidity;
+  weather["pressure"] = formatPressure(weatherModel.pressure);
+  weather["pm1"] =
+      weatherModel.airQuality.hasError ? NAN : weatherModel.airQuality.pm1;
+  weather["pm25"] =
+      weatherModel.airQuality.hasError ? NAN : weatherModel.airQuality.pm25;
+  weather["pm10"] =
+      weatherModel.airQuality.hasError ? NAN : weatherModel.airQuality.pm10;
+  weather["windSpeedMax"] =
+      weatherModel.wind.hasError ? NAN : weatherModel.wind.windSpeedMax;
+  weather["windSpeedAvg"] =
+      weatherModel.wind.hasError ? NAN : weatherModel.wind.windSpeedAvg;
+  weather["rainGauge"] = weatherModel.rainGauge.hasError
+                             ? NAN
+                             : weatherModel.rainGauge.amountOfPrecipitation;
+
   doc["timestamp"] = model.timestamp;
   printJson(doc);
 
@@ -48,21 +82,6 @@ WifiCredentialsModel JsonCoder::decodeWifiCredentials(String json) {
 
   return WifiCredentialsModel(doc["name"], doc["password"]);
 }
-
-void JsonCoder::encodeWeatherModelIntoJsonDocument(JsonDocument& doc, WeatherModel model) {
-  doc["temperature"] = formatTemperature(model.temperature, model.pressure);
-  doc["humidity"] =
-      model.temperature.hasError ? NAN : model.temperature.humidity;
-  doc["pressure"] = formatPressure(model.pressure);
-  doc["pm1"] = model.airQuality.hasError ? NAN : model.airQuality.pm1;
-  doc["pm25"] = model.airQuality.hasError ? NAN : model.airQuality.pm25;
-  doc["pm10"] = model.airQuality.hasError ? NAN : model.airQuality.pm10;
-  doc["windSpeedMax"] = model.wind.hasError ? NAN : model.wind.windSpeedMax;
-  doc["windSpeedAvg"] = model.wind.hasError ? NAN : model.wind.windSpeedAvg;
-  doc["rainGauge"] =
-      model.rainGauge.hasError ? NAN : model.rainGauge.amountOfPrecipitation;
-}
-
 
 double JsonCoder::formatTemperature(TemperatureModel temp1,
                                     PressureModel temp2) {
