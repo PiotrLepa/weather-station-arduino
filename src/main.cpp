@@ -32,6 +32,7 @@ class MyBleCallbacks : public BleCallbacks {
     ConnectionResult result =
         wifiClient.connectToWifi(credentials.name, credentials.password);
     if (result == CONNECTED) {
+      serverRequestTimer.start();
       dateTime.begin();
     }
     return result;
@@ -50,7 +51,6 @@ void setup() {
 
   while (!Serial)
     ;
-  serverRequestTimer.start();
 
   begin();
   startSensors();
