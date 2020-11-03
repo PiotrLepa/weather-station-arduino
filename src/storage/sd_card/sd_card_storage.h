@@ -1,5 +1,5 @@
-#ifndef SD_CARD_MANAGER_H
-#define SD_CARD_MANAGER_H
+#ifndef SD_CARD_STORAGE_H
+#define SD_CARD_STORAGE_H
 
 #include <Arduino.h>
 #include <SD.h>
@@ -8,9 +8,9 @@
 const String TXT_EXT = ".txt";
 const String CACHED_WEATHERS_PATH = "/cached_weathers";
 
-class SdCardManager {
+class SdCardStorage {
  public:
-  SdCardManager();
+  SdCardStorage();
 
   bool begin();
   bool createFileDirs(String path);

@@ -10,8 +10,8 @@
 
 #include <list>
 
-#include "../json_coder/json_coder.h"
-#include "../model/wifi/wifi_model.h"
+#include "../../model/wifi/wifi_model.h"
+#include "../../utils/json_coder/json_coder.h"
 #include "../wifi_client/wifi_client.h"
 #include "ble_callbacks.h"
 
@@ -22,7 +22,7 @@
 #define CONNECT_TO_WIFI_RESULT_CHARACTERISTIC \
   "e5b9a6f3-2d49-447b-a924-b2d116ca8e3f"
 
-#define DISCONNECT_DELAY 1200000 // 2 min
+#define DISCONNECT_DELAY 1200000  // 2 min
 
 #define PART_SIZE 500
 

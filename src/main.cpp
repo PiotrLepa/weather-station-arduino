@@ -6,7 +6,7 @@ RestClient restClient = RestClient(API_URL);
 JsonCoder jsonCoder = JsonCoder();
 
 BleManager bleManager = BleManager(jsonCoder);
-SdCardManager sdCardManager = SdCardManager();
+SdCardStorage sdCardManager = SdCardStorage();
 
 WeatherRepository weatherRepository =
     WeatherRepository(restClient, jsonCoder, sdCardManager, dateTime);

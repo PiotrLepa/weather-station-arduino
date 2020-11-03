@@ -1,16 +1,16 @@
-#include "sd_card_manager.h"
+#include "sd_card_storage.h"
 
-SdCardManager::SdCardManager() {}
+SdCardStorage::SdCardStorage() {}
 
-bool SdCardManager::begin() { return SD.begin(); }
+bool SdCardStorage::begin() { return SD.begin(); }
 
-bool SdCardManager::createFileDirs(String path) {
+bool SdCardStorage::createFileDirs(String path) {
   int dirsEnd = path.lastIndexOf("/");
   Serial.println(path.substring(0, dirsEnd));
   return SD.mkdir(path.substring(0, dirsEnd));
 }
 
-void SdCardManager::write(String path, String value) {
+void SdCardStorage::write(String path, String value) {
   createFileDirs(path);
 
   File file = SD.open(path, FILE_WRITE);
@@ -18,7 +18,7 @@ void SdCardManager::write(String path, String value) {
   file.close();
 }
 
-String SdCardManager::readFromFile(File file) {
+String SdCardStorage::readFromFile(File file) {
   String value = "";
   while (file.available()) {
     value += (char)file.read();
@@ -26,7 +26,7 @@ String SdCardManager::readFromFile(File file) {
   return value;
 }
 
-std::vector<String> SdCardManager::readAllInDirectory(String path) {
+std::vector<String> SdCardStorage::readAllInDirectory(String path) {
   File dir = SD.open(path, FILE_READ);
   dir.rewindDirectory();
 
@@ -46,4 +46,4 @@ std::vector<String> SdCardManager::readAllInDirectory(String path) {
   return filesData;
 }
 
-bool SdCardManager::remove(String path) { return SD.remove(path); }
+bool SdCardStorage::remove(String path) { return SD.remove(path); }

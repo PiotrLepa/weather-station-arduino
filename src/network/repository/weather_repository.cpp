@@ -1,11 +1,11 @@
 #include "weather_repository.h"
 
 WeatherRepository::WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder,
-                                     SdCardManager& _sdCardManager,
+                                     SdCardStorage& _sdCardStorage,
                                      DateTime& _dateTime)
     : client(_client),
       jsonCoder(_jsonCoder),
-      sdCardManager(_sdCardManager),
+      sdCardStorage(_sdCardStorage),
       dateTime(_dateTime) {}
 
 bool WeatherRepository::sendWeatherData(WeatherModel weather) {
@@ -24,15 +24,16 @@ void WeatherRepository::cacheWeather(WeatherModel weather) {
   String timestamp = dateTime.now();
   if (timestamp == "") return;
 
-  CachedWeatherModel cachedWeatherModel = CachedWeatherModel(weather, timestamp);
+  CachedWeatherModel cachedWeatherModel =
+      CachedWeatherModel(weather, timestamp);
   String fileName = CACHED_WEATHERS_PATH + "/" + String(millis()) + TXT_EXT;
   String json = jsonCoder.encodeCachedWeatherModel(cachedWeatherModel);
-  sdCardManager.write(fileName, json);
+  sdCardStorage.write(fileName, json);
 }
 
 void WeatherRepository::sendCachedWeathers() {
   std::vector<String> jsonModels =
-      sdCardManager.readAllInDirectory(CACHED_WEATHERS_PATH);
+      sdCardStorage.readAllInDirectory(CACHED_WEATHERS_PATH);
 
   if (jsonModels.size() == 0) return;
 
@@ -45,6 +46,6 @@ void WeatherRepository::sendCachedWeathers() {
 
   int resultCode = client.post("/weather/cached", resultJson);
   if (resultCode == 201) {
-    sdCardManager.remove(CACHED_WEATHERS_PATH);
+    sdCardStorage.remove(CACHED_WEATHERS_PATH);
   }
 }

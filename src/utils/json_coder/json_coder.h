@@ -4,10 +4,10 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
-#include "../model/cached_weather/cached_weather_model.h"
-#include "../model/weather/weather_model.h"
-#include "../model/wifi/wifi_model.h"
-#include "../model/wifi_credentials/wifi_credentials_model.h"
+#include "../../model/cached_weather/cached_weather_model.h"
+#include "../../model/weather/weather_model.h"
+#include "../../model/wifi/wifi_model.h"
+#include "../../model/wifi_credentials/wifi_credentials_model.h"
 
 class JsonCoder {
  public:
