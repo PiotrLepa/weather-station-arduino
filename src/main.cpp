@@ -57,9 +57,6 @@ void loop() {
 }
 
 void begin() {
-  while (!Serial)
-    ;
-
   sdCardStorage.begin();
   eepromStorage.begin();
   tempReader.begin();
@@ -78,7 +75,7 @@ void startSensors() {
 
 void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
-  if (credentialsJson != "") {
+  if (credentialsJson != NULL) {
     connectToWifiAndSetupOnSuccess(credentialsJson, false);
   }
 }

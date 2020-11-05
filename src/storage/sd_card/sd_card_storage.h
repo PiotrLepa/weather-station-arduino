@@ -15,7 +15,7 @@ class SdCardStorage {
   void write(String path, String value);
   String readFromFile(File file);
   std::vector<String> readAllInDirectory(String path);
-  bool remove(String path);
+  void removeAllInDirectory(String path);
 };
 
 #endif

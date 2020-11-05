@@ -62,6 +62,17 @@ String JsonCoder::encodeWifiNameList(std::vector<WifiModel> models) {
   return json;
 }
 
+String JsonCoder::encodeCachedWeathersList(std::vector<String> jsonModels) {
+  String resultJson = "[";
+  for (String json : jsonModels) {
+    resultJson += json + ",";
+  }
+  resultJson.remove(resultJson.length() - 1);  // remove last ','
+  resultJson += "]";
+
+  return resultJson;
+}
+
 WifiCredentialsModel JsonCoder::decodeWifiCredentials(String json) {
   StaticJsonDocument<128> doc;
   deserializeJson(doc, json);

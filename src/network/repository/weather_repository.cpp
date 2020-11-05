@@ -16,6 +16,17 @@ bool WeatherRepository::sendWeatherData(WeatherModel weather) {
   }
 }
 
+void WeatherRepository::sendCachedWeathers() {
+  std::vector<String> jsonModels = sdCardStorage.readAllInDirectory(CACHED_WEATHERS_PATH);
+  if (jsonModels.size() == 0) return;
+
+  String resultJson = jsonCoder.encodeCachedWeathersList(jsonModels);
+  int resultCode = client.post("/weather/cached", resultJson);
+  if (resultCode == 201) {
+    sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
+  }
+}
+
 void WeatherRepository::cacheWeather(WeatherModel weather) {
   String timestamp = dateTime.now();
   if (timestamp == "") return;
@@ -24,22 +35,4 @@ void WeatherRepository::cacheWeather(WeatherModel weather) {
   String fileName = CACHED_WEATHERS_PATH + "/" + String(millis()) + TXT_EXT;
   String json = jsonCoder.encodeCachedWeatherModel(cachedWeatherModel);
   sdCardStorage.write(fileName, json);
-}
-
-void WeatherRepository::sendCachedWeathers() {
-  std::vector<String> jsonModels = sdCardStorage.readAllInDirectory(CACHED_WEATHERS_PATH);
-
-  if (jsonModels.size() == 0) return;
-
-  String resultJson = "[";
-  for (String json : jsonModels) {
-    resultJson += json + ",";
-  }
-  resultJson.remove(resultJson.length());
-  resultJson += "]";
-
-  int resultCode = client.post("/weather/cached", resultJson);
-  if (resultCode == 201) {
-    sdCardStorage.remove(CACHED_WEATHERS_PATH);
-  }
 }
