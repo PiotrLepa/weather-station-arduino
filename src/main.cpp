@@ -28,14 +28,7 @@ class MyBleCallbacks : public BleCallbacks {
   }
 
   ConnectionResult connectToWifi(String credentialsJson) {
-    WifiCredentialsModel credentials = jsonCoder.decodeWifiCredentials(credentialsJson);
-    ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password);
-    if (result == CONNECTED) {
-      eepromStorage.write(credentialsJson, WIFI_CREDENTIALS_ADDRESS);
-      serverRequestTimer.start();
-      dateTime.begin();
-    }
-    return result;
+    return connectToWifiAndSetupOnSuccess(credentialsJson, true);
   }
 };
 
@@ -86,13 +79,21 @@ void startSensors() {
 void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
   if (credentialsJson != "") {
-    WifiCredentialsModel credentials = jsonCoder.decodeWifiCredentials(credentialsJson);
-    ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password);
-    if (result == CONNECTED) {
-      serverRequestTimer.start();
-      dateTime.begin();
+    connectToWifiAndSetupOnSuccess(credentialsJson, false);
+  }
+}
+
+ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials) {
+  WifiCredentialsModel credentials = jsonCoder.decodeWifiCredentials(credentialsJson);
+  ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password);
+  if (result == CONNECTED) {
+    serverRequestTimer.start();
+    dateTime.begin();
+    if (saveCredentials) {
+      eepromStorage.write(credentialsJson, WIFI_CREDENTIALS_ADDRESS);
     }
   }
+  return result;
 }
 
 void gatherWeatherData() {
