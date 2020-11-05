@@ -5,8 +5,7 @@ struct RainGaugeModel {
   float amountOfPrecipitation;
   bool hasError;
 
-  RainGaugeModel(float _amountOfPrecipitation)
-      : amountOfPrecipitation(_amountOfPrecipitation), hasError(false) {}
+  RainGaugeModel(float _amountOfPrecipitation) : amountOfPrecipitation(_amountOfPrecipitation), hasError(false) {}
 
   RainGaugeModel() : amountOfPrecipitation(-1), hasError(true) {}
 

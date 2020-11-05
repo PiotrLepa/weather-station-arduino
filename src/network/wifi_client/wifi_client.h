@@ -5,7 +5,7 @@
 
 #include <list>
 
-#include "../model/wifi/wifi_model.h"
+#include "../../model/wifi/wifi_model.h"
 
 enum ConnectionResult { CONNECTED, ERROR };
 

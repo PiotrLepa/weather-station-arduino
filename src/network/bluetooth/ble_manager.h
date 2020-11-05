@@ -10,8 +10,8 @@
 
 #include <list>
 
-#include "../json_coder/json_coder.h"
-#include "../model/wifi/wifi_model.h"
+#include "../../model/wifi/wifi_model.h"
+#include "../../utils/json_coder/json_coder.h"
 #include "../wifi_client/wifi_client.h"
 #include "ble_callbacks.h"
 
@@ -19,10 +19,9 @@
 #define SERVICE_UUID "a386aa2b-ce06-460c-bd02-9743997288b2"
 #define SCAN_WIFI_CHARACTERISTIC "53ce635f-255d-4cdb-9ece-dc8ba92180aa"
 #define WIFI_LIST_CHARACTERISTIC "db7a9839-79a5-455f-a213-736f25691050"
-#define CONNECT_TO_WIFI_RESULT_CHARACTERISTIC \
-  "e5b9a6f3-2d49-447b-a924-b2d116ca8e3f"
+#define CONNECT_TO_WIFI_RESULT_CHARACTERISTIC "e5b9a6f3-2d49-447b-a924-b2d116ca8e3f"
 
-#define DISCONNECT_DELAY 1200000 // 2 min
+#define DISCONNECT_DELAY 1200000  // 2 min
 
 #define PART_SIZE 500
 

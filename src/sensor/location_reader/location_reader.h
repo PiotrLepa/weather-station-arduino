@@ -1,5 +1,6 @@
 #ifndef LOCATION_READER_H
 #define LOCATION_READER_H
+
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
 

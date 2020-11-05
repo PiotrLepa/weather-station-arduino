@@ -19,8 +19,7 @@ class RestClient {
  private:
   String baseUrl;
 
-  int sendRequest(String method, String path, const char* body,
-                  String* response);
+  int sendRequest(String method, String path, const char* body, String* response);
 };
 
 #endif

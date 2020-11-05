@@ -12,6 +12,7 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
       Serial.println(WiFi.localIP());
 
       result = CONNECTED;
+      break;
     } else {
       delay(500);
       Serial.print(".");
@@ -29,13 +30,11 @@ std::vector<WifiModel> WifiClient::scanWifi() {
     WifiModel wifi = getWifiInfo(i);
     wifiList.push_back(wifi);
   }
-
   return wifiList;
 }
 
 WifiModel WifiClient::getWifiInfo(int index) {
-  return WifiModel(WiFi.SSID(index), mapEncryption(WiFi.encryptionType(index)),
-                   WiFi.RSSI(index));
+  return WifiModel(WiFi.SSID(index), mapEncryption(WiFi.encryptionType(index)), WiFi.RSSI(index));
 }
 
 WifiEncryption WifiClient::mapEncryption(wifi_auth_mode_t auth) {
