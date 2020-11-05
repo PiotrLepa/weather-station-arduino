@@ -72,25 +72,14 @@ WifiCredentialsModel JsonCoder::decodeWifiCredentials(String json) {
 }
 
 double JsonCoder::formatTemperature(TemperatureModel temp1, PressureModel temp2) {
-  double resultTemp = 0;
-  int tempReadCounter = 0;
   if (!temp1.hasError) {
-    resultTemp += temp1.temperature;
-    tempReadCounter++;
-  }
-  if (!temp2.hasError) {
-    resultTemp += temp2.temperature;
-    tempReadCounter++;
-  }
-
-  if (tempReadCounter == 0) {
-    return NAN;
-  } else {
-    resultTemp /= tempReadCounter;
-
     // round to 2 decimal point
-    int temp = round(resultTemp * 100);
-    return temp / 100;
+    return round(temp1.temperature * 100) / 100;
+  } else if (!temp2.hasError) {
+    // round to 2 decimal point
+    return round(temp2.temperature * 100) / 100;
+  } else {
+    return NAN;
   }
 }
 
