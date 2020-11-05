@@ -36,8 +36,7 @@ class WifiListCallbacks : public BLECharacteristicCallbacks {
     instance->restartDisconnectTimer();
 
     std::string json = characteristic->getValue();
-    ConnectionResult result =
-        bleManager->callbacks->connectToWifi(json.c_str());
+    ConnectionResult result = bleManager->callbacks->connectToWifi(json.c_str());
     bleManager->sendConnectToWifiResult(result);
   }
 
@@ -67,8 +66,7 @@ class WifiListCallbacks : public BLECharacteristicCallbacks {
 
 void onDisconnect() { instance->disconnect(); }
 
-BleManager::BleManager(JsonCoder _jsonCoder)
-    : jsonCoder(_jsonCoder), disconnectTimer(onDisconnect, DISCONNECT_DELAY) {
+BleManager::BleManager(JsonCoder _jsonCoder) : jsonCoder(_jsonCoder), disconnectTimer(onDisconnect, DISCONNECT_DELAY) {
   instance = this;
 }
 
@@ -105,25 +103,23 @@ void BleManager::disconnect() {
 }
 
 void BleManager::setupScanWifiCharacteristic(BLEService *service) {
-  BLECharacteristic *characteristic = service->createCharacteristic(
-      SCAN_WIFI_CHARACTERISTIC, BLECharacteristic::PROPERTY_READ);
+  BLECharacteristic *characteristic =
+      service->createCharacteristic(SCAN_WIFI_CHARACTERISTIC, BLECharacteristic::PROPERTY_READ);
   characteristic->setCallbacks(new ScanWifiCallbacks(this));
   characteristic->addDescriptor(new BLE2902());
 }
 
 void BleManager::setupWifiListCharacteristic(BLEService *service) {
   wifiListCharacteristic = service->createCharacteristic(
-      WIFI_LIST_CHARACTERISTIC, BLECharacteristic::PROPERTY_NOTIFY |
-                                    BLECharacteristic::PROPERTY_READ |
-                                    BLECharacteristic::PROPERTY_WRITE);
+      WIFI_LIST_CHARACTERISTIC,
+      BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
   wifiListCharacteristic->setCallbacks(new WifiListCallbacks(this));
   wifiListCharacteristic->addDescriptor(new BLE2902());
 }
 
 void BleManager::setupConnectToWifiResultCharacteristic(BLEService *service) {
   connectToWifiResultCharacteristic =
-      service->createCharacteristic(CONNECT_TO_WIFI_RESULT_CHARACTERISTIC,
-                                    BLECharacteristic::PROPERTY_NOTIFY);
+      service->createCharacteristic(CONNECT_TO_WIFI_RESULT_CHARACTERISTIC, BLECharacteristic::PROPERTY_NOTIFY);
   connectToWifiResultCharacteristic->addDescriptor(new BLE2902());
 }
 

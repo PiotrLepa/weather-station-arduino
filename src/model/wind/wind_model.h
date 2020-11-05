@@ -7,9 +7,7 @@ struct WindModel {
   bool hasError;
 
   WindModel(float _windSpeedMax, float _windSpeedAvg)
-      : windSpeedMax(_windSpeedMax),
-        windSpeedAvg(_windSpeedAvg),
-        hasError(false) {}
+      : windSpeedMax(_windSpeedMax), windSpeedAvg(_windSpeedAvg), hasError(false) {}
 
   WindModel() : windSpeedMax(-1), windSpeedAvg(-1), hasError(true) {}
 

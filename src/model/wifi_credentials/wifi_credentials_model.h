@@ -7,8 +7,7 @@ struct WifiCredentialsModel {
   String name;
   String password;
 
-  WifiCredentialsModel(String _name, String _password)
-      : name(_name), password(_password) {}
+  WifiCredentialsModel(String _name, String _password) : name(_name), password(_password) {}
 };
 
 #endif

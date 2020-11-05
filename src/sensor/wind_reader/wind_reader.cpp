@@ -30,8 +30,7 @@ void WindReader::startReading() {
   errorMessage = "No errors";
 
   timer.start();
-  attachInterrupt(digitalPinToInterrupt(windSensorPin),
-                  handleWindSendorPinInterrupt, RISING);
+  attachInterrupt(digitalPinToInterrupt(windSensorPin), handleWindSendorPinInterrupt, RISING);
 }
 
 void WindReader::stopReading() {
@@ -69,13 +68,11 @@ void WindReader::updateWindSpeed() {
 }
 
 float WindReader::calculateWindSpeed() {
-  return (float)rotations / (float)SINGE_MEASURE_SECONDS *
-         ROTATION_TO_WIND_SPEED_CONST;
+  return (float)rotations / (float)SINGE_MEASURE_SECONDS * ROTATION_TO_WIND_SPEED_CONST;
 }
 
 WindModel WindReader::getData() {
-  float sum = std::accumulate(windSpeeds.begin(), windSpeeds.end(),
-                              decltype(windSpeeds)::value_type(0));
+  float sum = std::accumulate(windSpeeds.begin(), windSpeeds.end(), decltype(windSpeeds)::value_type(0));
   return WindModel(windSpeedMax, sum / measurementCounter);
 }
 

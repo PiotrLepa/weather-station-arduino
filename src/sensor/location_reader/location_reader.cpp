@@ -1,7 +1,6 @@
 #include "location_reader.h"
 
-LocationReader::LocationReader(uint8_t rxPin, uint8_t txPin)
-    : readModel(-1, -1), errorMessage("No errors") {
+LocationReader::LocationReader(uint8_t rxPin, uint8_t txPin) : readModel(-1, -1), errorMessage("No errors") {
   gpsSerial = new SoftwareSerial(rxPin, txPin);
 }
 

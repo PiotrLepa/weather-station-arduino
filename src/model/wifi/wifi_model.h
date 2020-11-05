@@ -25,8 +25,7 @@ struct WifiModel {
   WifiEncryption encryption;
   int rssi;
 
-  WifiModel(String _name, WifiEncryption _encryption, int _rssi)
-      : name(_name), encryption(_encryption), rssi(_rssi) {}
+  WifiModel(String _name, WifiEncryption _encryption, int _rssi) : name(_name), encryption(_encryption), rssi(_rssi) {}
 };
 
 #endif

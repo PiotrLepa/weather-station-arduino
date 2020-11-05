@@ -2,9 +2,7 @@
 
 RainGaugeReader* rainGaugeReaderInstance = NULL;
 
-void ICACHE_RAM_ATTR handleRainGaugePinInterrupt() {
-  rainGaugeReaderInstance->countTips();
-}
+void ICACHE_RAM_ATTR handleRainGaugePinInterrupt() { rainGaugeReaderInstance->countTips(); }
 
 RainGaugeReader::RainGaugeReader(uint8_t _rainGaugeSensorPin)
     : rainGaugeSensorPin(_rainGaugeSensorPin),
@@ -22,13 +20,10 @@ void RainGaugeReader::startReading() {
   tips = 0;
   errorMessage = "No errors";
 
-  attachInterrupt(digitalPinToInterrupt(rainGaugeSensorPin),
-                  handleRainGaugePinInterrupt, RISING);
+  attachInterrupt(digitalPinToInterrupt(rainGaugeSensorPin), handleRainGaugePinInterrupt, RISING);
 }
 
-void RainGaugeReader::stopReading() {
-  detachInterrupt(digitalPinToInterrupt(rainGaugeSensorPin));
-}
+void RainGaugeReader::stopReading() { detachInterrupt(digitalPinToInterrupt(rainGaugeSensorPin)); }
 
 void ICACHE_RAM_ATTR RainGaugeReader::countTips() {
   if ((millis() - bounceTime) > ROTATION_DEBOUNCE_TIME) {
@@ -37,8 +32,6 @@ void ICACHE_RAM_ATTR RainGaugeReader::countTips() {
   }
 }
 
-RainGaugeModel RainGaugeReader::getData() {
-  return RainGaugeModel(tips * ML_FOR_TIP);
-}
+RainGaugeModel RainGaugeReader::getData() { return RainGaugeModel(tips * ML_FOR_TIP); }
 
 String RainGaugeReader::getErrorMessage() { return errorMessage; }

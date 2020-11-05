@@ -14,14 +14,9 @@ struct WeatherModel {
   WindModel wind;
   RainGaugeModel rainGauge;
 
-  WeatherModel(TemperatureModel _temperature, PressureModel _pressure,
-               AirQualityModel _airQuality, WindModel _wind,
+  WeatherModel(TemperatureModel _temperature, PressureModel _pressure, AirQualityModel _airQuality, WindModel _wind,
                RainGaugeModel _rainGauge)
-      : temperature(_temperature),
-        pressure(_pressure),
-        airQuality(_airQuality),
-        wind(_wind),
-        rainGauge(_rainGauge) {}
+      : temperature(_temperature), pressure(_pressure), airQuality(_airQuality), wind(_wind), rainGauge(_rainGauge) {}
 };
 
 #endif
