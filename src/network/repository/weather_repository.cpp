@@ -10,7 +10,7 @@ WeatherRepository::WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder,
 
 bool WeatherRepository::sendWeatherData(WeatherModel weather) {
   String json = jsonCoder.encodeWeatherModel(weather);
-  int resultCode = client.post("/weather/current", json);
+  int resultCode = client.post("/weather", json);
   if (resultCode == 201) {
     sendCachedWeathers();
     return true;

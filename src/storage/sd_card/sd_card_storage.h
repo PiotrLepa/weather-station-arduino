@@ -10,16 +10,12 @@ const String CACHED_WEATHERS_PATH = "/cached_weathers";
 
 class SdCardStorage {
  public:
-  SdCardStorage();
-
   bool begin();
   bool createFileDirs(String path);
   void write(String path, String value);
   String readFromFile(File file);
   std::vector<String> readAllInDirectory(String path);
   bool remove(String path);
-
- private:
 };
 
 #endif

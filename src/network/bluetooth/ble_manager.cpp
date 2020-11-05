@@ -36,9 +36,8 @@ class WifiListCallbacks : public BLECharacteristicCallbacks {
     instance->restartDisconnectTimer();
 
     std::string json = characteristic->getValue();
-    WifiCredentialsModel credentials =
-        bleManager->jsonCoder.decodeWifiCredentials(json.c_str());
-    ConnectionResult result = bleManager->callbacks->connectToWifi(credentials);
+    ConnectionResult result =
+        bleManager->callbacks->connectToWifi(json.c_str());
     bleManager->sendConnectToWifiResult(result);
   }
 

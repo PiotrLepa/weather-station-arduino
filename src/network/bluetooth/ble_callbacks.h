@@ -7,7 +7,7 @@
 class BleCallbacks {
  public:
   virtual void scanAvailablesWifi();
-  virtual ConnectionResult connectToWifi(WifiCredentialsModel credentials);
+  virtual ConnectionResult connectToWifi(String credentialsJson);
 };
 
 #endif

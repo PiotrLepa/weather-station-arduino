@@ -1,7 +1,5 @@
 #include "sd_card_storage.h"
 
-SdCardStorage::SdCardStorage() {}
-
 bool SdCardStorage::begin() { return SD.begin(); }
 
 bool SdCardStorage::createFileDirs(String path) {

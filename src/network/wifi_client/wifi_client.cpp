@@ -12,12 +12,13 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
       Serial.println(WiFi.localIP());
 
       result = CONNECTED;
+      break;
     } else {
       delay(500);
       Serial.print(".");
     }
   }
-
+  
   return result;
 }
 

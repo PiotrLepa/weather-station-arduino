@@ -22,6 +22,7 @@
 #include "sensor/rain_gauge/rain_gauge_reader.h"
 #include "sensor/temperature_reader/temperature_reader.h"
 #include "sensor/wind_reader/wind_reader.h"
+#include "storage/eeprom/eeprom_storage.h"
 #include "storage/sd_card/sd_card_storage.h"
 #include "utils/date_time/date_time.h"
 #include "utils/json_coder/json_coder.h"
@@ -41,6 +42,7 @@ void setup();
 void loop();
 void begin();
 void startSensors();
+void connectToWifiIfCredentialsAreSaved();
 void gatherWeatherData();
 void scanAndSendWifiList();
 void sendWeatherDataToServer(TemperatureModel temperature,

@@ -6,10 +6,11 @@ RestClient restClient = RestClient(API_URL);
 JsonCoder jsonCoder = JsonCoder();
 
 BleManager bleManager = BleManager(jsonCoder);
-SdCardStorage sdCardManager = SdCardStorage();
+SdCardStorage sdCardStorage = SdCardStorage();
+EepromStorage eepromStorage = EepromStorage();
 
 WeatherRepository weatherRepository =
-    WeatherRepository(restClient, jsonCoder, sdCardManager, dateTime);
+    WeatherRepository(restClient, jsonCoder, sdCardStorage, dateTime);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
@@ -28,10 +29,13 @@ class MyBleCallbacks : public BleCallbacks {
     startScanWifiTimer.start();
   }
 
-  ConnectionResult connectToWifi(WifiCredentialsModel credentials) {
+  ConnectionResult connectToWifi(String credentialsJson) {
+    WifiCredentialsModel credentials =
+        jsonCoder.decodeWifiCredentials(credentialsJson);
     ConnectionResult result =
         wifiClient.connectToWifi(credentials.name, credentials.password);
     if (result == CONNECTED) {
+      eepromStorage.write(credentialsJson, WIFI_CREDENTIALS_ADDRESS);
       serverRequestTimer.start();
       dateTime.begin();
     }
@@ -47,12 +51,11 @@ void scanAndSendWifiList() {
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Setup");
-
   while (!Serial)
     ;
 
   begin();
+  connectToWifiIfCredentialsAreSaved();
   startSensors();
 }
 
@@ -68,7 +71,8 @@ void begin() {
   while (!Serial)
     ;
 
-  sdCardManager.begin();
+  sdCardStorage.begin();
+  eepromStorage.begin();
   tempReader.begin();
   pressureReader.begin();
   airQualityReader.begin();
@@ -81,6 +85,20 @@ void begin() {
 void startSensors() {
   windReader.startReading();
   rainGaugeReader.startReading();
+}
+
+void connectToWifiIfCredentialsAreSaved() {
+  String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
+  if (credentialsJson != "") {
+    WifiCredentialsModel credentials =
+        jsonCoder.decodeWifiCredentials(credentialsJson);
+    ConnectionResult result =
+        wifiClient.connectToWifi(credentials.name, credentials.password);
+    if (result == CONNECTED) {
+      serverRequestTimer.start();
+      dateTime.begin();
+    }
+  }
 }
 
 void gatherWeatherData() {
