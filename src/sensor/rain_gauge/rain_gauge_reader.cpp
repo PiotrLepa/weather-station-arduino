@@ -29,9 +29,6 @@ void ICACHE_RAM_ATTR RainGaugeReader::countTips() {
     tips++;
     bounceTime = millis();
     handleRainDetector();
-
-    Serial.print("Tips: ");
-    Serial.println(tips);
   }
 }
 

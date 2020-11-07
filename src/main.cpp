@@ -78,7 +78,7 @@ void startSensors() {
 void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
   if (credentialsJson != NULL) {
-    // connectToWifiAndSetupOnSuccess(credentialsJson, false);
+    connectToWifiAndSetupOnSuccess(credentialsJson, false);
   }
 }
 
