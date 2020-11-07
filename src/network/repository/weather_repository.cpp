@@ -1,8 +1,7 @@
 #include "weather_repository.h"
 
-WeatherRepository::WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage,
-                                     DateTime& _dateTime)
-    : client(_client), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage), dateTime(_dateTime) {}
+WeatherRepository::WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
+    : client(_client), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
 
 bool WeatherRepository::sendWeatherData(WeatherModel weather) {
   String json = jsonCoder.encodeWeatherModel(weather);
@@ -28,11 +27,11 @@ void WeatherRepository::sendCachedWeathers() {
 }
 
 void WeatherRepository::cacheWeather(WeatherModel weather) {
-  String timestamp = dateTime.now();
-  if (timestamp == "") return;
+  DateTime dateTime = DateTime::now();
+  if (dateTime.getSecondsFromEpoch() == -1) return;
 
-  CachedWeatherModel cachedWeatherModel = CachedWeatherModel(weather, timestamp);
-  String fileName = CACHED_WEATHERS_PATH + "/" + String(millis()) + TXT_EXT;
+  CachedWeatherModel cachedWeatherModel = CachedWeatherModel(weather, dateTime.getFormattedDate());
+  String fileName = CACHED_WEATHERS_PATH + "/" + String(dateTime.getSecondsFromEpoch()) + TXT_EXT;
   String json = jsonCoder.encodeCachedWeatherModel(cachedWeatherModel);
   sdCardStorage.write(fileName, json);
 }

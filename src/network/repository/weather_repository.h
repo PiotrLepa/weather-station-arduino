@@ -10,7 +10,7 @@
 
 class WeatherRepository {
  public:
-  WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage, DateTime& _dateTime);
+  WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage);
 
   bool sendWeatherData(WeatherModel weather);
 
@@ -18,7 +18,6 @@ class WeatherRepository {
   RestClient& client;
   JsonCoder& jsonCoder;
   SdCardStorage& sdCardStorage;
-  DateTime& dateTime;
 
   void cacheWeather(WeatherModel weather);
   void sendCachedWeathers();

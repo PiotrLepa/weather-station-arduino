@@ -1,6 +1,5 @@
 #include "main.h"
 
-DateTime dateTime = DateTime();
 WifiClient wifiClient = WifiClient();
 RestClient restClient = RestClient(API_URL);
 JsonCoder jsonCoder = JsonCoder();
@@ -9,7 +8,7 @@ BleManager bleManager = BleManager(jsonCoder);
 SdCardStorage sdCardStorage = SdCardStorage();
 EepromStorage eepromStorage = EepromStorage();
 
-WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, sdCardStorage, dateTime);
+WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, sdCardStorage);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
@@ -45,6 +44,7 @@ void setup() {
 
   begin();
   connectToWifiIfCredentialsAreSaved();
+  rainGaugeReader.setRainDetectedCallback(onRainDetected);
   startSensors();
 }
 
@@ -68,6 +68,8 @@ void begin() {
   bleManager.begin(new MyBleCallbacks());
 }
 
+void onRainDetected() { Serial.println("onRainDetected"); }
+
 void startSensors() {
   windReader.startReading();
   rainGaugeReader.startReading();
@@ -76,7 +78,7 @@ void startSensors() {
 void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
   if (credentialsJson != NULL) {
-    connectToWifiAndSetupOnSuccess(credentialsJson, false);
+    // connectToWifiAndSetupOnSuccess(credentialsJson, false);
   }
 }
 
@@ -85,7 +87,7 @@ ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool sav
   ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password);
   if (result == CONNECTED) {
     serverRequestTimer.start();
-    dateTime.begin();
+    DateTime::begin();
     if (saveCredentials) {
       eepromStorage.write(credentialsJson, WIFI_CREDENTIALS_ADDRESS);
     }

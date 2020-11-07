@@ -34,14 +34,15 @@
 #define GPS_SENSOR_RX_PIN 12
 #define GPS_SENSOR_TX_PIN 14
 
-#define SERVER_REQUEST_DELAY 10000
-// #define SERVER_REQUEST_DELAY 1000000
+// #define SERVER_REQUEST_DELAY 10000
+#define SERVER_REQUEST_DELAY 1000000
 #define START_SCAN_WIFI_DELAY 2000
 
 void setup();
 void loop();
 void begin();
 void startSensors();
+void onRainDetected();
 void connectToWifiIfCredentialsAreSaved();
 ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials);
 void gatherWeatherData();

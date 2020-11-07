@@ -10,11 +10,20 @@
 
 class DateTime {
  public:
-  void begin();
-  String now();
+  static void begin();
+  static DateTime now();
+
+  long getSecondsFromEpoch();
+  String getFormattedDate();
 
  private:
-  String formatNumber(int number);
+  static bool isInitialized;
+
+  long secondsFromEpoch;
+  String formattedDate;
+
+  DateTime(long _secondsFromEpoch, String _formattedDate);
+  static String formatNumber(int number);
 };
 
 #endif
