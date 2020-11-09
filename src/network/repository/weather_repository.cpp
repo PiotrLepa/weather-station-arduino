@@ -15,6 +15,15 @@ bool WeatherRepository::sendWeatherData(WeatherModel weather) {
   }
 }
 
+bool WeatherRepository::sendRainDetected() {
+  int resultCode = client.post("/weather/rain-detected");
+  if (resultCode == 200) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 void WeatherRepository::sendCachedWeathers() {
   std::vector<String> jsonModels = sdCardStorage.readAllInDirectory(CACHED_WEATHERS_PATH);
   if (jsonModels.size() == 0) return;

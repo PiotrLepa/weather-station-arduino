@@ -68,7 +68,7 @@ void begin() {
   bleManager.begin(new MyBleCallbacks());
 }
 
-void onRainDetected() { Serial.println("onRainDetected"); }
+void onRainDetected() { weatherRepository.sendRainDetected(); }
 
 void startSensors() {
   windReader.startReading();

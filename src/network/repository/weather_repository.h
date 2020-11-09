@@ -13,6 +13,7 @@ class WeatherRepository {
   WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage);
 
   bool sendWeatherData(WeatherModel weather);
+  bool sendRainDetected();
 
  private:
   RestClient& client;

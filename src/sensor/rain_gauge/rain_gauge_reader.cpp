@@ -24,7 +24,7 @@ void RainGaugeReader::startReading() {
 
 void RainGaugeReader::stopReading() { detachInterrupt(digitalPinToInterrupt(rainGaugeSensorPin)); }
 
-void ICACHE_RAM_ATTR RainGaugeReader::countTips() {
+void RainGaugeReader::countTips() {
   if ((millis() - bounceTime) > ROTATION_DEBOUNCE_TIME) {
     tips++;
     bounceTime = millis();
