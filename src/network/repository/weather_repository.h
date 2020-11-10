@@ -1,6 +1,8 @@
 #ifndef WEATHER_REPOSITORY_H
 #define WEATHER_REPOSITORY_H
 
+#include <HTTPClient.h>
+
 #include "../../model/cached_weather/cached_weather_model.h"
 #include "../../model/weather/weather_model.h"
 #include "../../storage/sd_card/sd_card_storage.h"

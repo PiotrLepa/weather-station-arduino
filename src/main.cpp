@@ -20,6 +20,8 @@ LocationReader locationReader = LocationReader(GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_
 Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
 Ticker startScanWifiTimer = Ticker(scanAndSendWifiList, START_SCAN_WIFI_DELAY);
 
+bool sendRainDetectedRequest = false;
+
 class MyBleCallbacks : public BleCallbacks {
   void scanAvailablesWifi() {
     // give client some time to start observe ble notifications
@@ -31,6 +33,13 @@ class MyBleCallbacks : public BleCallbacks {
   }
 };
 
+class MyRainGaugeCallbacks : public RainGaugeCallbacks {
+  void rainDetected() {
+    // Do not call weatherRepository.sendRainDetected() here. HttpClient will return an error.
+    sendRainDetectedRequest = true;
+  }
+};
+
 void scanAndSendWifiList() {
   startScanWifiTimer.stop();
   std::vector<WifiModel> wifiList = wifiClient.scanWifi();
@@ -38,13 +47,8 @@ void scanAndSendWifiList() {
 }
 
 void setup() {
-  Serial.begin(9600);
-  while (!Serial)
-    ;
-
   begin();
   connectToWifiIfCredentialsAreSaved();
-  rainGaugeReader.setRainDetectedCallback(onRainDetected);
   startSensors();
 }
 
@@ -54,9 +58,11 @@ void loop() {
   locationReader.update();
   startScanWifiTimer.update();
   bleManager.update();
+  checkIfRainHasBeenDetected();
 }
 
 void begin() {
+  Serial.begin(9600);
   sdCardStorage.begin();
   eepromStorage.begin();
   tempReader.begin();
@@ -64,11 +70,10 @@ void begin() {
   airQualityReader.begin();
   windReader.begin();
   rainGaugeReader.begin();
+  rainGaugeReader.setCallback(new MyRainGaugeCallbacks());
   locationReader.begin();
   bleManager.begin(new MyBleCallbacks());
 }
-
-void onRainDetected() { weatherRepository.sendRainDetected(); }
 
 void startSensors() {
   windReader.startReading();
@@ -93,6 +98,13 @@ ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool sav
     }
   }
   return result;
+}
+
+void checkIfRainHasBeenDetected() {
+  if (sendRainDetectedRequest) {
+    sendRainDetectedRequest = false;
+    weatherRepository.sendRainDetected();
+  }
 }
 
 void gatherWeatherData() {

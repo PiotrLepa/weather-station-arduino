@@ -4,7 +4,6 @@ bool SdCardStorage::begin() { return SD.begin(); }
 
 bool SdCardStorage::createFileDirs(String path) {
   int dirsEnd = path.lastIndexOf("/");
-  Serial.println(path.substring(0, dirsEnd));
   return SD.mkdir(path.substring(0, dirsEnd));
 }
 

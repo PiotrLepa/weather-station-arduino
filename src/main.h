@@ -19,6 +19,7 @@
 #include "sensor/air_quality_reader/air_quality_reader.h"
 #include "sensor/location_reader/location_reader.h"
 #include "sensor/pressure_reader/pressure_reader.h"
+#include "sensor/rain_gauge/rain_gauge_callbacks.h"
 #include "sensor/rain_gauge/rain_gauge_reader.h"
 #include "sensor/temperature_reader/temperature_reader.h"
 #include "sensor/wind_reader/wind_reader.h"
@@ -40,9 +41,9 @@ void setup();
 void loop();
 void begin();
 void startSensors();
-void onRainDetected();
 void connectToWifiIfCredentialsAreSaved();
 ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials);
+void checkIfRainHasBeenDetected();
 void gatherWeatherData();
 void scanAndSendWifiList();
 void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,

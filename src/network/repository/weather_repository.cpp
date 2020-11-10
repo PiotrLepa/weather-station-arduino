@@ -6,7 +6,7 @@ WeatherRepository::WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder,
 bool WeatherRepository::sendWeatherData(WeatherModel weather) {
   String json = jsonCoder.encodeWeatherModel(weather);
   int resultCode = client.post("/weather", json);
-  if (resultCode == 201) {
+  if (resultCode == HTTP_CODE_CREATED) {
     sendCachedWeathers();
     return true;
   } else {
@@ -16,8 +16,9 @@ bool WeatherRepository::sendWeatherData(WeatherModel weather) {
 }
 
 bool WeatherRepository::sendRainDetected() {
+  delay(2000);
   int resultCode = client.post("/weather/rain-detected");
-  if (resultCode == 200) {
+  if (resultCode == HTTP_CODE_OK) {
     return true;
   } else {
     return false;
@@ -30,7 +31,7 @@ void WeatherRepository::sendCachedWeathers() {
 
   String resultJson = jsonCoder.encodeCachedWeathersList(jsonModels);
   int resultCode = client.post("/weather/cached", resultJson);
-  if (resultCode == 201) {
+  if (resultCode == HTTP_CODE_CREATED) {
     sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
   }
 }

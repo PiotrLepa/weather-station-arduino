@@ -13,6 +13,7 @@
 #include "../../model/rain_gauge/rain_gauge_model.h"
 #include "../../utils/date_time/date_time.h"
 #include "../continuous_sensor_reader.h"
+#include "rain_gauge_callbacks.h"
 
 class RainGaugeReader : public ContinuousSensorReader<RainGaugeModel> {
  public:
@@ -23,14 +24,14 @@ class RainGaugeReader : public ContinuousSensorReader<RainGaugeModel> {
   void stopReading() override;
   RainGaugeModel getData() override;
   String getErrorMessage() override;
-  void setRainDetectedCallback(void (*callback)());
+  void setCallback(RainGaugeCallbacks* callback);
 
   void ICACHE_RAM_ATTR countTips();
 
  private:
   uint8_t rainGaugeSensorPin;
   long rainDetectorLastTriggerTime;
-  void (*rainDetectedCallback)();
+  RainGaugeCallbacks* callback;
 
   int tips;
   unsigned long bounceTime;

@@ -2,7 +2,7 @@
 
 RainGaugeReader* rainGaugeReaderInstance = NULL;
 
-void ICACHE_RAM_ATTR handleRainGaugePinInterrupt() { rainGaugeReaderInstance->countTips(); }
+void handleRainGaugePinInterrupt() { rainGaugeReaderInstance->countTips(); }
 
 RainGaugeReader::RainGaugeReader(uint8_t _rainGaugeSensorPin)
     : rainGaugeSensorPin(_rainGaugeSensorPin),
@@ -36,13 +36,13 @@ RainGaugeModel RainGaugeReader::getData() { return RainGaugeModel(tips * ML_FOR_
 
 String RainGaugeReader::getErrorMessage() { return errorMessage; }
 
-void RainGaugeReader::setRainDetectedCallback(void (*callback)()) { rainDetectedCallback = callback; }
+void RainGaugeReader::setCallback(RainGaugeCallbacks* _callback) { callback = _callback; }
 
 void RainGaugeReader::handleRainDetector() {
   long now = DateTime::now().getSecondsFromEpoch();
   if (now == -1) return;
   if (rainDetectorLastTriggerTime == 0 || now - rainDetectorLastTriggerTime >= RAIN_DETECTOR_DELAY_SECONDS) {
     rainDetectorLastTriggerTime = now;
-    rainDetectedCallback();
+    callback->rainDetected();
   }
 }
