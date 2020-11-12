@@ -4,6 +4,8 @@ RestClient::RestClient(String _baseUrl) { baseUrl = _baseUrl; }
 
 int RestClient::get(String path, String* response) { return sendRequest("GET", path, NULL, response); }
 
+int RestClient::post(String path) { return sendRequest("POST", path, NULL, NULL); }
+
 int RestClient::post(String path, String body) { return sendRequest("POST", path, body.c_str(), NULL); }
 
 int RestClient::post(String path, String body, String* response) {

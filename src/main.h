@@ -19,6 +19,7 @@
 #include "sensor/air_quality_reader/air_quality_reader.h"
 #include "sensor/location_reader/location_reader.h"
 #include "sensor/pressure_reader/pressure_reader.h"
+#include "sensor/rain_gauge/rain_gauge_callbacks.h"
 #include "sensor/rain_gauge/rain_gauge_reader.h"
 #include "sensor/temperature_reader/temperature_reader.h"
 #include "sensor/wind_reader/wind_reader.h"
@@ -29,13 +30,11 @@
 
 #define TEMPERATURE_SENSOR_PIN 32
 #define WIND_SENSOR_PIN 13
-// #define RAIN_GAUGE_SENSOR_PIN 23
-#define RAIN_GAUGE_SENSOR_PIN 4  // check if this pin works
+#define RAIN_GAUGE_SENSOR_PIN 4
 #define GPS_SENSOR_RX_PIN 12
 #define GPS_SENSOR_TX_PIN 14
 
-#define SERVER_REQUEST_DELAY 10000
-// #define SERVER_REQUEST_DELAY 1000000
+#define SERVER_REQUEST_DELAY 300000 // 5 minutes
 #define START_SCAN_WIFI_DELAY 2000
 
 void setup();
@@ -44,6 +43,7 @@ void begin();
 void startSensors();
 void connectToWifiIfCredentialsAreSaved();
 ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials);
+void checkIfRainHasBeenDetected();
 void gatherWeatherData();
 void scanAndSendWifiList();
 void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,

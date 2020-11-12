@@ -1,6 +1,5 @@
 #include "main.h"
 
-DateTime dateTime = DateTime();
 WifiClient wifiClient = WifiClient();
 RestClient restClient = RestClient(API_URL);
 JsonCoder jsonCoder = JsonCoder();
@@ -9,7 +8,7 @@ BleManager bleManager = BleManager(jsonCoder);
 SdCardStorage sdCardStorage = SdCardStorage();
 EepromStorage eepromStorage = EepromStorage();
 
-WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, sdCardStorage, dateTime);
+WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, sdCardStorage);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
@@ -20,6 +19,8 @@ LocationReader locationReader = LocationReader(GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_
 
 Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
 Ticker startScanWifiTimer = Ticker(scanAndSendWifiList, START_SCAN_WIFI_DELAY);
+
+bool sendRainDetectedRequest = false;
 
 class MyBleCallbacks : public BleCallbacks {
   void scanAvailablesWifi() {
@@ -32,6 +33,13 @@ class MyBleCallbacks : public BleCallbacks {
   }
 };
 
+class MyRainGaugeCallbacks : public RainGaugeCallbacks {
+  void rainDetected() {
+    // Do not call weatherRepository.sendRainDetected() here. HttpClient will return an error.
+    sendRainDetectedRequest = true;
+  }
+};
+
 void scanAndSendWifiList() {
   startScanWifiTimer.stop();
   std::vector<WifiModel> wifiList = wifiClient.scanWifi();
@@ -39,10 +47,6 @@ void scanAndSendWifiList() {
 }
 
 void setup() {
-  Serial.begin(9600);
-  while (!Serial)
-    ;
-
   begin();
   connectToWifiIfCredentialsAreSaved();
   startSensors();
@@ -54,12 +58,11 @@ void loop() {
   locationReader.update();
   startScanWifiTimer.update();
   bleManager.update();
+  checkIfRainHasBeenDetected();
 }
 
 void begin() {
-  while (!Serial)
-    ;
-
+  Serial.begin(9600);
   sdCardStorage.begin();
   eepromStorage.begin();
   tempReader.begin();
@@ -67,6 +70,7 @@ void begin() {
   airQualityReader.begin();
   windReader.begin();
   rainGaugeReader.begin();
+  rainGaugeReader.setCallback(new MyRainGaugeCallbacks());
   locationReader.begin();
   bleManager.begin(new MyBleCallbacks());
 }
@@ -78,7 +82,7 @@ void startSensors() {
 
 void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
-  if (credentialsJson != "") {
+  if (credentialsJson != NULL) {
     connectToWifiAndSetupOnSuccess(credentialsJson, false);
   }
 }
@@ -88,12 +92,19 @@ ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool sav
   ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password);
   if (result == CONNECTED) {
     serverRequestTimer.start();
-    dateTime.begin();
+    DateTime::begin();
     if (saveCredentials) {
       eepromStorage.write(credentialsJson, WIFI_CREDENTIALS_ADDRESS);
     }
   }
   return result;
+}
+
+void checkIfRainHasBeenDetected() {
+  if (sendRainDetectedRequest) {
+    sendRainDetectedRequest = false;
+    weatherRepository.sendRainDetected();
+  }
 }
 
 void gatherWeatherData() {

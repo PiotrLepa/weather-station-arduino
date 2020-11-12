@@ -4,7 +4,6 @@ bool SdCardStorage::begin() { return SD.begin(); }
 
 bool SdCardStorage::createFileDirs(String path) {
   int dirsEnd = path.lastIndexOf("/");
-  Serial.println(path.substring(0, dirsEnd));
   return SD.mkdir(path.substring(0, dirsEnd));
 }
 
@@ -35,13 +34,29 @@ std::vector<String> SdCardStorage::readAllInDirectory(String path) {
       // no more files
       break;
     }
-
     filesData.push_back(readFromFile(file));
-
     file.close();
   }
 
   return filesData;
 }
 
-bool SdCardStorage::remove(String path) { return SD.remove(path); }
+void SdCardStorage::removeAllInDirectory(String path) {
+  File dir = SD.open(path, FILE_READ);
+  dir.rewindDirectory();
+
+  std::vector<String> fileNames;
+  while (true) {
+    File file = dir.openNextFile();
+    if (!file) {
+      // no more files
+      break;
+    }
+    fileNames.push_back(file.name());
+    file.close();
+  }
+
+  for (String name : fileNames) {
+    SD.remove(name);
+  }
+}

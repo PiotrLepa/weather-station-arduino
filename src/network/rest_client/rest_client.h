@@ -10,6 +10,7 @@ class RestClient {
 
   int get(String path, String* response);
 
+  int post(String path);
   int post(String path, String body);
   int post(String path, String body, String* response);
 

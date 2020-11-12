@@ -19,6 +19,8 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
     }
   }
 
+  Serial.println();
+
   return result;
 }
 
