@@ -20,6 +20,7 @@ bool LocationReader::read() {
     errorMessage = "Failed to read from GPS sensor!";
     return false;
   }
+
   readModel = LocationModel(location.lat(), location.lng());
   return true;
 }
