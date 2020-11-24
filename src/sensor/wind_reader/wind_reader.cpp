@@ -2,9 +2,7 @@
 
 WindReader* windReaderInstance = NULL;
 
-void handleWindSendorPinInterrupt() {
-  windReaderInstance->countRotations();
-}
+void handleWindSendorPinInterrupt() { windReaderInstance->countRotations(); }
 
 void calculate() { windReaderInstance->updateWindSpeed(); }
 
@@ -24,7 +22,7 @@ void WindReader::begin() {}
 void WindReader::startReading() {
   status = ACTIVE;
   measurementCounter = 0;
-  windSpeedMax = -1;
+  windSpeedMax = 0;
   rotations = 0;
   windSpeeds.clear();
   errorMessage = "No errors";
