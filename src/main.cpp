@@ -24,7 +24,7 @@ bool sendRainDetectedRequest = false;
 
 class MyBleCallbacks : public BleCallbacks {
   void scanAvailablesWifi() {
-    // give client some time to start observe ble notifications
+    // Give client some time to start observe ble notifications
     startScanWifiTimer.start();
   }
 
@@ -63,6 +63,7 @@ void loop() {
 
 void begin() {
   Serial.begin(9600);
+  wifiClient.begin();
   sdCardStorage.begin();
   eepromStorage.begin();
   tempReader.begin();
@@ -83,6 +84,7 @@ void startSensors() {
 void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
   if (credentialsJson != NULL) {
+    delay(5000);
     connectToWifiAndSetupOnSuccess(credentialsJson, false);
   }
 }

@@ -1,9 +1,23 @@
 #include "wifi_client.h"
 
+void WifiClient::begin() {
+  WiFi.disconnect(true);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+  delay(1000);
+}
+
 ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
   Serial.println("Connecting to WiFi");
 
-  WiFi.begin(ssid.c_str(), password.c_str());
+  WiFi.disconnect(true);
+  delay(1000);
+
+  if (password == "null") {
+    WiFi.begin(ssid.c_str());
+  } else {
+    WiFi.begin(ssid.c_str(), password.c_str());
+  }
 
   ConnectionResult result = ERROR;
   for (int i = 0; i < 5; i++) {

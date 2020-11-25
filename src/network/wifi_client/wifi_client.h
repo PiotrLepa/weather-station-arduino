@@ -11,6 +11,7 @@ enum ConnectionResult { CONNECTED, ERROR };
 
 class WifiClient {
  public:
+  void begin();
   ConnectionResult connectToWifi(String ssid, String password);
   std::vector<WifiModel> scanWifi();
 
