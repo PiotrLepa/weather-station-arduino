@@ -34,8 +34,7 @@
 #define GPS_SENSOR_TX_PIN 12
 #define GPS_SENSOR_RX_PIN 14
 
-// #define SERVER_REQUEST_DELAY 300000  // 5 minutes
-#define SERVER_REQUEST_DELAY 30000
+#define SERVER_REQUEST_DELAY 300000  // 5 minutes
 #define START_SCAN_WIFI_DELAY 2000
 
 void setup();

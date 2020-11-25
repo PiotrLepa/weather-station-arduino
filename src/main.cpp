@@ -15,7 +15,7 @@ PressureReader pressureReader = PressureReader();
 AirQualityReader airQualityReader = AirQualityReader(Serial);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
-LocationReader locationReader = LocationReader(GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_PIN);
+LocationReader locationReader = LocationReader(GPS_SENSOR_TX_PIN, GPS_SENSOR_RX_PIN);
 
 Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
 Ticker startScanWifiTimer = Ticker(scanAndSendWifiList, START_SCAN_WIFI_DELAY);
