@@ -144,13 +144,13 @@ void gatherWeatherData() {
   WindModel windModel = windReader.getData();
   RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
 
-  sendWeatherDataToServer(temperatureModel, pressureModel, airQualityModel, windModel, rainGaugeModel);
+  sendWeatherDataToServer(temperatureModel, pressureModel, airQualityModel, windModel, rainGaugeModel, locationModel);
 
   startSensors();
 }
 
 void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,
-                             WindModel wind, RainGaugeModel rainGauge) {
-  WeatherModel model = WeatherModel(temperature, pressureModel, airQuality, wind, rainGauge);
+                             WindModel wind, RainGaugeModel rainGauge, LocationModel location) {
+  WeatherModel model = WeatherModel(temperature, pressureModel, airQuality, wind, rainGauge, location);
   weatherRepository.sendWeatherData(model);
 }

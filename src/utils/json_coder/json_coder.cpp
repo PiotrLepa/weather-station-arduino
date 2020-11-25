@@ -12,6 +12,8 @@ String JsonCoder::encodeWeatherModel(WeatherModel model) {
   doc["windSpeedMax"] = model.wind.hasError ? NAN : formatToOneDecimalPoint(model.wind.windSpeedMax);
   doc["windSpeedAvg"] = model.wind.hasError ? NAN : formatToOneDecimalPoint(model.wind.windSpeedAvg);
   doc["rainGauge"] = model.rainGauge.hasError ? NAN : formatToOneDecimalPoint(model.rainGauge.amountOfPrecipitation);
+  doc["latitude"] = model.location.hasError ? NAN : model.location.latitude;
+  doc["longitude"] = model.location.hasError ? NAN : model.location.longitude;
 
   printJson(doc);
   String json;
@@ -35,6 +37,8 @@ String JsonCoder::encodeCachedWeatherModel(CachedWeatherModel model) {
   weather["windSpeedAvg"] = weatherModel.wind.hasError ? NAN : formatToOneDecimalPoint(weatherModel.wind.windSpeedAvg);
   weather["rainGauge"] =
       weatherModel.rainGauge.hasError ? NAN : formatToOneDecimalPoint(weatherModel.rainGauge.amountOfPrecipitation);
+  doc["latitude"] = weatherModel.location.hasError ? NAN : weatherModel.location.latitude;
+  doc["longitude"] = weatherModel.location.hasError ? NAN : weatherModel.location.longitude;
 
   doc["timestamp"] = model.timestamp;
   printJson(doc);
