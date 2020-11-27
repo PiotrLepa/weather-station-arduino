@@ -4,7 +4,7 @@ LocationReader::LocationReader(uint8_t rxPin, uint8_t txPin) : readModel(-1, -1)
   gpsSerial = new SoftwareSerial(rxPin, txPin);
 }
 
-void LocationReader::begin() { gpsSerial->begin(4800); }
+void LocationReader::begin() { gpsSerial->begin(9600); }
 
 void LocationReader::update() {
   while (gpsSerial->available()) {
