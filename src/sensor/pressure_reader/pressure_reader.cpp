@@ -6,7 +6,7 @@ void PressureReader::begin() { bme.begin(BME280_ADDRESS_ALTERNATE); }
 
 bool PressureReader::read() {
   float temperature = bme.readTemperature();
-  float pressure = bme.readPressure();
+  float pressure = bme.readPressure() / 100;
 
   if (pressure == 0 || isnan(pressure) || isnan(temperature) || temperature < -100) {
     readModel = PressureModel::error();
