@@ -21,7 +21,8 @@ class JsonCoder {
   void printJson(JsonDocument &source);
   void printJson(JsonArray &source);
   double formatToOneDecimalPoint(double value);
-  double formatTemperature(TemperatureModel temp1, PressureModel temp2);
+  double formatTemperature(TemperatureModel model1, PressureModel model2);
+  double formatHumidity(TemperatureModel model1, PressureModel model2);
 };
 
 #endif
