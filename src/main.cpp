@@ -47,21 +47,6 @@ void scanAndSendWifiList() {
 }
 
 void setup() {
-  begin();
-  connectToWifiIfCredentialsAreSaved();
-  startSensors();
-}
-
-void loop() {
-  serverRequestTimer.update();
-  windReader.update();
-  locationReader.update();
-  startScanWifiTimer.update();
-  bleManager.update();
-  checkIfRainHasBeenDetected();
-}
-
-void begin() {
   Serial.begin(9600);
   wifiClient.begin();
   sdCardStorage.begin();
@@ -72,8 +57,22 @@ void begin() {
   windReader.begin();
   rainGaugeReader.begin();
   rainGaugeReader.setCallback(new MyRainGaugeCallbacks());
-  locationReader.begin();
   bleManager.begin(new MyBleCallbacks());
+  connectToWifiIfCredentialsAreSaved();
+
+  // Have to be called last
+  locationReader.begin();
+
+  startSensors();
+}
+
+void loop() {
+  serverRequestTimer.update();
+  windReader.update();
+  startScanWifiTimer.update();
+  bleManager.update();
+  locationReader.update();
+  checkIfRainHasBeenDetected();
 }
 
 void startSensors() {
@@ -84,7 +83,6 @@ void startSensors() {
 void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
   if (credentialsJson != NULL) {
-    delay(5000);
     connectToWifiAndSetupOnSuccess(credentialsJson, false);
   }
 }

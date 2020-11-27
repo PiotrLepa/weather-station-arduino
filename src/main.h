@@ -39,14 +39,16 @@
 
 void setup();
 void loop();
-void begin();
 void startSensors();
 void connectToWifiIfCredentialsAreSaved();
-ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials);
+ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson,
+                                                bool saveCredentials);
 void checkIfRainHasBeenDetected();
 void gatherWeatherData();
 void scanAndSendWifiList();
-void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,
-                             WindModel wind, RainGaugeModel rainGauge, LocationModel location);
+void sendWeatherDataToServer(TemperatureModel temperature,
+                             PressureModel pressureModel,
+                             AirQualityModel airQuality, WindModel wind,
+                             RainGaugeModel rainGauge, LocationModel location);
 
 #endif
