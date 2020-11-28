@@ -18,6 +18,7 @@ class WifiClient {
  private:
   WifiModel getWifiInfo(int index);
   WifiEncryption mapEncryption(wifi_auth_mode_t auth);
+  void restartWifi();
 };
 
 #endif

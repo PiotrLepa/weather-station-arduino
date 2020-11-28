@@ -1,17 +1,11 @@
 #include "wifi_client.h"
 
-void WifiClient::begin() {
-  WiFi.disconnect(true);
-  delay(1000);
-  WiFi.mode(WIFI_STA);
-  delay(1000);
-}
+void WifiClient::begin() { restartWifi(); }
 
 ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
   Serial.println("Connecting to WiFi");
 
-  WiFi.disconnect(true);
-  delay(1000);
+  restartWifi();
 
   if (password == "null") {
     WiFi.begin(ssid.c_str());
@@ -39,10 +33,12 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
 }
 
 std::vector<WifiModel> WifiClient::scanWifi() {
-  int n = WiFi.scanNetworks();
+  restartWifi();
+
+  int numberOfWifi = WiFi.scanNetworks();
 
   std::vector<WifiModel> wifiList;
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < numberOfWifi; i++) {
     WifiModel wifi = getWifiInfo(i);
     wifiList.push_back(wifi);
   }
@@ -51,6 +47,13 @@ std::vector<WifiModel> WifiClient::scanWifi() {
 
 WifiModel WifiClient::getWifiInfo(int index) {
   return WifiModel(WiFi.SSID(index), mapEncryption(WiFi.encryptionType(index)), WiFi.RSSI(index));
+}
+
+void WifiClient::restartWifi() {
+  WiFi.disconnect(true);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+  delay(1000);
 }
 
 WifiEncryption WifiClient::mapEncryption(wifi_auth_mode_t auth) {
