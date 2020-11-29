@@ -150,5 +150,9 @@ void gatherWeatherData() {
 void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,
                              WindModel wind, RainGaugeModel rainGauge, LocationModel location) {
   WeatherModel model = WeatherModel(temperature, pressureModel, airQuality, wind, rainGauge, location);
-  weatherRepository.sendWeatherData(model);
+  if (model.canBeSendToServer()) {
+    weatherRepository.sendWeatherData(model);
+  } else {
+    Serial.println("Weather model is incorrect");
+  }
 }

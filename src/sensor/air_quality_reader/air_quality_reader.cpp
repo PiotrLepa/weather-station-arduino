@@ -1,19 +1,28 @@
 #include "air_quality_reader.h"
 
-AirQualityReader::AirQualityReader(HardwareSerial &serial)
-    : pms(PMSx003, serial) {}
+AirQualityReader::AirQualityReader(HardwareSerial &serial) : pms(PMSx003, serial) {}
 
 void AirQualityReader::begin() { pms.init(); }
 
 bool AirQualityReader::read() {
   pms.read();
+
+  if (pms.pm10 == 0) {
+    // Try read the data again
+    pms.read();
+    if (pms.pm10 == 0) {
+      return false;
+    }
+  }
+
   return pms;
 }
 
 AirQualityModel AirQualityReader::getData() {
-  if (pms.pm25 == -1) {
+  if (pms.pm10 == -1 || pms.pm10 == 0) {
     return AirQualityModel::error();
   }
+
   return AirQualityModel(pms.pm01, pms.pm25, pms.pm10);
 }
 
