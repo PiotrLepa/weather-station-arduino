@@ -33,8 +33,9 @@
 #define RAIN_GAUGE_SENSOR_PIN 4
 #define GPS_SENSOR_TX_PIN 12
 #define GPS_SENSOR_RX_PIN 14
+#define PMS_MODE_CONTROL_PIN 2
 
-#define SERVER_REQUEST_DELAY 300000  // 5 minutes
+#define SERVER_REQUEST_DELAY 300000 - PMS_WAKE_UP_MILLIS  // 5 minutes
 #define START_SCAN_WIFI_DELAY 2000
 
 void setup();
@@ -43,8 +44,9 @@ void startSensors();
 void connectToWifiIfCredentialsAreSaved();
 ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials);
 void checkIfRainHasBeenDetected();
-void gatherWeatherData();
+void collectWeatherData();
 void scanAndSendWifiList();
+void wakeUpSensors();
 void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,
                              WindModel wind, RainGaugeModel rainGauge, LocationModel location);
 

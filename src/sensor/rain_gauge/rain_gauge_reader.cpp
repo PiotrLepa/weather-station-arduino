@@ -18,7 +18,6 @@ void RainGaugeReader::begin() {}
 void RainGaugeReader::startReading() {
   tips = 0;
   errorMessage = "No errors";
-
   attachInterrupt(digitalPinToInterrupt(rainGaugeSensorPin), handleRainGaugePinInterrupt, RISING);
 }
 

@@ -1,12 +1,17 @@
 #include "air_quality_reader.h"
 
-AirQualityReader::AirQualityReader(HardwareSerial &serial) : pms(PMSx003, serial) {}
+AirQualityReader::AirQualityReader(HardwareSerial &serial, uint8_t _pmsModePin) : pms(PMSx003, serial) {
+  pmsModePin = _pmsModePin;
+  pinMode(pmsModePin, OUTPUT);
+}
 
-void AirQualityReader::begin() { pms.init(); }
+void AirQualityReader::begin() {
+  pms.init();
+  sleep();
+}
 
 bool AirQualityReader::read() {
   pms.read();
-
   if (pms.pm10 == 0) {
     // Try read the data again
     pms.read();
@@ -50,3 +55,7 @@ String AirQualityReader::getErrorMessage() {
       return "No errors";
   }
 }
+
+void AirQualityReader::wakeUp() { digitalWrite(pmsModePin, HIGH); }
+
+void AirQualityReader::sleep() { digitalWrite(pmsModePin, LOW); }

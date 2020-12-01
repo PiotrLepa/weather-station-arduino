@@ -12,12 +12,13 @@ WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, s
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
-AirQualityReader airQualityReader = AirQualityReader(Serial);
+AirQualityReader airQualityReader = AirQualityReader(Serial, PMS_MODE_CONTROL_PIN);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 LocationReader locationReader = LocationReader(GPS_SENSOR_TX_PIN, GPS_SENSOR_RX_PIN);
 
-Ticker serverRequestTimer = Ticker(gatherWeatherData, SERVER_REQUEST_DELAY);
+Ticker serverRequestTimer = Ticker(wakeUpSensors, SERVER_REQUEST_DELAY);
+Ticker wakeUpSensorsTimer = Ticker(collectWeatherData, PMS_WAKE_UP_MILLIS);
 Ticker startScanWifiTimer = Ticker(scanAndSendWifiList, START_SCAN_WIFI_DELAY);
 
 bool sendRainDetectedRequest = false;
@@ -68,8 +69,9 @@ void setup() {
 
 void loop() {
   serverRequestTimer.update();
-  windReader.update();
   startScanWifiTimer.update();
+  wakeUpSensorsTimer.update();
+  windReader.update();
   bleManager.update();
   locationReader.update();
   checkIfRainHasBeenDetected();
@@ -107,7 +109,15 @@ void checkIfRainHasBeenDetected() {
   }
 }
 
-void gatherWeatherData() {
+void wakeUpSensors() {
+  airQualityReader.wakeUp();
+
+  wakeUpSensorsTimer.start();
+}
+
+void collectWeatherData() {
+  wakeUpSensorsTimer.stop();
+
   windReader.stopReading();
   rainGaugeReader.stopReading();
 
@@ -144,6 +154,7 @@ void gatherWeatherData() {
 
   sendWeatherDataToServer(temperatureModel, pressureModel, airQualityModel, windModel, rainGaugeModel, locationModel);
 
+  airQualityReader.sleep();
   startSensors();
 }
 
