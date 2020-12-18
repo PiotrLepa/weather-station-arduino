@@ -42,7 +42,7 @@ void setup();
 void loop();
 void startSensors();
 void connectToWifiIfCredentialsAreSaved();
-ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials);
+ConnectionResult IRAM_ATTR connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials);
 void checkIfRainHasBeenDetected();
 void collectWeatherData();
 void scanAndSendWifiList();

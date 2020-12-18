@@ -89,7 +89,7 @@ void connectToWifiIfCredentialsAreSaved() {
   }
 }
 
-ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials) {
+ConnectionResult IRAM_ATTR connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials) {
   WifiCredentialsModel credentials = jsonCoder.decodeWifiCredentials(credentialsJson);
   ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password);
   if (result == CONNECTED) {

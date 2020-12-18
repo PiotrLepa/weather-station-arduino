@@ -5,8 +5,6 @@ void WifiClient::begin() { restartWifi(); }
 ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
   Serial.println("Connecting to WiFi");
 
-  restartWifi();
-
   if (password == "null") {
     WiFi.begin(ssid.c_str());
   } else {
