@@ -13,9 +13,9 @@ WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, s
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
 AirQualityReader airQualityReader = AirQualityReader(Serial, PMS_MODE_CONTROL_PIN);
+LocationReader locationReader = LocationReader(Serial1, GPS_SENSOR_RX_PIN, GPS_SENSOR_TX_PIN);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
-LocationReader locationReader = LocationReader(GPS_SENSOR_TX_PIN, GPS_SENSOR_RX_PIN);
 
 Ticker serverRequestTimer = Ticker(wakeUpSensors, SERVER_REQUEST_DELAY);
 Ticker wakeUpSensorsTimer = Ticker(collectWeatherData, PMS_WAKE_UP_MILLIS);
@@ -55,14 +55,12 @@ void setup() {
   tempReader.begin();
   pressureReader.begin();
   airQualityReader.begin();
+  locationReader.begin();
   windReader.begin();
   rainGaugeReader.begin();
   rainGaugeReader.setCallback(new MyRainGaugeCallbacks());
   bleManager.begin(new MyBleCallbacks());
   connectToWifiIfCredentialsAreSaved();
-
-  // Have to be called last
-  locationReader.begin();
 
   startSensors();
 }
@@ -85,13 +83,13 @@ void startSensors() {
 void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
   if (credentialsJson != NULL) {
-    connectToWifiAndSetupOnSuccess(credentialsJson, false);
+    connectToWifiAndSetupOnSuccess(credentialsJson, false, 50);
   }
 }
 
-ConnectionResult IRAM_ATTR connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials) {
+ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials, int tries) {
   WifiCredentialsModel credentials = jsonCoder.decodeWifiCredentials(credentialsJson);
-  ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password);
+  ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password, tries);
   if (result == CONNECTED) {
     serverRequestTimer.start();
     DateTime::begin();

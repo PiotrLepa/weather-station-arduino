@@ -2,7 +2,7 @@
 
 void WifiClient::begin() { restartWifi(); }
 
-ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
+ConnectionResult WifiClient::connectToWifi(String ssid, String password, int tries) {
   Serial.println("Connecting to WiFi");
 
   if (password == "null") {
@@ -12,7 +12,7 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password) {
   }
 
   ConnectionResult result = ERROR;
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < tries; i++) {
     if (WiFi.status() == WL_CONNECTED) {
       Serial.print("\nConnected! Ip address: ");
       Serial.println(WiFi.localIP());

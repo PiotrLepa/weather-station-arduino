@@ -1,7 +1,7 @@
 #ifndef LOCATION_READER_H
 #define LOCATION_READER_H
 
-#include <SoftwareSerial.h>
+#include <HardwareSerial.h>
 #include <TinyGPS++.h>
 
 #include "../../model/location/location_model.h"
@@ -9,7 +9,7 @@
 
 class LocationReader : public SensorReader<LocationModel> {
  public:
-  LocationReader(uint8_t rxPin, uint8_t txPin);
+  LocationReader(HardwareSerial& serial, uint8_t _gpsRxPin, uint8_t _gpsTxPin);
 
   void begin() override;
   bool read() override;
@@ -18,8 +18,10 @@ class LocationReader : public SensorReader<LocationModel> {
   void update();
 
  private:
+  uint8_t gpsRxPin;
+  uint8_t gpsTxPin;
+  HardwareSerial gpsSerial;
   TinyGPSPlus gps;
-  SoftwareSerial *gpsSerial;
   LocationModel readModel;
   String errorMessage;
 };

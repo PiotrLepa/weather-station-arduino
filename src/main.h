@@ -31,8 +31,8 @@
 #define TEMPERATURE_SENSOR_PIN 32
 #define WIND_SENSOR_PIN 13
 #define RAIN_GAUGE_SENSOR_PIN 4
-#define GPS_SENSOR_TX_PIN 12
-#define GPS_SENSOR_RX_PIN 14
+#define GPS_SENSOR_TX_PIN 16
+#define GPS_SENSOR_RX_PIN 17
 #define PMS_MODE_CONTROL_PIN 2
 
 #define SERVER_REQUEST_DELAY 300000 - PMS_WAKE_UP_MILLIS  // 5 minutes
@@ -42,7 +42,7 @@ void setup();
 void loop();
 void startSensors();
 void connectToWifiIfCredentialsAreSaved();
-ConnectionResult IRAM_ATTR connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials);
+ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials, int tries = 50);
 void checkIfRainHasBeenDetected();
 void collectWeatherData();
 void scanAndSendWifiList();

@@ -1,14 +1,13 @@
 #include "location_reader.h"
 
-LocationReader::LocationReader(uint8_t rxPin, uint8_t txPin) : readModel(-1, -1), errorMessage("No errors") {
-  gpsSerial = new SoftwareSerial(rxPin, txPin);
-}
+LocationReader::LocationReader(HardwareSerial& serial, uint8_t _gpsRxPin, uint8_t _gpsTxPin)
+    : gpsRxPin(_gpsRxPin), gpsTxPin(_gpsTxPin), gpsSerial(serial), readModel(-1, -1), errorMessage("No errors") {}
 
-void LocationReader::begin() { gpsSerial->begin(9600); }
+void LocationReader::begin() { gpsSerial.begin(9600, SERIAL_8N1, gpsTxPin, gpsRxPin); }
 
 void LocationReader::update() {
-  while (gpsSerial->available()) {
-    gps.encode(gpsSerial->read());
+  while (gpsSerial.available()) {
+    gps.encode(gpsSerial.read());
   }
 }
 
