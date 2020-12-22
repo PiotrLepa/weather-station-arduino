@@ -91,7 +91,7 @@ ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool sav
   WifiCredentialsModel credentials = jsonCoder.decodeWifiCredentials(credentialsJson);
   ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password, tries);
   if (result == CONNECTED) {
-    serverRequestTimer.start();
+    wakeUpSensorsTimer.start();
     DateTime::begin();
     if (saveCredentials) {
       eepromStorage.write(credentialsJson, WIFI_CREDENTIALS_ADDRESS);
