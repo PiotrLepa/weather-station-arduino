@@ -17,8 +17,8 @@ LocationReader locationReader = LocationReader(Serial1, GPS_SENSOR_RX_PIN, GPS_S
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 
-Ticker serverRequestTimer = Ticker(wakeUpSensors, SERVER_REQUEST_DELAY);
-Ticker wakeUpSensorsTimer = Ticker(collectWeatherData, PMS_WAKE_UP_MILLIS);
+Ticker wakeUpSensorsTimer = Ticker(wakeUpSensors, SERVER_REQUEST_DELAY);
+Ticker collectWeatherDataTimer = Ticker(collectWeatherData, PMS_WAKE_UP_MILLIS);
 Ticker startScanWifiTimer = Ticker(scanAndSendWifiList, START_SCAN_WIFI_DELAY);
 
 bool sendRainDetectedRequest = false;
@@ -49,6 +49,9 @@ void scanAndSendWifiList() {
 
 void setup() {
   Serial.begin(9600);
+
+  pinMode(WIFI_STATUS_PIN, OUTPUT);
+
   wifiClient.begin();
   sdCardStorage.begin();
   eepromStorage.begin();
@@ -60,15 +63,16 @@ void setup() {
   rainGaugeReader.begin();
   rainGaugeReader.setCallback(new MyRainGaugeCallbacks());
   bleManager.begin(new MyBleCallbacks());
+
   connectToWifiIfCredentialsAreSaved();
 
   startSensors();
 }
 
 void loop() {
-  serverRequestTimer.update();
   startScanWifiTimer.update();
   wakeUpSensorsTimer.update();
+  collectWeatherDataTimer.update();
   windReader.update();
   bleManager.update();
   locationReader.update();
@@ -91,11 +95,14 @@ ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool sav
   WifiCredentialsModel credentials = jsonCoder.decodeWifiCredentials(credentialsJson);
   ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password, tries);
   if (result == CONNECTED) {
+    digitalWrite(WIFI_STATUS_PIN, HIGH);
     wakeUpSensorsTimer.start();
     DateTime::begin();
     if (saveCredentials) {
       eepromStorage.write(credentialsJson, WIFI_CREDENTIALS_ADDRESS);
     }
+  } else {
+    digitalWrite(WIFI_STATUS_PIN, LOW);
   }
   return result;
 }
@@ -109,12 +116,12 @@ void checkIfRainHasBeenDetected() {
 
 void wakeUpSensors() {
   airQualityReader.wakeUp();
-
-  wakeUpSensorsTimer.start();
+  wakeUpSensorsTimer.stop();
+  collectWeatherDataTimer.start();
 }
 
 void collectWeatherData() {
-  wakeUpSensorsTimer.stop();
+  collectWeatherDataTimer.stop();
 
   windReader.stopReading();
   rainGaugeReader.stopReading();
@@ -154,6 +161,7 @@ void collectWeatherData() {
 
   airQualityReader.sleep();
   startSensors();
+  wakeUpSensorsTimer.start();
 }
 
 void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,
