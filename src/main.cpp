@@ -88,6 +88,8 @@ void connectToWifiIfCredentialsAreSaved() {
   String credentialsJson = eepromStorage.read(WIFI_CREDENTIALS_ADDRESS);
   if (credentialsJson != NULL) {
     connectToWifiAndSetupOnSuccess(credentialsJson, false, 50);
+  } else {
+    setWifiLed(false);
   }
 }
 
@@ -95,17 +97,19 @@ ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool sav
   WifiCredentialsModel credentials = jsonCoder.decodeWifiCredentials(credentialsJson);
   ConnectionResult result = wifiClient.connectToWifi(credentials.name, credentials.password, tries);
   if (result == CONNECTED) {
-    digitalWrite(WIFI_STATUS_PIN, HIGH);
+    setWifiLed(true);
     wakeUpSensorsTimer.start();
     DateTime::begin();
     if (saveCredentials) {
       eepromStorage.write(credentialsJson, WIFI_CREDENTIALS_ADDRESS);
     }
   } else {
-    digitalWrite(WIFI_STATUS_PIN, LOW);
+    setWifiLed(false);
   }
   return result;
 }
+
+void setWifiLed(bool isWifiEnabled) { digitalWrite(WIFI_STATUS_PIN, isWifiEnabled); }
 
 void checkIfRainHasBeenDetected() {
   if (sendRainDetectedRequest) {
@@ -168,6 +172,9 @@ void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressur
                              WindModel wind, RainGaugeModel rainGauge, LocationModel location) {
   WeatherModel model = WeatherModel(temperature, pressureModel, airQuality, wind, rainGauge, location);
   if (model.canBeSendToServer()) {
+    if (!wifiClient.isWifiConnected()) {
+      connectToWifiIfCredentialsAreSaved();
+    }
     weatherRepository.sendWeatherData(model);
   } else {
     Serial.println("Weather model is incorrect");

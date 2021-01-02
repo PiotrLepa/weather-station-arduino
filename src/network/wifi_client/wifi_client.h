@@ -14,6 +14,7 @@ class WifiClient {
   void begin();
   ConnectionResult connectToWifi(String ssid, String password, int tries = 5);
   std::vector<WifiModel> scanWifi();
+  bool isWifiConnected();
 
  private:
   WifiModel getWifiInfo(int index);

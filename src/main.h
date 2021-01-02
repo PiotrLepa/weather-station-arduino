@@ -44,6 +44,7 @@ void loop();
 void startSensors();
 void connectToWifiIfCredentialsAreSaved();
 ConnectionResult connectToWifiAndSetupOnSuccess(String credentialsJson, bool saveCredentials, int tries = 50);
+void setWifiLed(bool isWifiEnabled);
 void checkIfRainHasBeenDetected();
 void collectWeatherData();
 void scanAndSendWifiList();

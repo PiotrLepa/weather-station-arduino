@@ -47,6 +47,8 @@ WifiModel WifiClient::getWifiInfo(int index) {
   return WifiModel(WiFi.SSID(index), mapEncryption(WiFi.encryptionType(index)), WiFi.RSSI(index));
 }
 
+bool WifiClient::isWifiConnected() { return WiFi.status() == WL_CONNECTED; }
+
 void WifiClient::restartWifi() {
   WiFi.disconnect(true);
   delay(1000);
