@@ -3,7 +3,8 @@
 
 #define ROTATION_DEBOUNCE_TIME 15
 #define ML_FOR_TIP 2.5
-#define RAIN_DETECTOR_DELAY_SECONDS 3600
+// #define RAIN_DETECTOR_DELAY_SECONDS 1800
+#define RAIN_DETECTOR_DELAY_SECONDS 120
 
 #include <Arduino.h>
 #include <Ticker.h>
@@ -30,7 +31,7 @@ class RainGaugeReader : public ContinuousSensorReader<RainGaugeModel> {
 
  private:
   uint8_t rainGaugeSensorPin;
-  long rainDetectorLastTriggerTime;
+  long lastRainfallTime;
   RainGaugeCallbacks* callback;
 
   int tips;

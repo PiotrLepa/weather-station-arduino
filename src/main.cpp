@@ -43,6 +43,7 @@ class MyRainGaugeCallbacks : public RainGaugeCallbacks {
 
 void scanAndSendWifiList() {
   startScanWifiTimer.stop();
+  setWifiLed(false);
   std::vector<WifiModel> wifiList = wifiClient.scanWifi();
   bleManager.sendWifiList(wifiList);
 }
