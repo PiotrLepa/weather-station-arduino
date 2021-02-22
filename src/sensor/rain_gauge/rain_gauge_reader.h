@@ -3,8 +3,7 @@
 
 #define ROTATION_DEBOUNCE_TIME 15
 #define ML_FOR_TIP 2.5
-// #define RAIN_DETECTOR_DELAY_SECONDS 1800
-#define RAIN_DETECTOR_DELAY_SECONDS 120
+#define RAIN_DETECTOR_DELAY_SECONDS 1800
 
 #include <Arduino.h>
 #include <Ticker.h>
