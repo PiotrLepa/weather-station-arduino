@@ -16,7 +16,7 @@ DateTime DateTime::now() {
     return DateTime(-1, "");
   }
 
-  String formatted = String(timeinfo.tm_year + 1900) + "-" + formatNumber(timeinfo.tm_mon) + "-" +
+  String formatted = String(timeinfo.tm_year + 1900) + "-" + formatNumber(timeinfo.tm_mon + 1) + "-" +
                      formatNumber(timeinfo.tm_mday) + "T" + formatNumber(timeinfo.tm_hour) + ":" +
                      formatNumber(timeinfo.tm_min) + ":" + formatNumber(timeinfo.tm_sec) + ".000";
 

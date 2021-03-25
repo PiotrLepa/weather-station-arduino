@@ -30,7 +30,7 @@ class MyBleCallbacks : public BleCallbacks {
   }
 
   ConnectionResult connectToWifi(String credentialsJson) {
-    return connectToWifiAndSetupOnSuccess(credentialsJson, true);
+    return connectToWifiAndSetupOnSuccess(credentialsJson, true, 5);
   }
 };
 
@@ -43,6 +43,7 @@ class MyRainGaugeCallbacks : public RainGaugeCallbacks {
 
 void scanAndSendWifiList() {
   startScanWifiTimer.stop();
+  setWifiLed(false);
   std::vector<WifiModel> wifiList = wifiClient.scanWifi();
   bleManager.sendWifiList(wifiList);
 }
