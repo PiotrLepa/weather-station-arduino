@@ -5,7 +5,6 @@
 
 #include "config/config.h"
 #include "model/air_quality/air_quality_model.h"
-#include "model/location/location_model.h"
 #include "model/pressure/pressure_model.h"
 #include "model/rain_gauge/rain_gauge_model.h"
 #include "model/temperature/temperature_model.h"
@@ -17,7 +16,6 @@
 #include "network/rest_client/rest_client.h"
 #include "network/wifi_client/wifi_client.h"
 #include "sensor/air_quality_reader/air_quality_reader.h"
-#include "sensor/location_reader/location_reader.h"
 #include "sensor/pressure_reader/pressure_reader.h"
 #include "sensor/rain_gauge/rain_gauge_callbacks.h"
 #include "sensor/rain_gauge/rain_gauge_reader.h"
@@ -31,8 +29,6 @@
 #define TEMPERATURE_SENSOR_PIN 32
 #define WIND_SENSOR_PIN 13
 #define RAIN_GAUGE_SENSOR_PIN 4
-#define GPS_SENSOR_TX_PIN 16
-#define GPS_SENSOR_RX_PIN 17
 #define PMS_MODE_CONTROL_PIN 14
 #define WIFI_STATUS_PIN 2
 
@@ -50,6 +46,6 @@ void collectWeatherData();
 void scanAndSendWifiList();
 void wakeUpSensors();
 void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,
-                             WindModel wind, RainGaugeModel rainGauge, LocationModel location);
+                             WindModel wind, RainGaugeModel rainGauge);
 
 #endif
