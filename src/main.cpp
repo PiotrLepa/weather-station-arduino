@@ -11,6 +11,7 @@ EepromStorage eepromStorage = EepromStorage();
 WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, sdCardStorage);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
+ExternalTemperatureReader externalTempReader = ExternalTemperatureReader(EXTERNAL_TEMPERATURE_SENSOR_PIN);
 PressureReader pressureReader = PressureReader();
 AirQualityReader airQualityReader = AirQualityReader(Serial, PMS_MODE_CONTROL_PIN);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
@@ -56,6 +57,7 @@ void setup() {
   sdCardStorage.begin();
   eepromStorage.begin();
   tempReader.begin();
+  externalTempReader.begin();
   pressureReader.begin();
   airQualityReader.begin();
   windReader.begin();
@@ -135,6 +137,13 @@ void collectWeatherData() {
     Serial.println(tempReader.getErrorMessage());
   }
 
+  ExternalTemperatureModel externalTemperatureModel;
+  if (tempReader.read()) {
+    externalTemperatureModel = externalTempReader.getData();
+  } else {
+    Serial.println(externalTempReader.getErrorMessage());
+  }
+
   PressureModel pressureModel;
   if (pressureReader.read()) {
     pressureModel = pressureReader.getData();
@@ -152,16 +161,18 @@ void collectWeatherData() {
   WindModel windModel = windReader.getData();
   RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
 
-  sendWeatherDataToServer(temperatureModel, pressureModel, airQualityModel, windModel, rainGaugeModel);
+  sendWeatherDataToServer(temperatureModel, externalTemperatureModel, pressureModel, airQualityModel, windModel,
+                          rainGaugeModel);
 
   airQualityReader.sleep();
   startSensors();
   wakeUpSensorsTimer.start();
 }
 
-void sendWeatherDataToServer(TemperatureModel temperature, PressureModel pressureModel, AirQualityModel airQuality,
-                             WindModel wind, RainGaugeModel rainGauge) {
-  WeatherModel model = WeatherModel(temperature, pressureModel, airQuality, wind, rainGauge);
+void sendWeatherDataToServer(TemperatureModel temperature, ExternalTemperatureModel externalTemperature,
+                             PressureModel pressureModel, AirQualityModel airQuality, WindModel wind,
+                             RainGaugeModel rainGauge) {
+  WeatherModel model = WeatherModel(temperature, externalTemperature, pressureModel, airQuality, wind, rainGauge);
   if (model.canBeSendToServer()) {
     if (!wifiClient.isWifiConnected()) {
       connectToWifiIfCredentialsAreSaved();
