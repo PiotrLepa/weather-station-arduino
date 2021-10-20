@@ -26,7 +26,25 @@ struct WeatherModel {
         rainGauge(_rainGauge) {}
 
   bool canBeSendToServer() {
-    return !pressure.hasError && !airQuality.hasError && !wind.hasError && !rainGauge.hasError;
+    if (externalTemperature.hasError) {
+      Serial.println("External temperature error");
+    }
+    if (pressure.hasError) {
+      Serial.println("Pressure error");
+    }
+    if (pressure.hasError) {
+      Serial.println("Pressure error");
+    }
+    if (airQuality.hasError) {
+      Serial.println("Air quality error");
+    }
+    if (wind.hasError) {
+      Serial.println("Wind error");
+    }
+    if (rainGauge.hasError) {
+      Serial.println("Rain gauge error");
+    }
+    return !externalTemperature.hasError && !pressure.hasError && !airQuality.hasError && !wind.hasError && !rainGauge.hasError;
   }
 };
 

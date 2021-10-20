@@ -3,8 +3,7 @@
 String JsonCoder::encodeWeatherModel(WeatherModel model) {
   StaticJsonDocument<256> doc;
 
-  doc["temperature"] = formatTemperature(model.temperature, model.pressure);
-  doc["externalTemperature"] = formatTemperature(model.externalTemperature);
+  doc["temperature"] = formatTemperature(model.externalTemperature);
   doc["humidity"] = formatHumidity(model.temperature, model.pressure);
   doc["pressure"] = model.pressure.hasError ? NAN : formatToOneDecimalPoint(model.pressure.pressure);
   doc["pm1"] = model.airQuality.hasError ? NAN : model.airQuality.pm1;
@@ -27,8 +26,7 @@ String JsonCoder::encodeCachedWeatherModel(CachedWeatherModel model) {
 
   JsonObject weather = doc.createNestedObject("weather");
   WeatherModel weatherModel = model.weather;
-  weather["temperature"] = formatTemperature(weatherModel.temperature, weatherModel.pressure);
-  weather["externalTemperature"] = formatTemperature(weatherModel.externalTemperature);
+  weather["temperature"] = formatTemperature(weatherModel.externalTemperature);
   weather["humidity"] = formatHumidity(weatherModel.temperature, weatherModel.pressure);
   weather["pressure"] = weatherModel.pressure.hasError ? NAN : formatToOneDecimalPoint(weatherModel.pressure.pressure);
   weather["pm1"] = weatherModel.airQuality.hasError ? NAN : weatherModel.airQuality.pm1;
@@ -90,16 +88,6 @@ WifiCredentialsModel JsonCoder::decodeWifiCredentials(String json) {
 }
 
 double JsonCoder::formatToOneDecimalPoint(double value) { return round(value * 10) / 10; }
-
-double JsonCoder::formatTemperature(TemperatureModel model1, PressureModel model2) {
-  if (!model1.hasError) {
-    return formatToOneDecimalPoint(model1.temperature);
-  } else if (!model2.hasError) {
-    return formatToOneDecimalPoint(model2.temperature);
-  } else {
-    return NAN;
-  }
-}
 
 double JsonCoder::formatTemperature(ExternalTemperatureModel model) {
   if (!model.hasError) {
