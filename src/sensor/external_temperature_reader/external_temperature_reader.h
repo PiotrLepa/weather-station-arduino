@@ -10,7 +10,7 @@
 
 class ExternalTemperatureReader : public SensorReader<ExternalTemperatureModel> {
  public:
-  ExternalTemperatureReader(uint8_t pin);
+  ExternalTemperatureReader(OneWire* oneWire);
 
   void begin() override;
   bool read() override;

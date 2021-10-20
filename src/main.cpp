@@ -11,7 +11,9 @@ EepromStorage eepromStorage = EepromStorage();
 WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, sdCardStorage);
 
 TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
-ExternalTemperatureReader externalTempReader = ExternalTemperatureReader(EXTERNAL_TEMPERATURE_SENSOR_PIN);
+
+OneWire externalTemperatureOneWire(EXTERNAL_TEMPERATURE_SENSOR_PIN);
+ExternalTemperatureReader externalTempReader = ExternalTemperatureReader(&externalTemperatureOneWire);
 PressureReader pressureReader = PressureReader();
 AirQualityReader airQualityReader = AirQualityReader(Serial, PMS_MODE_CONTROL_PIN);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
@@ -138,7 +140,7 @@ void collectWeatherData() {
   }
 
   ExternalTemperatureModel externalTemperatureModel;
-  if (tempReader.read()) {
+  if (externalTempReader.read()) {
     externalTemperatureModel = externalTempReader.getData();
   } else {
     Serial.println(externalTempReader.getErrorMessage());
