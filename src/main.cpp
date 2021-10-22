@@ -32,7 +32,7 @@ class MyBleCallbacks : public BleCallbacks {
   }
 
   ConnectionResult connectToWifi(String credentialsJson) {
-    return connectToWifiAndSetupOnSuccess(credentialsJson, true, 5);
+    return connectToWifiAndSetupOnSuccess(credentialsJson, true, 15);
   }
 };
 
