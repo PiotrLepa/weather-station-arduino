@@ -62,12 +62,12 @@ void startSensors() {
 
 ConnectionResult connectToWifi() {
   /*
-  To configure WIFI_SSID and WIFI_PASSWORD create file private_config.h in /src/config folder
+  To configure WIFI_SSID and WIFI_PASSWORD create file wifi_credentials.h in /src/config folder
 
   Example to copy:
 
-  #ifndef PRIVATE_CONFIG_H
-  #define PRIVATE_CONFIG_H
+  #ifndef WIFI_CREDENTIALS_H
+  #define WIFI_CREDENTIALS_H
 
   #define WIFI_SSID "WIFI_SSID"
   #define WIFI_PASSWORD "WIFI_PASSWORD"

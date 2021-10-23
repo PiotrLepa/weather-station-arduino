@@ -4,4 +4,4 @@
 .vscode/launch.json
 .vscode/ipch
 
-src/config/private_config.h
+src/config/wifi_credentials.h

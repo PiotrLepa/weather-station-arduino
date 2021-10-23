@@ -4,7 +4,7 @@
 #include <Ticker.h>
 
 #include "config/config.h"
-#include "config/private_config.h"
+#include "config/wifi_credentials.h"
 #include "model/air_quality/air_quality_model.h"
 #include "model/external_temperature/external_temperature_model.h"
 #include "model/pressure/pressure_model.h"
