@@ -13,7 +13,7 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password, int tri
 
   ConnectionResult result = ERROR;
   for (int i = 0; i < tries; i++) {
-    if (WiFi.status() == WL_CONNECTED) {
+    if (WifiClient::isWifiConnected()) {
       Serial.print("\nConnected! Ip address: ");
       Serial.println(WiFi.localIP());
 
@@ -25,7 +25,8 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password, int tri
     }
   }
 
-  Serial.println();
+  Serial.print("Wifi status: ");
+  Serial.println(WiFi.status());
 
   return result;
 }

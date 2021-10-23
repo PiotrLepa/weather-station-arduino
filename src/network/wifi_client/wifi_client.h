@@ -12,7 +12,7 @@ enum ConnectionResult { CONNECTED, ERROR };
 class WifiClient {
  public:
   void begin();
-  ConnectionResult connectToWifi(String ssid, String password, int tries = 5);
+  ConnectionResult connectToWifi(String ssid, String password, int tries);
   std::vector<WifiModel> scanWifi();
   bool isWifiConnected();
 
