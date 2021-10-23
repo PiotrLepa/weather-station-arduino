@@ -47,26 +47,6 @@ String JsonCoder::encodeCachedWeatherModel(CachedWeatherModel model) {
   return json;
 }
 
-String JsonCoder::encodeWifiNameList(std::vector<WifiModel> models) {
-  size_t capacity = JSON_ARRAY_SIZE(models.size() * 10);
-  DynamicJsonDocument doc(capacity);
-
-  JsonArray array = doc.to<JsonArray>();
-
-  for (int i = 0; i < models.size(); i++) {
-    JsonObject nested = array.createNestedObject();
-    nested["name"] = models[i].name;
-    nested["encryption"] = encryptionToString(models[i].encryption);
-    nested["rssi"] = models[i].rssi;
-  }
-
-  printJson(array);
-
-  String json;
-  serializeJson(array, json);
-  return json;
-}
-
 String JsonCoder::encodeCachedWeathersList(std::vector<String> jsonModels) {
   String resultJson = "[";
   for (String json : jsonModels) {
@@ -76,15 +56,6 @@ String JsonCoder::encodeCachedWeathersList(std::vector<String> jsonModels) {
   resultJson += "]";
 
   return resultJson;
-}
-
-WifiCredentialsModel JsonCoder::decodeWifiCredentials(String json) {
-  StaticJsonDocument<128> doc;
-  deserializeJson(doc, json);
-
-  printJson(doc);
-
-  return WifiCredentialsModel(doc["name"], doc["password"]);
 }
 
 double JsonCoder::formatToOneDecimalPoint(double value) { return round(value * 10) / 10; }
