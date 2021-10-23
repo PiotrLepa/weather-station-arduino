@@ -61,7 +61,22 @@ void startSensors() {
 }
 
 ConnectionResult connectToWifi() {
-  ConnectionResult result = wifiClient.connectToWifi("", "", 50);
+  /*
+  To configure WIFI_SSID and WIFI_PASSWORD create file private_config.h in /src/config folder
+
+  Example to copy:
+
+  #ifndef PRIVATE_CONFIG_H
+  #define PRIVATE_CONFIG_H
+
+  #define WIFI_SSID "WIFI_SSID"
+  #define WIFI_PASSWORD "WIFI_PASSWORD"
+
+  #endif
+
+  */
+
+  ConnectionResult result = wifiClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD, 50);
   if (result == CONNECTED) {
     setWifiLed(true);
     wakeUpSensorsTimer.start();
