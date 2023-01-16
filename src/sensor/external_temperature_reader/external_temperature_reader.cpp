@@ -3,10 +3,7 @@
 ExternalTemperatureReader::ExternalTemperatureReader(OneWire* oneWire)
     : sensor(oneWire), readModel(-1), errorMessage("No errors") {}
 
-void ExternalTemperatureReader::begin() {
-  sensor.begin();
-  sensor.requestTemperatures();
-}
+void ExternalTemperatureReader::begin() { sensor.begin(); }
 
 bool ExternalTemperatureReader::read() {
   sensor.requestTemperatures();

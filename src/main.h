@@ -26,26 +26,27 @@
 #include "utils/date_time/date_time.h"
 #include "utils/json_coder/json_coder.h"
 
-#define TEMPERATURE_SENSOR_PIN 32
-#define EXTERNAL_TEMPERATURE_SENSOR_PIN 33
-#define WIND_SENSOR_PIN 13
-#define RAIN_GAUGE_SENSOR_PIN 4
-#define PMS_MODE_CONTROL_PIN 14
+#define EXTERNAL_TEMPERATURE_SENSOR_PIN 26
+#define PMS_MODE_CONTROL_PIN 13
+#define WIND_SENSOR_PIN 14
+#define RAIN_GAUGE_SENSOR_PIN 33
 #define WIFI_STATUS_PIN 2
 
-#define SERVER_REQUEST_DELAY 300000 - PMS_WAKE_UP_MILLIS  // 5 minutes
+// #define SERVER_REQUEST_DELAY 300000 - PMS_WAKE_UP_MILLIS  // 5 minutes
+// #define SERVER_REQUEST_DELAY 180000 - PMS_WAKE_UP_MILLIS  // 3 minutes
+#define SERVER_REQUEST_DELAY 90000 - PMS_WAKE_UP_MILLIS  // 1.5 minutes
+
+//   pio device monitor --filter esp32_exception_decoder
 
 void setup();
 void loop();
 void startSensors();
 ConnectionResult connectToWifi();
 void setWifiLed(bool isWifiEnabled);
-void checkIfRainHasBeenDetected();
 void collectWeatherData();
 void scanAndSendWifiList();
 void wakeUpSensors();
-void sendWeatherDataToServer(TemperatureModel temperature, ExternalTemperatureModel externalTemperature,
-                             PressureModel pressureModel, AirQualityModel airQuality, WindModel wind,
-                             RainGaugeModel rainGauge);
+void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, PressureModel pressureModel,
+                             AirQualityModel airQuality, WindModel wind, RainGaugeModel rainGauge);
 
 #endif

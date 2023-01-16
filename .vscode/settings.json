@@ -36,6 +36,7 @@
         "typeinfo": "cpp",
         "string": "cpp",
         "memory": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "unordered_set": "cpp"
     }
 }

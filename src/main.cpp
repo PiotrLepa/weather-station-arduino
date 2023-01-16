@@ -8,24 +8,18 @@ SdCardStorage sdCardStorage = SdCardStorage();
 
 WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, sdCardStorage);
 
-TemperatureReader tempReader = TemperatureReader(TEMPERATURE_SENSOR_PIN);
 OneWire externalTemperatureOneWire(EXTERNAL_TEMPERATURE_SENSOR_PIN);
 ExternalTemperatureReader externalTempReader = ExternalTemperatureReader(&externalTemperatureOneWire);
 PressureReader pressureReader = PressureReader();
-AirQualityReader airQualityReader = AirQualityReader(Serial, PMS_MODE_CONTROL_PIN);
+AirQualityReader airQualityReader = AirQualityReader(Serial2, PMS_MODE_CONTROL_PIN);
 WindReader windReader = WindReader(WIND_SENSOR_PIN);
 RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 
 Ticker wakeUpSensorsTimer = Ticker(wakeUpSensors, SERVER_REQUEST_DELAY);
 Ticker collectWeatherDataTimer = Ticker(collectWeatherData, PMS_WAKE_UP_MILLIS);
 
-bool sendRainDetectedRequest = false;
-
 class MyRainGaugeCallbacks : public RainGaugeCallbacks {
-  void rainDetected() {
-    // Do not call weatherRepository.sendRainDetected() here. HttpClient will return an error.
-    sendRainDetectedRequest = true;
-  }
+  void rainDetected() { weatherRepository.sendRainDetected(); }
 };
 
 void setup() {
@@ -35,7 +29,6 @@ void setup() {
 
   wifiClient.begin();
   sdCardStorage.begin();
-  tempReader.begin();
   externalTempReader.begin();
   pressureReader.begin();
   airQualityReader.begin();
@@ -52,7 +45,7 @@ void loop() {
   wakeUpSensorsTimer.update();
   collectWeatherDataTimer.update();
   windReader.update();
-  checkIfRainHasBeenDetected();
+  rainGaugeReader.update();
 }
 
 void startSensors() {
@@ -89,13 +82,6 @@ ConnectionResult connectToWifi() {
 
 void setWifiLed(bool isWifiEnabled) { digitalWrite(WIFI_STATUS_PIN, isWifiEnabled); }
 
-void checkIfRainHasBeenDetected() {
-  if (sendRainDetectedRequest) {
-    sendRainDetectedRequest = false;
-    weatherRepository.sendRainDetected();
-  }
-}
-
 void wakeUpSensors() {
   airQualityReader.wakeUp();
   wakeUpSensorsTimer.stop();
@@ -107,13 +93,6 @@ void collectWeatherData() {
 
   windReader.stopReading();
   rainGaugeReader.stopReading();
-
-  TemperatureModel temperatureModel;
-  if (tempReader.read()) {
-    temperatureModel = tempReader.getData();
-  } else {
-    Serial.println(tempReader.getErrorMessage());
-  }
 
   ExternalTemperatureModel externalTemperatureModel;
   if (externalTempReader.read()) {
@@ -127,6 +106,7 @@ void collectWeatherData() {
     pressureModel = pressureReader.getData();
   } else {
     Serial.println(pressureReader.getErrorMessage());
+    // pressureReader.begin(); // TODO remove?
   }
 
   AirQualityModel airQualityModel;
@@ -139,21 +119,20 @@ void collectWeatherData() {
   WindModel windModel = windReader.getData();
   RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
 
-  sendWeatherDataToServer(temperatureModel, externalTemperatureModel, pressureModel, airQualityModel, windModel,
-                          rainGaugeModel);
+  sendWeatherDataToServer(externalTemperatureModel, pressureModel, airQualityModel, windModel, rainGaugeModel);
 
   airQualityReader.sleep();
   startSensors();
   wakeUpSensorsTimer.start();
 }
 
-void sendWeatherDataToServer(TemperatureModel temperature, ExternalTemperatureModel externalTemperature,
-                             PressureModel pressureModel, AirQualityModel airQuality, WindModel wind,
-                             RainGaugeModel rainGauge) {
-  WeatherModel model = WeatherModel(temperature, externalTemperature, pressureModel, airQuality, wind, rainGauge);
+void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, PressureModel pressureModel,
+                             AirQualityModel airQuality, WindModel wind, RainGaugeModel rainGauge) {
+  WeatherModel model = WeatherModel(externalTemperature, pressureModel, airQuality, wind, rainGauge);
   if (model.canBeSendToServer()) {
     weatherRepository.sendWeatherData(model);
   } else {
     Serial.println("Weather model is incorrect");
+    Serial.println();
   }
 }

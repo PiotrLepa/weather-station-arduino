@@ -18,12 +18,12 @@ class WindReader : public ContinuousSensorReader<WindModel> {
   WindReader(uint8_t _windSensorPin);
 
   void begin() override;
+  void update() override;
   void startReading() override;
   void stopReading() override;
   WindModel getData() override;
   String getErrorMessage() override;
   void updateWindSpeed();
-  void update();
 
   void countRotations();
 

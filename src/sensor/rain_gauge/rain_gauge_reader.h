@@ -20,13 +20,14 @@ class RainGaugeReader : public ContinuousSensorReader<RainGaugeModel> {
   RainGaugeReader(uint8_t _rainGaugeSensorPin);
 
   void begin() override;
+  void update() override;
   void startReading() override;
   void stopReading() override;
   RainGaugeModel getData() override;
   String getErrorMessage() override;
   void setCallback(RainGaugeCallbacks* callback);
 
-  void ICACHE_RAM_ATTR countTips();
+  void countTips();
 
  private:
   uint8_t rainGaugeSensorPin;

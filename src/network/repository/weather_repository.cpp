@@ -5,7 +5,8 @@ WeatherRepository::WeatherRepository(RestClient& _client, JsonCoder& _jsonCoder,
 
 bool WeatherRepository::sendWeatherData(WeatherModel weather) {
   String json = jsonCoder.encodeWeatherModel(weather);
-  int resultCode = client.post("/weather", json);
+  // int resultCode = client.post("/weather", json);
+  int resultCode = 500; // TODO remove mock
   if (resultCode == HTTP_CODE_CREATED) {
     sendCachedWeathers();
     return true;
@@ -17,7 +18,9 @@ bool WeatherRepository::sendWeatherData(WeatherModel weather) {
 
 bool WeatherRepository::sendRainDetected() {
   delay(2000);
-  int resultCode = client.post("/weather/rain-detected");
+  // int resultCode = client.post("/weather/rain-detected");
+  Serial.println("Rain detected");
+  int resultCode = HTTP_CODE_OK; // TODO remove mock
   if (resultCode == HTTP_CODE_OK) {
     return true;
   } else {
@@ -40,8 +43,17 @@ void WeatherRepository::cacheWeather(WeatherModel weather) {
   DateTime dateTime = DateTime::now();
   if (dateTime.getSecondsFromEpoch() == -1) return;
 
-  CachedWeatherModel cachedWeatherModel = CachedWeatherModel(weather, dateTime.getFormattedDate());
-  String fileName = CACHED_WEATHERS_PATH + "/" + String(dateTime.getSecondsFromEpoch()) + TXT_EXT;
+  String formattedDate = dateTime.getFormattedDate();
+  CachedWeatherModel cachedWeatherModel = CachedWeatherModel(weather, formattedDate);
+
+  String fileName = getFileNameToCacheWeather(formattedDate);
   String json = jsonCoder.encodeCachedWeatherModel(cachedWeatherModel);
   sdCardStorage.write(fileName, json);
+}
+
+String WeatherRepository::getFileNameToCacheWeather(String formattedDate) {
+  String timestampWithoutInvalidChars = String(formattedDate);
+  timestampWithoutInvalidChars.replace(':', '-');
+  timestampWithoutInvalidChars.replace(".000", "");
+  return CACHED_WEATHERS_PATH + "/" + timestampWithoutInvalidChars + TXT_EXT;
 }

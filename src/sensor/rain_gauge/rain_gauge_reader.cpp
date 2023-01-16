@@ -2,14 +2,17 @@
 
 RainGaugeReader* rainGaugeReaderInstance = NULL;
 
-void handleRainGaugePinInterrupt() { rainGaugeReaderInstance->countTips(); }
+void IRAM_ATTR handleRainGaugePinInterrupt() { rainGaugeReaderInstance->countTips(); }
 
 RainGaugeReader::RainGaugeReader(uint8_t _rainGaugeSensorPin)
     : rainGaugeSensorPin(_rainGaugeSensorPin), lastRainfallTime(0), tips(0), bounceTime(0), errorMessage("No errors") {
   rainGaugeReaderInstance = this;
+  pinMode(rainGaugeSensorPin, INPUT);
 }
 
 void RainGaugeReader::begin() {}
+
+void RainGaugeReader::update() { handleRainDetector(); }
 
 void RainGaugeReader::startReading() {
   tips = 0;
@@ -23,7 +26,6 @@ void RainGaugeReader::countTips() {
   if ((millis() - bounceTime) > ROTATION_DEBOUNCE_TIME) {
     tips++;
     bounceTime = millis();
-    handleRainDetector();
   }
 }
 

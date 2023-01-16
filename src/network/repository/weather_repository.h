@@ -24,6 +24,7 @@ class WeatherRepository {
 
   void cacheWeather(WeatherModel weather);
   void sendCachedWeathers();
+  String getFileNameToCacheWeather(String formattedDate);
 };
 
 #endif

@@ -19,6 +19,8 @@ WindReader::WindReader(uint8_t _windSensorPin)
 
 void WindReader::begin() {}
 
+void WindReader::update() { timer.update(); }
+
 void WindReader::startReading() {
   status = ACTIVE;
   measurementCounter = 0;
@@ -35,8 +37,6 @@ void WindReader::stopReading() {
   status = INACTIVE;
   detachInterrupt(digitalPinToInterrupt(windSensorPin));
 }
-
-void WindReader::update() { timer.update(); }
 
 void WindReader::countRotations() {
   if (status == ACTIVE && (millis() - bounceTime) > ROTATION_DEBOUNCE_TIME) {
