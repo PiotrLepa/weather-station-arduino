@@ -20,14 +20,15 @@ void SdCardStorage::write(String path, String value) {
   createFileDirs(path);
 
   File file = SD.open(path, FILE_WRITE);
-  size_t writtenBytes = file.print(value);
+  // size_t writtenBytes = file.print(value);
+  file.print(value);
   file.close();
-  Serial.print("SD Card written bytes: ");
-  Serial.println(writtenBytes);
-  if (writtenBytes == 0) {
-    begin();
-    write(path, value);
-  }
+  // Serial.print("SD Card written bytes: ");
+  // Serial.println(writtenBytes);
+  // if (writtenBytes == 0) {
+  //   begin();
+  //   write(path, value);
+  // }
 }
 
 String SdCardStorage::readFromFile(File file) {

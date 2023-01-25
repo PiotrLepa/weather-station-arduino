@@ -48,7 +48,7 @@ void WeatherRepository::cacheWeather(WeatherModel weather) {
 
   String fileName = getFileNameToCacheWeather(formattedDate);
   String json = jsonCoder.encodeCachedWeatherModel(cachedWeatherModel);
-  sdCardStorage.write(fileName, json);
+  // sdCardStorage.write(fileName, json); // TODO enable
 }
 
 String WeatherRepository::getFileNameToCacheWeather(String formattedDate) {

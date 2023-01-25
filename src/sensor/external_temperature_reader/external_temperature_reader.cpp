@@ -7,6 +7,7 @@ void ExternalTemperatureReader::begin() { sensor.begin(); }
 
 bool ExternalTemperatureReader::read() {
   sensor.requestTemperatures();
+  sensor.requestTemperatures();
   float temperature = sensor.getTempCByIndex(0);
 
   if (isnan(temperature) || temperature == -1 || temperature == -127) {

@@ -39,7 +39,9 @@ String JsonCoder::encodeCachedWeatherModel(CachedWeatherModel model) {
   weather["longitude"] = NAN;
 
   doc["timestamp"] = model.timestamp;
-  printJson(doc);
+  
+  Serial.print("Weather data timestamp: ");
+  Serial.println(model.timestamp);
 
   String json;
   serializeJson(doc, json);
