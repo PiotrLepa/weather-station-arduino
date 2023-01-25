@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <vector>
 
 #include "../../model/cached_weather/cached_weather_model.h"
 #include "../../model/weather/weather_model.h"

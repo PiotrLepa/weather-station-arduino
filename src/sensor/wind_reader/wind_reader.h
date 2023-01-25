@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <Ticker.h>
+#include <numeric>
 
 #include <vector>
 
