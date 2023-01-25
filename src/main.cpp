@@ -6,7 +6,7 @@ JsonCoder jsonCoder = JsonCoder();
 
 SdCardStorage sdCardStorage = SdCardStorage();
 
-WeatherRepository weatherRepository = WeatherRepository(restClient, jsonCoder, sdCardStorage);
+WeatherRepository *weatherRepository = new RestWeatherRepository(restClient, jsonCoder, sdCardStorage);
 
 OneWire externalTemperatureOneWire(EXTERNAL_TEMPERATURE_SENSOR_PIN);
 ExternalTemperatureReader externalTempReader = ExternalTemperatureReader(&externalTemperatureOneWire);
@@ -18,11 +18,13 @@ RainGaugeReader rainGaugeReader = RainGaugeReader(RAIN_GAUGE_SENSOR_PIN);
 Ticker wakeUpSensorsTimer = Ticker(wakeUpSensors, SERVER_REQUEST_DELAY);
 Ticker collectWeatherDataTimer = Ticker(collectWeatherData, PMS_WAKE_UP_MILLIS);
 
-class MyRainGaugeCallbacks : public RainGaugeCallbacks {
-  void rainDetected() { weatherRepository.sendRainDetected(); }
+class MyRainGaugeCallbacks : public RainGaugeCallbacks
+{
+  void rainDetected() { weatherRepository->sendRainDetected(); }
 };
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
 
   pinMode(WIFI_STATUS_PIN, OUTPUT);
@@ -41,19 +43,22 @@ void setup() {
   startSensors();
 }
 
-void loop() {
+void loop()
+{
   wakeUpSensorsTimer.update();
   collectWeatherDataTimer.update();
   windReader.update();
   rainGaugeReader.update();
 }
 
-void startSensors() {
+void startSensors()
+{
   windReader.startReading();
   rainGaugeReader.startReading();
 }
 
-ConnectionResult connectToWifi() {
+ConnectionResult connectToWifi()
+{
   /*
   To configure WIFI_SSID and WIFI_PASSWORD create file wifi_credentials.h in /src/config folder
 
@@ -70,11 +75,14 @@ ConnectionResult connectToWifi() {
   */
 
   ConnectionResult result = wifiClient.connectToWifi(WIFI_SSID, WIFI_PASSWORD, 50);
-  if (result == CONNECTED) {
+  if (result == CONNECTED)
+  {
     setWifiLed(true);
     wakeUpSensorsTimer.start();
     DateTime::begin();
-  } else {
+  }
+  else
+  {
     setWifiLed(false);
   }
   return result;
@@ -82,37 +90,48 @@ ConnectionResult connectToWifi() {
 
 void setWifiLed(bool isWifiEnabled) { digitalWrite(WIFI_STATUS_PIN, isWifiEnabled); }
 
-void wakeUpSensors() {
+void wakeUpSensors()
+{
   airQualityReader.wakeUp();
   wakeUpSensorsTimer.stop();
   collectWeatherDataTimer.start();
 }
 
-void collectWeatherData() {
+void collectWeatherData()
+{
   collectWeatherDataTimer.stop();
 
   windReader.stopReading();
   rainGaugeReader.stopReading();
 
   ExternalTemperatureModel externalTemperatureModel;
-  if (externalTempReader.read()) {
+  if (externalTempReader.read())
+  {
     externalTemperatureModel = externalTempReader.getData();
-  } else {
+  }
+  else
+  {
     Serial.println(externalTempReader.getErrorMessage());
   }
 
   PressureModel pressureModel;
-  if (pressureReader.read()) {
+  if (pressureReader.read())
+  {
     pressureModel = pressureReader.getData();
-  } else {
+  }
+  else
+  {
     Serial.println(pressureReader.getErrorMessage());
     // pressureReader.begin(); // TODO remove?
   }
 
   AirQualityModel airQualityModel;
-  if (airQualityReader.read()) {
+  if (airQualityReader.read())
+  {
     airQualityModel = airQualityReader.getData();
-  } else {
+  }
+  else
+  {
     Serial.println(airQualityReader.getErrorMessage());
   }
 
@@ -127,11 +146,15 @@ void collectWeatherData() {
 }
 
 void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, PressureModel pressureModel,
-                             AirQualityModel airQuality, WindModel wind, RainGaugeModel rainGauge) {
+                             AirQualityModel airQuality, WindModel wind, RainGaugeModel rainGauge)
+{
   WeatherModel model = WeatherModel(externalTemperature, pressureModel, airQuality, wind, rainGauge);
-  if (model.canBeSendToServer()) {
-    weatherRepository.sendWeatherData(model);
-  } else {
+  if (model.canBeSendToServer())
+  {
+    weatherRepository->sendWeatherData(model);
+  }
+  else
+  {
     Serial.println("Weather model is incorrect");
     Serial.println();
   }
