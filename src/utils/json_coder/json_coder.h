@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <vector>
 
 #include "../../model/cached_weather/cached_weather_model.h"
 #include "../../model/weather/weather_model.h"
@@ -18,7 +19,7 @@ class JsonCoder {
   void printJson(JsonArray &source);
   double formatToOneDecimalPoint(double value);
   double formatTemperature(ExternalTemperatureModel model);
-  double formatHumidity(TemperatureModel model1, PressureModel model2);
+  double formatHumidity(PressureModel model);
 };
 
 #endif

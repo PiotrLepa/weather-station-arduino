@@ -2,7 +2,16 @@
 
 PressureReader::PressureReader() : bme(), readModel(-1, -1, -1), errorMessage("No errors") {}
 
-void PressureReader::begin() { bme.begin(BME280_ADDRESS_ALTERNATE); }
+void PressureReader::begin() {
+  bool initialized = false;
+  while (!initialized) {
+    Wire1.begin(21, 22);
+    initialized = bme.begin(BME280_ADDRESS_ALTERNATE, &Wire1);
+    Serial.print("Pressure initialization result: ");
+    Serial.println(initialized);
+    delay(5000);
+  }
+}
 
 bool PressureReader::read() {
   float temperature = bme.readTemperature();

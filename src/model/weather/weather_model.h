@@ -9,17 +9,16 @@
 #include "../wind/wind_model.h"
 
 struct WeatherModel {
-  TemperatureModel temperature;
   ExternalTemperatureModel externalTemperature;
   PressureModel pressure;
   AirQualityModel airQuality;
   WindModel wind;
+
   RainGaugeModel rainGauge;
 
-  WeatherModel(TemperatureModel _temperature, ExternalTemperatureModel _externalTemperature, PressureModel _pressure,
-               AirQualityModel _airQuality, WindModel _wind, RainGaugeModel _rainGauge)
-      : temperature(_temperature),
-        externalTemperature(_externalTemperature),
+  WeatherModel(ExternalTemperatureModel _externalTemperature, PressureModel _pressure, AirQualityModel _airQuality,
+               WindModel _wind, RainGaugeModel _rainGauge)
+      : externalTemperature(_externalTemperature),
         pressure(_pressure),
         airQuality(_airQuality),
         wind(_wind),
@@ -28,9 +27,6 @@ struct WeatherModel {
   bool canBeSendToServer() {
     if (externalTemperature.hasError) {
       Serial.println("External temperature error");
-    }
-    if (pressure.hasError) {
-      Serial.println("Pressure error");
     }
     if (pressure.hasError) {
       Serial.println("Pressure error");
@@ -44,7 +40,8 @@ struct WeatherModel {
     if (rainGauge.hasError) {
       Serial.println("Rain gauge error");
     }
-    return !externalTemperature.hasError && !pressure.hasError && !airQuality.hasError && !wind.hasError && !rainGauge.hasError;
+    return !externalTemperature.hasError && !pressure.hasError && !airQuality.hasError && !wind.hasError &&
+           !rainGauge.hasError;
   }
 };
 
