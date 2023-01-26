@@ -28,6 +28,7 @@ class MyRainGaugeCallbacks : public RainGaugeCallbacks
 void setup()
 {
   Serial.begin(9600);
+  Serial2.begin(9600);
 
   pinMode(WIFI_STATUS_PIN, OUTPUT);
 
