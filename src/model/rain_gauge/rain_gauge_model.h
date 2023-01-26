@@ -2,12 +2,12 @@
 #define RAIN_GAUGE_MODEL_H
 
 struct RainGaugeModel {
-  float amountOfPrecipitation;
+  float precipitation;
   bool hasError;
 
-  RainGaugeModel(float _amountOfPrecipitation) : amountOfPrecipitation(_amountOfPrecipitation), hasError(false) {}
+  RainGaugeModel(float _amountOfPrecipitation) : precipitation(_amountOfPrecipitation), hasError(false) {}
 
-  RainGaugeModel() : amountOfPrecipitation(-1), hasError(true) {}
+  RainGaugeModel() : precipitation(-1), hasError(true) {}
 
   RainGaugeModel static error() { return RainGaugeModel(); }
 };

@@ -3,15 +3,15 @@
 String JsonCoder::encodeWeather(WeatherModel model) {
   StaticJsonDocument<256> doc;
 
-  doc["temperature"] = formatTemperature(model.externalTemperature);
-  doc["humidity"] = formatHumidity(model.pressure);
-  doc["pressure"] = model.pressure.hasError ? NAN : formatToOneDecimalPoint(model.pressure.pressure);
+  doc["temperature"] = model.externalTemperature.hasError ? NAN : model.externalTemperature.temperature;
+  doc["humidity"] = model.pressure.hasError ? NAN : model.pressure.humidity;
+  doc["pressure"] = model.pressure.hasError ? NAN : model.pressure.pressure;
   doc["pm1"] = model.airQuality.hasError ? NAN : model.airQuality.pm1;
   doc["pm25"] = model.airQuality.hasError ? NAN : model.airQuality.pm25;
   doc["pm10"] = model.airQuality.hasError ? NAN : model.airQuality.pm10;
-  doc["windSpeedMax"] = model.wind.hasError ? NAN : formatToOneDecimalPoint(model.wind.windSpeedMax);
-  doc["windSpeedAvg"] = model.wind.hasError ? NAN : formatToOneDecimalPoint(model.wind.windSpeedAvg);
-  doc["rainGauge"] = model.rainGauge.hasError ? NAN : formatToOneDecimalPoint(model.rainGauge.amountOfPrecipitation);
+  doc["windSpeedMax"] = model.wind.hasError ? NAN : model.wind.windSpeedMax;
+  doc["windSpeedAvg"] = model.wind.hasError ? NAN : model.wind.windSpeedAvg;
+  doc["precipitation"] = model.rainGauge.hasError ? NAN : model.rainGauge.precipitation;
   doc["timestamp"] = model.timestamp;
 
   printJson(doc);
@@ -31,32 +31,7 @@ String JsonCoder::encodeWeathersList(std::vector<String> jsonModels) {
   return resultJson;
 }
 
-double JsonCoder::formatToOneDecimalPoint(double value) { return round(value * 10) / 10; }
-
-double JsonCoder::formatTemperature(ExternalTemperatureModel model) {
-  if (!model.hasError) {
-    return formatToOneDecimalPoint(model.temperature);
-  } else {
-    return NAN;
-  }
-}
-
-double JsonCoder::formatHumidity(PressureModel model) {
-  if (!model.hasError) {
-    return formatToOneDecimalPoint(model.humidity);
-  } else {
-    return NAN;
-  }
-}
-
 void JsonCoder::printJson(JsonDocument &source) {
-  String json;
-  serializeJsonPretty(source, json);
-  Serial.print("Json: ");
-  Serial.println(json);
-}
-
-void JsonCoder::printJson(JsonArray &source) {
   String json;
   serializeJsonPretty(source, json);
   Serial.print("Json: ");

@@ -27,6 +27,7 @@
 #include "sensor/wind_reader/wind_reader.h"
 #include "storage/sd_card/sd_card_storage.h"
 #include "utils/date_time/date_time.h"
+#include "utils/rounder/weather/weather_model_rounder.h"
 #include "utils/json_coder/json_coder.h"
 
 #define EXTERNAL_TEMPERATURE_SENSOR_PIN 26

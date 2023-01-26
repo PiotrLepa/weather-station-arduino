@@ -15,10 +15,6 @@ class JsonCoder {
 
  private:
   void printJson(JsonDocument &source);
-  void printJson(JsonArray &source);
-  double formatToOneDecimalPoint(double value);
-  double formatTemperature(ExternalTemperatureModel model);
-  double formatHumidity(PressureModel model);
 };
 
 #endif

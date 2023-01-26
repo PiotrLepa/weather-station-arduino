@@ -3,11 +3,11 @@
 
 struct PressureModel {
   float temperature;
-  float pressure;
+  int pressure;
   float humidity;
   bool hasError;
 
-  PressureModel(float _temperature, float _pressure, float _humidity)
+  PressureModel(float _temperature, int _pressure, float _humidity)
       : temperature(_temperature), pressure(_pressure), humidity(_humidity), hasError(false) {}
 
   PressureModel() : temperature(-1), pressure(-1), humidity(-1), hasError(true) {}

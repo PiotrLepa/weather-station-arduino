@@ -3,12 +3,13 @@
 WifiClient wifiClient = WifiClient();
 // RestClient restClient = RestClient(API_URL);
 FirestoreClient firestoreClient = FirestoreClient(FIREBASE_PROJECT_ID);
+WeatherModelRounder weatherModelRounder = WeatherModelRounder();
 JsonCoder jsonCoder = JsonCoder();
 
 SdCardStorage sdCardStorage = SdCardStorage();
 
-// WeatherRepository *weatherRepository = new RestWeatherRepository(restClient, jsonCoder, sdCardStorage);
-WeatherRepository *weatherRepository = new FirestoreWeatherRepository(firestoreClient, jsonCoder, sdCardStorage);
+// WeatherRepository *weatherRepository = new RestWeatherRepository(restClient, weatherModelRounder, jsonCoder, sdCardStorage);
+WeatherRepository *weatherRepository = new FirestoreWeatherRepository(firestoreClient, weatherModelRounder, jsonCoder, sdCardStorage);
 
 OneWire externalTemperatureOneWire(EXTERNAL_TEMPERATURE_SENSOR_PIN);
 ExternalTemperatureReader externalTempReader = ExternalTemperatureReader(&externalTemperatureOneWire);

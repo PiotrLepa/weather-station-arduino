@@ -1,10 +1,11 @@
 #include "rest_weather_repository.h"
 
-RestWeatherRepository::RestWeatherRepository(RestClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
-    : client(_client), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
+RestWeatherRepository::RestWeatherRepository(RestClient& _client, WeatherModelRounder& _weatherModelRounder, JsonCoder& _jsonCoder,
+                                             SdCardStorage& _sdCardStorage)
+    : client(_client), weatherModelRounder(_weatherModelRounder), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
 
 bool RestWeatherRepository::sendWeatherData(WeatherModel weather) {
-  String json = jsonCoder.encodeWeather(weather);
+  String json = jsonCoder.encodeWeather(weatherModelRounder.round(weather));
   int resultCode = client.post("/weather", json);
   if (resultCode == HTTP_CODE_CREATED) {
     sendCachedWeathers();

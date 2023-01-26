@@ -1,25 +1,24 @@
 #include "firestore_weather_repository.h"
 
-FirestoreWeatherRepository::FirestoreWeatherRepository(FirestoreClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
-    : client(_client), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
+FirestoreWeatherRepository::FirestoreWeatherRepository(FirestoreClient& _client, WeatherModelRounder& _weatherModelRounder,
+                                                       JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
+    : client(_client), weatherModelRounder(_weatherModelRounder), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
 
 bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
-  bool isSuccessful = client.write(weather);
+  bool isSuccessful = client.write(weatherModelRounder.round(weather));
+  if (isSuccessful) {
+    sendCachedWeathers();
+  } else {
+    cacheWeather(weather);
+  }
   return isSuccessful;
-  // if (isSuccessful) {
-  //   sendCachedWeathers();
-  //   return true;
-  // } else {
-  //   cacheWeather(weather);
-  //   return false;
-  // }
 }
 
 bool FirestoreWeatherRepository::sendRainDetected() {
   delay(2000);
   // int resultCode = client.post("/weather/rain-detected");
   Serial.println("Rain detected");
-  int resultCode = HTTP_CODE_OK; // TODO remove mock
+  int resultCode = HTTP_CODE_OK;  // TODO remove mock
   if (resultCode == HTTP_CODE_OK) {
     return true;
   } else {

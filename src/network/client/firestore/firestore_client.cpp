@@ -19,13 +19,13 @@ bool FirestoreClient::write(WeatherModel weather) {
 
     content.set("fields/temperature/doubleValue", weather.externalTemperature.temperature);
     content.set("fields/humidity/doubleValue", weather.pressure.humidity);
-    content.set("fields/pressure/doubleValue", weather.pressure.pressure);
+    content.set("fields/pressure/integerValue", weather.pressure.pressure);
     content.set("fields/pm1/integerValue", weather.airQuality.pm1);
     content.set("fields/pm25/integerValue", weather.airQuality.pm25);
     content.set("fields/pm10/integerValue", weather.airQuality.pm10);
     content.set("fields/windSpeedMax/doubleValue", weather.wind.windSpeedMax);
     content.set("fields/windSpeedAvg/doubleValue", weather.wind.windSpeedAvg);
-    content.set("fields/rainGauge/doubleValue", weather.rainGauge.amountOfPrecipitation);
+    content.set("fields/precipitation/doubleValue", weather.rainGauge.precipitation);
     content.set("fields/timestamp/timestampValue", weather.timestamp);
 
     String documentPath = "weathers";
