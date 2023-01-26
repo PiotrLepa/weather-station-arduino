@@ -1,19 +1,18 @@
 #include "firestore_weather_repository.h"
 
-FirestoreWeatherRepository::FirestoreWeatherRepository(RestClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
+FirestoreWeatherRepository::FirestoreWeatherRepository(FirestoreClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
     : client(_client), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
 
 bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
-  String json = jsonCoder.encodeWeatherModel(weather);
-  // int resultCode = client.post("/weather", json);
-  int resultCode = 500; // TODO remove mock
-  if (resultCode == HTTP_CODE_CREATED) {
-    sendCachedWeathers();
-    return true;
-  } else {
-    cacheWeather(weather);
-    return false;
-  }
+  bool isSuccessful = client.write(weather);
+  return isSuccessful;
+  // if (isSuccessful) {
+  //   sendCachedWeathers();
+  //   return true;
+  // } else {
+  //   cacheWeather(weather);
+  //   return false;
+  // }
 }
 
 bool FirestoreWeatherRepository::sendRainDetected() {
@@ -33,10 +32,10 @@ void FirestoreWeatherRepository::sendCachedWeathers() {
   if (jsonModels.size() == 0) return;
 
   String resultJson = jsonCoder.encodeCachedWeathersList(jsonModels);
-  int resultCode = client.post("/weather/cached", resultJson);
-  if (resultCode == HTTP_CODE_CREATED) {
-    sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
-  }
+  // int resultCode = client.post("/weather/cached", resultJson);
+  // if (resultCode == HTTP_CODE_CREATED) {
+  //   sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
+  // }
 }
 
 void FirestoreWeatherRepository::cacheWeather(WeatherModel weather) {

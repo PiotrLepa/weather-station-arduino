@@ -1,12 +1,14 @@
 #include "main.h"
 
 WifiClient wifiClient = WifiClient();
-RestClient restClient = RestClient(API_URL);
+// RestClient restClient = RestClient(API_URL);
+FirestoreClient firestoreClient = FirestoreClient(FIREBASE_PROJECT_ID);
 JsonCoder jsonCoder = JsonCoder();
 
 SdCardStorage sdCardStorage = SdCardStorage();
 
-WeatherRepository *weatherRepository = new RestWeatherRepository(restClient, jsonCoder, sdCardStorage);
+// WeatherRepository *weatherRepository = new RestWeatherRepository(restClient, jsonCoder, sdCardStorage);
+WeatherRepository *weatherRepository = new FirestoreWeatherRepository(firestoreClient, jsonCoder, sdCardStorage);
 
 OneWire externalTemperatureOneWire(EXTERNAL_TEMPERATURE_SENSOR_PIN);
 ExternalTemperatureReader externalTempReader = ExternalTemperatureReader(&externalTemperatureOneWire);
