@@ -38,6 +38,7 @@
         "memory": "cpp",
         "random": "cpp",
         "unordered_set": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "string_view": "cpp"
     }
 }

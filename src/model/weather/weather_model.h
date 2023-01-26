@@ -13,16 +13,17 @@ struct WeatherModel {
   PressureModel pressure;
   AirQualityModel airQuality;
   WindModel wind;
-
   RainGaugeModel rainGauge;
+  String timestamp;
 
   WeatherModel(ExternalTemperatureModel _externalTemperature, PressureModel _pressure, AirQualityModel _airQuality,
-               WindModel _wind, RainGaugeModel _rainGauge)
+               WindModel _wind, RainGaugeModel _rainGauge, String _timestamp)
       : externalTemperature(_externalTemperature),
         pressure(_pressure),
         airQuality(_airQuality),
         wind(_wind),
-        rainGauge(_rainGauge) {}
+        rainGauge(_rainGauge),
+        timestamp(_timestamp) {}
 
   bool canBeSendToServer() {
     if (externalTemperature.hasError) {

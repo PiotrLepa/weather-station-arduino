@@ -31,7 +31,7 @@ void FirestoreWeatherRepository::sendCachedWeathers() {
   std::vector<String> jsonModels = sdCardStorage.readAllInDirectory(CACHED_WEATHERS_PATH);
   if (jsonModels.size() == 0) return;
 
-  String resultJson = jsonCoder.encodeCachedWeathersList(jsonModels);
+  String resultJson = jsonCoder.encodeWeathersList(jsonModels);
   // int resultCode = client.post("/weather/cached", resultJson);
   // if (resultCode == HTTP_CODE_CREATED) {
   //   sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
@@ -39,15 +39,9 @@ void FirestoreWeatherRepository::sendCachedWeathers() {
 }
 
 void FirestoreWeatherRepository::cacheWeather(WeatherModel weather) {
-  DateTime dateTime = DateTime::now();
-  if (dateTime.getSecondsFromEpoch() == -1) return;
-
-  String formattedDate = dateTime.getFormattedDate();
-  CachedWeatherModel cachedWeatherModel = CachedWeatherModel(weather, formattedDate);
-
-  String fileName = getFileNameToCacheWeather(formattedDate);
-  String json = jsonCoder.encodeCachedWeatherModel(cachedWeatherModel);
-  // sdCardStorage.write(fileName, json); // TODO enable
+  String fileName = getFileNameToCacheWeather(weather.timestamp);
+  String json = jsonCoder.encodeWeather(weather);
+  sdCardStorage.write(fileName, json);
 }
 
 String FirestoreWeatherRepository::getFileNameToCacheWeather(String formattedDate) {

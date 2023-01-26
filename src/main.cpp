@@ -43,6 +43,8 @@ void setup()
 
   connectToWifi();
 
+  firestoreClient.connect();
+
   startSensors();
 }
 
@@ -151,7 +153,7 @@ void collectWeatherData()
 void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, PressureModel pressureModel,
                              AirQualityModel airQuality, WindModel wind, RainGaugeModel rainGauge)
 {
-  WeatherModel model = WeatherModel(externalTemperature, pressureModel, airQuality, wind, rainGauge);
+  WeatherModel model = WeatherModel(externalTemperature, pressureModel, airQuality, wind, rainGauge, getCurrentTimestamp());
   if (model.canBeSendToServer())
   {
     weatherRepository->sendWeatherData(model);
@@ -161,4 +163,11 @@ void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, Press
     Serial.println("Weather model is incorrect");
     Serial.println();
   }
+}
+
+String getCurrentTimestamp() {
+  DateTime dateTime = DateTime::now();
+  if (dateTime.getSecondsFromEpoch() == -1) return "";
+
+  return dateTime.getFormattedDate();
 }

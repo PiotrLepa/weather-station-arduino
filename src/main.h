@@ -51,5 +51,6 @@ void scanAndSendWifiList();
 void wakeUpSensors();
 void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, PressureModel pressureModel,
                              AirQualityModel airQuality, WindModel wind, RainGaugeModel rainGauge);
+String getCurrentTimestamp();
 
 #endif

@@ -3,16 +3,15 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
+
 #include <vector>
 
-#include "../../model/cached_weather/cached_weather_model.h"
 #include "../../model/weather/weather_model.h"
 
 class JsonCoder {
  public:
-  String encodeWeatherModel(WeatherModel model);
-  String encodeCachedWeatherModel(CachedWeatherModel model);
-  String encodeCachedWeathersList(std::vector<String> jsonModels);
+  String encodeWeather(WeatherModel model);
+  String encodeWeathersList(std::vector<String> jsonModels);
 
  private:
   void printJson(JsonDocument &source);

@@ -3,7 +3,6 @@
 
 #include <HTTPClient.h>
 
-#include "../../../model/cached_weather/cached_weather_model.h"
 #include "../../../model/weather/weather_model.h"
 #include "../../../storage/sd_card/sd_card_storage.h"
 #include "../../../utils/date_time/date_time.h"
@@ -11,15 +10,14 @@
 #include "../../client/firestore/firestore_client.h"
 #include "../weather_repository.h"
 
-class FirestoreWeatherRepository : public WeatherRepository
-{
-public:
+class FirestoreWeatherRepository : public WeatherRepository {
+ public:
   FirestoreWeatherRepository(FirestoreClient &_client, JsonCoder &_jsonCoder, SdCardStorage &_sdCardStorage);
 
   bool sendWeatherData(WeatherModel weather) override;
   bool sendRainDetected() override;
 
-private:
+ private:
   FirestoreClient &client;
   JsonCoder &jsonCoder;
   SdCardStorage &sdCardStorage;

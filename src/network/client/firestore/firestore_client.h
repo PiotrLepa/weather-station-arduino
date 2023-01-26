@@ -10,6 +10,7 @@ class FirestoreClient
 public:
   FirestoreClient(String projectId);
 
+  void connect();
   bool write(WeatherModel weather);
 
 private:
