@@ -26,13 +26,12 @@ bool FirestoreClient::write(WeatherModel weather) {
     content.set("fields/windSpeedMax/doubleValue", weather.wind.windSpeedMax);
     content.set("fields/windSpeedAvg/doubleValue", weather.wind.windSpeedAvg);
     content.set("fields/rainGauge/doubleValue", weather.rainGauge.amountOfPrecipitation);
-    content.set("fields/myTimestamp/timestampValue", weather.timestamp);
+    content.set("fields/timestamp/timestampValue", weather.timestamp);
 
     String documentPath = "weathers";
 
-    firebaseData.setResponseSize(1024);
     if (Firebase.Firestore.createDocument(&firebaseData, projectId, "", documentPath.c_str(), content.raw()))
-        Serial.printf("Document created");
+        Serial.println("Document created");
     else
         Serial.println(firebaseData.errorReason());
     return true;
