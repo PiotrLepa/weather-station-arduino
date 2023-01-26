@@ -29,6 +29,7 @@
 #include "utils/date_time/date_time.h"
 #include "utils/rounder/weather/weather_model_rounder.h"
 #include "utils/json_coder/json_coder.h"
+#include "utils/printer/weather_printer.h"
 
 #define EXTERNAL_TEMPERATURE_SENSOR_PIN 26
 #define PMS_MODE_CONTROL_PIN 13

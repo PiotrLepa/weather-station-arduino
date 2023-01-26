@@ -20,15 +20,8 @@ void SdCardStorage::write(String path, String value) {
   createFileDirs(path);
 
   File file = SD.open(path, FILE_WRITE);
-  // size_t writtenBytes = file.print(value);
   file.print(value);
   file.close();
-  // Serial.print("SD Card written bytes: ");
-  // Serial.println(writtenBytes);
-  // if (writtenBytes == 0) {
-  //   begin();
-  //   write(path, value);
-  // }
 }
 
 String SdCardStorage::readFromFile(File file) {
@@ -40,10 +33,13 @@ String SdCardStorage::readFromFile(File file) {
 }
 
 std::vector<String> SdCardStorage::readAllInDirectory(String path) {
+  std::vector<String> filesData;
+
+  if (!SD.exists(path)) return filesData;
+  
   File dir = SD.open(path, FILE_READ);
   dir.rewindDirectory();
 
-  std::vector<String> filesData;
   while (true) {
     File file = dir.openNextFile();
     if (!file) {

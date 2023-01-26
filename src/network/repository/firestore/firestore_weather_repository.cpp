@@ -1,11 +1,10 @@
 #include "firestore_weather_repository.h"
 
-FirestoreWeatherRepository::FirestoreWeatherRepository(FirestoreClient& _client, WeatherModelRounder& _weatherModelRounder,
-                                                       JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
-    : client(_client), weatherModelRounder(_weatherModelRounder), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
+FirestoreWeatherRepository::FirestoreWeatherRepository(FirestoreClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
+    : client(_client), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
 
 bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
-  bool isSuccessful = client.write(weatherModelRounder.round(weather));
+  bool isSuccessful = client.write(weather);
   if (isSuccessful) {
     sendCachedWeathers();
   } else {
@@ -15,15 +14,9 @@ bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
 }
 
 bool FirestoreWeatherRepository::sendRainDetected() {
-  delay(2000);
-  // int resultCode = client.post("/weather/rain-detected");
+  // TODO invoke firebase clound function
   Serial.println("Rain detected");
-  int resultCode = HTTP_CODE_OK;  // TODO remove mock
-  if (resultCode == HTTP_CODE_OK) {
-    return true;
-  } else {
-    return false;
-  }
+  return false;
 }
 
 void FirestoreWeatherRepository::sendCachedWeathers() {
@@ -31,10 +24,11 @@ void FirestoreWeatherRepository::sendCachedWeathers() {
   if (jsonModels.size() == 0) return;
 
   String resultJson = jsonCoder.encodeWeathersList(jsonModels);
-  // int resultCode = client.post("/weather/cached", resultJson);
-  // if (resultCode == HTTP_CODE_CREATED) {
-  //   sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
-  // }
+  // TODO send cached weathers to firebase
+  bool isSuccessful = false;
+  if (isSuccessful) {
+    sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
+  }
 }
 
 void FirestoreWeatherRepository::cacheWeather(WeatherModel weather) {
