@@ -8,7 +8,7 @@ JsonCoder jsonCoder = JsonCoder();
 SdCardStorage sdCardStorage = SdCardStorage();
 
 WeatherModelRounder weatherModelRounder = WeatherModelRounder();
-WeatherPrinter weatherPrinter = WeatherPrinter();
+WeatherModelFormatter weatherModelFormatter = WeatherModelFormatter();
 
 // WeatherRepository *weatherRepository = new RestWeatherRepository(restClient, jsonCoder, sdCardStorage);
 WeatherRepository *weatherRepository = new FirestoreWeatherRepository(firestoreClient, jsonCoder, sdCardStorage);
@@ -124,25 +124,12 @@ void collectWeatherData() {
   windReader.stopReading();
   rainGaugeReader.stopReading();
 
-  externalTempReader.read();
-  ExternalTemperatureModel externalTemperatureModel = externalTempReader.getData();
-
-  pressureReader.read();
-  PressureModel pressureModel = pressureReader.getData();
-
-  airQualityReader.read();
-  AirQualityModel airQualityModel = airQualityReader.getData();
+  ExternalTemperatureModel externalTemperatureModel = externalTempReader.read();
+  PressureModel pressureModel = pressureReader.read();
+  AirQualityModel airQualityModel = airQualityReader.read();
 
   WindModel windModel = windReader.getData();
   RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
-
-  String errorMessage =
-      externalTempReader.getErrorMessage() + "\n" + pressureReader.getErrorMessage() + "\n" + airQualityReader.getErrorMessage() + "\n";
-
-  if (errorMessage != "") {
-    errorMessage = "Weather model is incorrect\n" + errorMessage;
-    LOGGER.log(errorMessage);
-  }
 
   sendWeatherDataToServer(externalTemperatureModel, pressureModel, airQualityModel, windModel, rainGaugeModel);
 
@@ -155,15 +142,16 @@ void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, Press
                              WindModel wind, RainGaugeModel rainGauge) {
   WeatherModel weather = WeatherModel(externalTemperature, pressureModel, airQuality, wind, rainGauge, getCurrentTimestamp());
   WeatherModel roundedWeather = weatherModelRounder.round(weather);
-  weatherPrinter.print(roundedWeather);
+  String modelToPrint = weatherModelFormatter.format(roundedWeather);
   if (roundedWeather.canBeSendToServer()) {
+    Serial.println(modelToPrint);
     weatherRepository->sendWeatherData(roundedWeather);
+  } else {
+    if (airQuality.hasError) {
+      LOGGER.log(airQualityReader.getErrorMessage());
+    }
+    LOGGER.log(modelToPrint);
   }
 }
 
-String getCurrentTimestamp() {
-  DateTime dateTime = DateTime::now();
-  if (dateTime.getSecondsFromEpoch() == -1) return "";
-
-  return dateTime.getFormattedDate();
-}
+String getCurrentTimestamp() { return DateTime::now().getFormattedDate(); }

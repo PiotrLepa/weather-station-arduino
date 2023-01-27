@@ -23,7 +23,6 @@ class WindReader : public ContinuousSensorReader<WindModel> {
   void startReading() override;
   void stopReading() override;
   WindModel getData() override;
-  String getErrorMessage() override;
   void updateWindSpeed();
 
   void countRotations();
@@ -45,8 +44,6 @@ class WindReader : public ContinuousSensorReader<WindModel> {
 
   float windSpeedMax;
   std::vector<float> windSpeeds;
-
-  String errorMessage;
 
   float calculateWindSpeed();
 };

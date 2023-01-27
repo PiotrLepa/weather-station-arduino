@@ -24,7 +24,6 @@ class RainGaugeReader : public ContinuousSensorReader<RainGaugeModel> {
   void startReading() override;
   void stopReading() override;
   RainGaugeModel getData() override;
-  String getErrorMessage() override;
   void setCallback(RainGaugeCallbacks* callback);
 
   void countTips();
@@ -36,8 +35,6 @@ class RainGaugeReader : public ContinuousSensorReader<RainGaugeModel> {
 
   int tips;
   unsigned long bounceTime;
-
-  String errorMessage;
 
   void handleRainDetector();
 };

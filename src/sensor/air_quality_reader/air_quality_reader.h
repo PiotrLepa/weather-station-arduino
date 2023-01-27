@@ -14,9 +14,8 @@ class AirQualityReader : public SensorReader<AirQualityModel> {
   AirQualityReader(HardwareSerial &serial, uint8_t _pmsModePin);
 
   bool begin() override;
-  bool read() override;
-  AirQualityModel getData() override;
-  String getErrorMessage() override;
+  AirQualityModel read() override;
+  String getErrorMessage();
   void wakeUp();
   void sleep();
 

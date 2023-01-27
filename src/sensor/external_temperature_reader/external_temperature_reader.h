@@ -13,14 +13,10 @@ class ExternalTemperatureReader : public SensorReader<ExternalTemperatureModel> 
   ExternalTemperatureReader(OneWire* oneWire);
 
   bool begin() override;
-  bool read() override;
-  ExternalTemperatureModel getData() override;
-  String getErrorMessage() override;
+  ExternalTemperatureModel read() override;
 
  private:
   DallasTemperature sensor;
-  ExternalTemperatureModel readModel;
-  String errorMessage;
 };
 
 #endif

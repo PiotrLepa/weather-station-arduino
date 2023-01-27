@@ -11,20 +11,16 @@ bool AirQualityReader::begin() {
   return true;
 }
 
-bool AirQualityReader::read() {
+AirQualityModel AirQualityReader::read() {
   pms.read();
   if (pms.pm10 == 0) {
     // Try read the data again
     pms.read();
     if (pms.pm10 == 0) {
-      return false;
+      return AirQualityModel::error();
     }
   }
 
-  return pms;
-}
-
-AirQualityModel AirQualityReader::getData() {
   if (pms.pm10 == -1 || pms.pm10 == 0) {
     return AirQualityModel::error();
   }

@@ -5,9 +5,7 @@ template <typename T>
 class SensorReader {
  public:
   virtual bool begin();
-  virtual bool read();
-  virtual T getData();
-  virtual String getErrorMessage();
+  virtual T read();
 };
 
 #endif

@@ -5,7 +5,7 @@ RainGaugeReader* rainGaugeReaderInstance = NULL;
 void IRAM_ATTR handleRainGaugePinInterrupt() { rainGaugeReaderInstance->countTips(); }
 
 RainGaugeReader::RainGaugeReader(uint8_t _rainGaugeSensorPin)
-    : rainGaugeSensorPin(_rainGaugeSensorPin), lastRainfallTime(0), tips(0), bounceTime(0), errorMessage("") {
+    : rainGaugeSensorPin(_rainGaugeSensorPin), lastRainfallTime(0), tips(0), bounceTime(0) {
   rainGaugeReaderInstance = this;
   pinMode(rainGaugeSensorPin, INPUT);
 }
@@ -16,7 +16,6 @@ void RainGaugeReader::update() { handleRainDetector(); }
 
 void RainGaugeReader::startReading() {
   tips = 0;
-  errorMessage = "No errors";
   attachInterrupt(digitalPinToInterrupt(rainGaugeSensorPin), handleRainGaugePinInterrupt, RISING);
 }
 
@@ -30,8 +29,6 @@ void RainGaugeReader::countTips() {
 }
 
 RainGaugeModel RainGaugeReader::getData() { return RainGaugeModel(tips * ML_FOR_TIP); }
-
-String RainGaugeReader::getErrorMessage() { return errorMessage; }
 
 void RainGaugeReader::setCallback(RainGaugeCallbacks* _callback) { callback = _callback; }
 

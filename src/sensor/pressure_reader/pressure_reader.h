@@ -14,14 +14,10 @@ class PressureReader : public SensorReader<PressureModel> {
   PressureReader();
 
   bool begin() override;
-  bool read() override;
-  PressureModel getData() override;
-  String getErrorMessage() override;
+  PressureModel read() override;
 
  private:
   Adafruit_BME280 bme;
-  PressureModel readModel;
-  String errorMessage;
 };
 
 #endif

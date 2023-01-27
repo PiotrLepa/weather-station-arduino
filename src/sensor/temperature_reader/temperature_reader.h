@@ -14,14 +14,10 @@ class TemperatureReader : public SensorReader<TemperatureModel> {
   TemperatureReader(uint8_t pin);
 
   bool begin() override;
-  bool read() override;
-  TemperatureModel getData() override;
-  String getErrorMessage() override;
+  TemperatureModel read() override;
 
  private:
   DHT dht;
-  TemperatureModel readModel;
-  String errorMessage;
 };
 
 #endif

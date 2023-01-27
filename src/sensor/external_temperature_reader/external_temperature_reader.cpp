@@ -1,27 +1,19 @@
 #include "external_temperature_reader.h"
 
-ExternalTemperatureReader::ExternalTemperatureReader(OneWire* oneWire) : sensor(oneWire), readModel(-1), errorMessage("") {}
+ExternalTemperatureReader::ExternalTemperatureReader(OneWire* oneWire) : sensor(oneWire) {}
 
 bool ExternalTemperatureReader::begin() {
   sensor.begin();
   return true;
 }
 
-bool ExternalTemperatureReader::read() {
+ExternalTemperatureModel ExternalTemperatureReader::read() {
   sensor.requestTemperatures();
   sensor.requestTemperatures();
   float temperature = sensor.getTempCByIndex(0);
 
   if (isnan(temperature) || temperature == -1 || temperature == -127) {
-    readModel = ExternalTemperatureModel::error();
-    errorMessage = "Failed to read from external temperature(DS18B20) sensor!";
-    return false;
+    return ExternalTemperatureModel::error();
   }
-  errorMessage = "";
-  readModel = ExternalTemperatureModel(temperature);
-  return true;
+  return ExternalTemperatureModel(temperature);
 }
-
-ExternalTemperatureModel ExternalTemperatureReader::getData() { return readModel; }
-
-String ExternalTemperatureReader::getErrorMessage() { return errorMessage; }

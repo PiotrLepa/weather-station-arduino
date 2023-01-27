@@ -9,7 +9,6 @@ class ContinuousSensorReader {
   virtual void startReading();
   virtual void stopReading();
   virtual T getData();
-  virtual String getErrorMessage();
 };
 
 #endif
