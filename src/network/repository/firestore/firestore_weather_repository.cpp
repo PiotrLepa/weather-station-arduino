@@ -8,6 +8,7 @@ bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
   if (isSuccessful) {
     sendCachedWeathers();
   } else {
+    LOGGER.log("Sending rain detection to firebase failed");
     cacheWeather(weather);
   }
   return isSuccessful;
@@ -16,6 +17,8 @@ bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
 bool FirestoreWeatherRepository::sendRainDetected() {
   // TODO invoke firebase clound function
   Serial.println("Rain detected");
+
+  LOGGER.log("Sending rain detection to firebase failed");
   return false;
 }
 
@@ -28,6 +31,8 @@ void FirestoreWeatherRepository::sendCachedWeathers() {
   bool isSuccessful = false;
   if (isSuccessful) {
     sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
+  } else {
+    LOGGER.log("Sending cached weathers to firebase failed");
   }
 }
 

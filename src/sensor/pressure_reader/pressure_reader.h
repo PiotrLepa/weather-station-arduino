@@ -13,7 +13,7 @@ class PressureReader : public SensorReader<PressureModel> {
  public:
   PressureReader();
 
-  void begin() override;
+  bool begin() override;
   bool read() override;
   PressureModel getData() override;
   String getErrorMessage() override;

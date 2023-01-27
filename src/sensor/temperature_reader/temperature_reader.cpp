@@ -1,8 +1,11 @@
 #include "temperature_reader.h"
 
-TemperatureReader::TemperatureReader(uint8_t pin) : dht(pin, DHT22), readModel(-1, -1), errorMessage("No errors") {}
+TemperatureReader::TemperatureReader(uint8_t pin) : dht(pin, DHT22), readModel(-1, -1), errorMessage("") {}
 
-void TemperatureReader::begin() { dht.begin(); }
+bool TemperatureReader::begin() {
+  dht.begin();
+  return true;
+}
 
 bool TemperatureReader::read() {
   float temperature = dht.readTemperature();

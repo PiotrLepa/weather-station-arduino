@@ -19,7 +19,7 @@ class RainGaugeReader : public ContinuousSensorReader<RainGaugeModel> {
  public:
   RainGaugeReader(uint8_t _rainGaugeSensorPin);
 
-  void begin() override;
+  bool begin() override;
   void update() override;
   void startReading() override;
   void stopReading() override;

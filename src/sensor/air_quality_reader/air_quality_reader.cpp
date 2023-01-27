@@ -5,9 +5,10 @@ AirQualityReader::AirQualityReader(HardwareSerial &serial, uint8_t _pmsModePin) 
   pinMode(pmsModePin, OUTPUT);
 }
 
-void AirQualityReader::begin() {
+bool AirQualityReader::begin() {
   pms.init();
   sleep();
+  return true;
 }
 
 bool AirQualityReader::read() {
@@ -34,7 +35,7 @@ AirQualityModel AirQualityReader::getData() {
 String AirQualityReader::getErrorMessage() {
   switch (pms.status) {
     case SerialPM::STATUS::OK:
-      return "No errors";
+      return "";
     case SerialPM::STATUS::ERROR_TIMEOUT:
       return PMS_ERROR_TIMEOUT;
     case SerialPM::STATUS::ERROR_MSG_UNKNOWN:
@@ -52,7 +53,7 @@ String AirQualityReader::getErrorMessage() {
     case SerialPM::STATUS::ERROR_PMS_TYPE:
       return PMS_ERROR_PMS_TYPE;
     default:
-      return "No errors";
+      return "";
   }
 }
 

@@ -4,7 +4,7 @@
 template <typename T>
 class ContinuousSensorReader {
  public:
-  virtual void begin();
+  virtual bool begin();
   virtual void update();
   virtual void startReading();
   virtual void stopReading();

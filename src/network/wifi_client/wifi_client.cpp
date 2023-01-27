@@ -25,8 +25,7 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password, int tri
     }
   }
 
-  Serial.print("Wifi status: ");
-  Serial.println(WiFi.status());
+  LOGGER.log("Wifi status: " + String(WiFi.status()));
 
   return result;
 }

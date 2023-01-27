@@ -3,6 +3,8 @@
 
 #include <WiFi.h>
 
+#include "../../utils/logger/logger.h"
+
 enum ConnectionResult { CONNECTED, ERROR };
 
 class WifiClient {

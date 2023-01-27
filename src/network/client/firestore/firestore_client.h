@@ -3,17 +3,18 @@
 
 #include <Arduino.h>
 #include <Firebase_ESP_Client.h>
-#include "../../../model/weather/weather_model.h"
 
-class FirestoreClient
-{
-public:
+#include "../../../model/weather/weather_model.h"
+#include "../../../utils/logger/logger.h"
+
+class FirestoreClient {
+ public:
   FirestoreClient(String projectId);
 
   void connect();
   bool write(WeatherModel weather);
 
-private:
+ private:
   String projectId;
 };
 

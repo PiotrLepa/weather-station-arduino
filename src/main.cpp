@@ -31,18 +31,40 @@ void setup() {
   Serial.begin(9600);
   Serial2.begin(9600);
 
-  pinMode(WIFI_STATUS_PIN, OUTPUT);
+  LOGGER.begin();
+  LOGGER.printSavedLogs();
+  // LOGGER.clear();
 
+  pinMode(WIFI_STATUS_PIN, OUTPUT);
   wifiClient.begin();
-  sdCardStorage.begin();
-  externalTempReader.begin();
-  pressureReader.begin();
-  airQualityReader.begin();
-  windReader.begin();
-  rainGaugeReader.begin();
-  rainGaugeReader.setCallback(new MyRainGaugeCallbacks());
 
   connectToWifi();
+
+  String errorMessage = "";
+  if (!sdCardStorage.begin()) {
+    errorMessage = "Sd card initialization error\n";
+  }
+  if (!externalTempReader.begin()) {
+    errorMessage = "External temperature initialization error\n";
+  }
+  if (!pressureReader.begin()) {
+    errorMessage = "Pressure initialization error\n";
+  }
+  if (!airQualityReader.begin()) {
+    errorMessage = "Air quality initialization error\n";
+  }
+  if (!windReader.begin()) {
+    errorMessage = "Wind reader initialization error\n";
+  }
+  if (!rainGaugeReader.begin()) {
+    errorMessage = "Rain gauge initialization error\n";
+  }
+
+  if (errorMessage != "") {
+    LOGGER.log(errorMessage);
+  }
+
+  rainGaugeReader.setCallback(new MyRainGaugeCallbacks());
 
   firestoreClient.connect();
 
@@ -102,30 +124,25 @@ void collectWeatherData() {
   windReader.stopReading();
   rainGaugeReader.stopReading();
 
-  ExternalTemperatureModel externalTemperatureModel;
-  if (externalTempReader.read()) {
-    externalTemperatureModel = externalTempReader.getData();
-  } else {
-    Serial.println(externalTempReader.getErrorMessage());
-  }
+  externalTempReader.read();
+  ExternalTemperatureModel externalTemperatureModel = externalTempReader.getData();
 
-  PressureModel pressureModel;
-  if (pressureReader.read()) {
-    pressureModel = pressureReader.getData();
-  } else {
-    Serial.println(pressureReader.getErrorMessage());
-    // pressureReader.begin(); // TODO remove?
-  }
+  pressureReader.read();
+  PressureModel pressureModel = pressureReader.getData();
 
-  AirQualityModel airQualityModel;
-  if (airQualityReader.read()) {
-    airQualityModel = airQualityReader.getData();
-  } else {
-    Serial.println(airQualityReader.getErrorMessage());
-  }
+  airQualityReader.read();
+  AirQualityModel airQualityModel = airQualityReader.getData();
 
   WindModel windModel = windReader.getData();
   RainGaugeModel rainGaugeModel = rainGaugeReader.getData();
+
+  String errorMessage =
+      externalTempReader.getErrorMessage() + "\n" + pressureReader.getErrorMessage() + "\n" + airQualityReader.getErrorMessage() + "\n";
+
+  if (errorMessage != "") {
+    errorMessage = "Weather model is incorrect\n" + errorMessage;
+    LOGGER.log(errorMessage);
+  }
 
   sendWeatherDataToServer(externalTemperatureModel, pressureModel, airQualityModel, windModel, rainGaugeModel);
 
@@ -141,8 +158,6 @@ void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, Press
   weatherPrinter.print(roundedWeather);
   if (roundedWeather.canBeSendToServer()) {
     weatherRepository->sendWeatherData(roundedWeather);
-  } else {
-    Serial.println("Weather model is incorrect\n");
   }
 }
 

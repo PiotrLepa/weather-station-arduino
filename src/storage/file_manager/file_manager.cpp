@@ -18,29 +18,26 @@ String FileManager::readFile(File file) {
 std::vector<String> FileManager::readAllInDirectory(String path) {
   std::vector<String> filesData;
 
-  if (!fileSystem->exists(path)) return filesData;
-
-  File dir = fileSystem->open(path, FILE_READ);
-  dir.rewindDirectory();
-
-  while (true) {
-    File file = dir.openNextFile();
-    if (!file) {
-      // no more files
-      break;
-    }
+  File root = fileSystem->open(path, FILE_READ);
+  File file = root.openNextFile();
+  while (file) {
     filesData.push_back(readFile(file));
     file.close();
+    file = root.openNextFile();
   }
 
   return filesData;
 }
 
-bool FileManager::write(String path, String value) { write(path, value, FILE_WRITE); }
+bool FileManager::write(String path, String value) { return write(path, value, FILE_WRITE); }
 
-bool FileManager::append(String path, String value) { write(path, value, FILE_APPEND); }
+bool FileManager::append(String path, String value) { return write(path, value, FILE_APPEND); }
 
 bool FileManager::write(String path, String value, String mode) {
+  if (mode == FILE_APPEND && !fileSystem->exists(path)) {
+    mode = FILE_WRITE;
+  }
+
   File file = fileSystem->open(path, mode.c_str(), true);
   if (file) {
     file.print(value);
@@ -52,18 +49,14 @@ bool FileManager::write(String path, String value, String mode) {
 }
 
 void FileManager::removeAllInDirectory(String path) {
-  File dir = fileSystem->open(path, FILE_READ);
-  dir.rewindDirectory();
-
   std::vector<String> fileNames;
-  while (true) {
-    File file = dir.openNextFile();
-    if (!file) {
-      // no more files
-      break;
-    }
+
+  File root = fileSystem->open(path, FILE_READ);
+  File file = root.openNextFile();
+  while (file) {
     fileNames.push_back(file.name());
     file.close();
+    file = root.openNextFile();
   }
 
   for (String name : fileNames) {

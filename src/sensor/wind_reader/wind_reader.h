@@ -18,7 +18,7 @@ class WindReader : public ContinuousSensorReader<WindModel> {
  public:
   WindReader(uint8_t _windSensorPin);
 
-  void begin() override;
+  bool begin() override;
   void update() override;
   void startReading() override;
   void stopReading() override;

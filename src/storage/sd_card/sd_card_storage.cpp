@@ -1,15 +1,6 @@
 #include "sd_card_storage.h"
 
-bool SdCardStorage::begin() {
-  bool initialized = false;
-  while (!initialized) {
-    initialized = SD.begin();
-    Serial.print("SD Card initialization result: ");
-    Serial.println(initialized);
-    delay(5000);
-  }
-  return true;
-}
+bool SdCardStorage::begin() { return SD.begin(); }
 
 bool SdCardStorage::createFileDirs(String path) {
   int dirsEnd = path.lastIndexOf("/");
@@ -36,7 +27,7 @@ std::vector<String> SdCardStorage::readAllInDirectory(String path) {
   std::vector<String> filesData;
 
   if (!SD.exists(path)) return filesData;
-  
+
   File dir = SD.open(path, FILE_READ);
   dir.rewindDirectory();
 
@@ -68,6 +59,7 @@ void SdCardStorage::removeAllInDirectory(String path) {
     file.close();
   }
 
+  // TODO check if can be moved to upper loop
   for (String name : fileNames) {
     SD.remove(name);
   }

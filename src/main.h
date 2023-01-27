@@ -38,13 +38,11 @@
 #define RAIN_GAUGE_SENSOR_PIN 33
 #define WIFI_STATUS_PIN 2
 
-// #define SERVER_REQUEST_DELAY 300000 - PMS_WAKE_UP_MILLIS  // 5 minutes
+#define SERVER_REQUEST_DELAY 300000 - PMS_WAKE_UP_MILLIS  // 5 minutes
 // #define SERVER_REQUEST_DELAY 180000 - PMS_WAKE_UP_MILLIS  // 3 minutes
-#define SERVER_REQUEST_DELAY 90000 - PMS_WAKE_UP_MILLIS  // 1.5 minutes
+// #define SERVER_REQUEST_DELAY 90000 - PMS_WAKE_UP_MILLIS  // 1.5 minutes
 
 //   pio device monitor --filter esp32_exception_decoder
-
-#define FORMAT_SAVED_LOGS_ON_FAIL true
 
 void setup();
 void loop();

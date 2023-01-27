@@ -43,6 +43,7 @@
         "optional": "cpp",
         "system_error": "cpp",
         "iterator": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "iomanip": "cpp"
     }
 }

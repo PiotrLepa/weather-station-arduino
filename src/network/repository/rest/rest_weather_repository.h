@@ -4,9 +4,11 @@
 #include <HTTPClient.h>
 
 #include "../../../model/weather/weather_model.h"
+#include "../../../storage/file_manager/file_manager.h"
 #include "../../../storage/sd_card/sd_card_storage.h"
 #include "../../../utils/date_time/date_time.h"
 #include "../../../utils/json_coder/json_coder.h"
+#include "../../../utils/logger/logger.h"
 #include "../../client/rest/rest_client.h"
 #include "../weather_repository.h"
 

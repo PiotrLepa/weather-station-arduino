@@ -1,16 +1,10 @@
 #include "pressure_reader.h"
 
-PressureReader::PressureReader() : bme(), readModel(-1, -1, -1), errorMessage("No errors") {}
+PressureReader::PressureReader() : bme(), readModel(-1, -1, -1), errorMessage("") {}
 
-void PressureReader::begin() {
-  bool initialized = false;
-  while (!initialized) {
-    Wire1.begin(21, 22);
-    initialized = bme.begin(BME280_ADDRESS_ALTERNATE, &Wire1);
-    Serial.print("Pressure initialization result: ");
-    Serial.println(initialized);
-    delay(5000);
-  }
+bool PressureReader::begin() {
+  Wire1.begin(21, 22);
+  return bme.begin(BME280_ADDRESS_ALTERNATE, &Wire1);
 }
 
 bool PressureReader::read() {
@@ -23,6 +17,7 @@ bool PressureReader::read() {
     errorMessage = "Failed to read from BME sensor!";
     return false;
   }
+  errorMessage = "";
   readModel = PressureModel(temperature, pressure, humidity);
   return true;
 }

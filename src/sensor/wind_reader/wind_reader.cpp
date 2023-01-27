@@ -13,11 +13,13 @@ WindReader::WindReader(uint8_t _windSensorPin)
       rotations(0),
       bounceTime(0),
       measurementCounter(0),
-      errorMessage("No errors") {
+      errorMessage("") {
   windReaderInstance = this;
 }
 
-void WindReader::begin() {}
+bool WindReader::begin() {
+  return true;
+}
 
 void WindReader::update() { timer.update(); }
 

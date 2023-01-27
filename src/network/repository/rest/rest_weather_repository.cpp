@@ -11,6 +11,7 @@ bool RestWeatherRepository::sendWeatherData(WeatherModel weather) {
     sendCachedWeathers();
     return true;
   } else {
+    LOGGER.log("Sending weather data to rest server failed with code: " + resultCode);
     cacheWeather(weather);
     return false;
   }
@@ -23,6 +24,7 @@ bool RestWeatherRepository::sendRainDetected() {
   if (resultCode == HTTP_CODE_OK) {
     return true;
   } else {
+    LOGGER.log("Sending rain detection to rest server failed with code: " + resultCode);
     return false;
   }
 }
@@ -35,6 +37,8 @@ void RestWeatherRepository::sendCachedWeathers() {
   int resultCode = client.post("/weather/cached", resultJson);
   if (resultCode == HTTP_CODE_CREATED) {
     sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
+  } else {
+    LOGGER.log("Sending cached weathers to rest server failed with code: " + resultCode);
   }
 }
 
