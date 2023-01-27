@@ -30,6 +30,7 @@
 #include "utils/rounder/weather/weather_model_rounder.h"
 #include "utils/json_coder/json_coder.h"
 #include "utils/printer/weather_printer.h"
+#include "utils/logger/logger.h"
 
 #define EXTERNAL_TEMPERATURE_SENSOR_PIN 26
 #define PMS_MODE_CONTROL_PIN 13
@@ -42,6 +43,8 @@
 #define SERVER_REQUEST_DELAY 90000 - PMS_WAKE_UP_MILLIS  // 1.5 minutes
 
 //   pio device monitor --filter esp32_exception_decoder
+
+#define FORMAT_SAVED_LOGS_ON_FAIL true
 
 void setup();
 void loop();

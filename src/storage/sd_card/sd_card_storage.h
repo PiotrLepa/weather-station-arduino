@@ -6,7 +6,6 @@
 #include <SPI.h>
 #include <vector>
 
-const String TXT_EXT = ".txt";
 const String CACHED_WEATHERS_PATH = "/cached_weathers";
 
 class SdCardStorage {

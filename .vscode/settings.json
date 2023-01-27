@@ -39,6 +39,10 @@
         "random": "cpp",
         "unordered_set": "cpp",
         "algorithm": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "optional": "cpp",
+        "system_error": "cpp",
+        "iterator": "cpp",
+        "memory_resource": "cpp"
     }
 }
