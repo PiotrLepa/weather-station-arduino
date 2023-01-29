@@ -12,7 +12,7 @@ class SdCardStorage {
  public:
   bool begin();
   bool createFileDirs(String path);
-  void write(String path, String value);
+  bool write(String path, String value);
   String readFromFile(File file);
   std::vector<String> readAllInDirectory(String path);
   void removeAllInDirectory(String path);

@@ -39,7 +39,10 @@ void FirestoreWeatherRepository::sendCachedWeathers() {
 void FirestoreWeatherRepository::cacheWeather(WeatherModel weather) {
   String fileName = getFileNameToCacheWeather(weather.timestamp);
   String json = jsonCoder.encodeWeather(weather);
-  sdCardStorage.write(fileName, json);
+  bool weatherSaved = sdCardStorage.write(fileName, json);
+  if (!weatherSaved) {
+    LOGGER.log("Save weather to sd card failed");
+  }
 }
 
 String FirestoreWeatherRepository::getFileNameToCacheWeather(String formattedDate) {

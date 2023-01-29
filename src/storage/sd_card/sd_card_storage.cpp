@@ -7,12 +7,17 @@ bool SdCardStorage::createFileDirs(String path) {
   return SD.mkdir(path.substring(0, dirsEnd));
 }
 
-void SdCardStorage::write(String path, String value) {
+bool SdCardStorage::write(String path, String value) {
   createFileDirs(path);
 
   File file = SD.open(path, FILE_WRITE);
-  file.print(value);
-  file.close();
+  if (file) {
+    file.print(value);
+    file.close();
+    return true;
+  } else {
+    return false;
+  }
 }
 
 String SdCardStorage::readFromFile(File file) {
