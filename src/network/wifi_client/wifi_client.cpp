@@ -1,6 +1,16 @@
 #include "wifi_client.h"
 
-void WifiClient::begin() { restartWifi(); }
+void onWifiConnectedAndIpAddressGot(WiFiEvent_t event, WiFiEventInfo_t info) {
+  LOGGER.log("Wifi connected, ip address: " + WiFi.localIP().toString());
+}
+
+void onWifiDisconnected(WiFiEvent_t event, WiFiEventInfo_t info) { LOGGER.log("Wifi disconnected"); }
+
+void WifiClient::begin() {
+  WiFi.onEvent(onWifiConnectedAndIpAddressGot, ARDUINO_EVENT_WIFI_STA_GOT_IP);
+  WiFi.onEvent(onWifiDisconnected, ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+  restartWifi();
+}
 
 ConnectionResult WifiClient::connectToWifi(String ssid, String password, int tries) {
   Serial.println("Connecting to WiFi");
@@ -14,9 +24,6 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password, int tri
   ConnectionResult result = ERROR;
   for (int i = 0; i < tries; i++) {
     if (WifiClient::isWifiConnected()) {
-      Serial.print("\nConnected! Ip address: ");
-      Serial.println(WiFi.localIP());
-
       result = CONNECTED;
       break;
     } else {
@@ -24,8 +31,11 @@ ConnectionResult WifiClient::connectToWifi(String ssid, String password, int tri
       Serial.print(".");
     }
   }
+  Serial.print("");
 
-  LOGGER.log("Wifi status: " + String(WiFi.status()));
+  WiFi.setAutoReconnect(true);
+
+  Serial.println("Wifi status: " + String(WiFi.status()));
 
   return result;
 }
