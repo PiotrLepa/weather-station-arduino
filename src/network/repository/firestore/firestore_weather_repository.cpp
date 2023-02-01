@@ -8,7 +8,7 @@ bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
   if (isSuccessful) {
     sendCachedWeathers();
   } else {
-    LOGGER.log("Sending rain detection to firebase failed");
+    LOGGER.log("Sending weather to firebase failed");
     cacheWeather(weather);
   }
   return isSuccessful;

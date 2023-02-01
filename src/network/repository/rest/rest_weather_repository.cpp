@@ -11,7 +11,7 @@ bool RestWeatherRepository::sendWeatherData(WeatherModel weather) {
     sendCachedWeathers();
     return true;
   } else {
-    LOGGER.log("Sending weather data to rest server failed with code: " + resultCode);
+    LOGGER.log("Sending weather to rest server failed with code: " + resultCode);
     cacheWeather(weather);
     return false;
   }
