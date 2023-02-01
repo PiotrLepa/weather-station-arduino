@@ -6,9 +6,8 @@ FirestoreWeatherRepository::FirestoreWeatherRepository(FirestoreClient& _client,
 bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
   bool isSuccessful = client.write(weather);
   if (isSuccessful) {
-    sendCachedWeathers();
+    // sendCachedWeathers();  TODO enable when ready
   } else {
-    LOGGER.log("Sending weather to firebase failed");
     cacheWeather(weather);
   }
   return isSuccessful;
