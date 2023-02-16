@@ -26,9 +26,9 @@ void FirestoreWeatherRepository::saveDayIfNotSaved(DateTime timestamp) {
   if (day == lastSavedDay) return;
 
   bool isSuccessful = client.saveDay(day);
-  Serial.println("Day saved");
   if (isSuccessful) {
-    lastSavedDay = lastSavedDay;
+    Serial.println("Day saved");
+    lastSavedDay = day;
   }
 }
 
