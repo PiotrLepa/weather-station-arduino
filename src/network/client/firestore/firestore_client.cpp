@@ -50,10 +50,7 @@ bool FirestoreClient::saveDay(DateTime timestamp) {
 
   bool isSuccessful = Firebase.Firestore.createDocument(&firebaseData, projectId, "", documentPath.c_str(), content.raw());
   if (!isSuccessful) {
-    String errorMessage = String(firebaseData.errorReason().c_str());
-    if (errorMessage != "Document already exists: projects/" + projectId + "/databases/(default)/documents/" + documentPath) {
-      LOGGER.log("Firestore save day error: " + errorMessage);
-    }
+    LOGGER.log("Firestore save day error: " + String(firebaseData.errorReason().c_str()));
   }
 
   return isSuccessful;
