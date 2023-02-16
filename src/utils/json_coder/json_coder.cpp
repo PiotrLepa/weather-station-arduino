@@ -12,7 +12,7 @@ String JsonCoder::encodeWeather(WeatherModel model) {
   doc["windSpeedMax"] = model.wind.hasError ? NAN : model.wind.windSpeedMax;
   doc["windSpeedAvg"] = model.wind.hasError ? NAN : model.wind.windSpeedAvg;
   doc["precipitation"] = model.rainGauge.hasError ? NAN : model.rainGauge.precipitation;
-  doc["timestamp"] = model.timestamp;
+  doc["timestamp"] = model.timestamp.getFormattedDateTime();
 
   printJson(doc);
   String json;

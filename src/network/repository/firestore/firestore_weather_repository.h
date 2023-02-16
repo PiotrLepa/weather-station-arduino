@@ -23,8 +23,10 @@ class FirestoreWeatherRepository : public WeatherRepository {
   FirestoreClient &client;
   JsonCoder &jsonCoder;
   SdCardStorage &sdCardStorage;
+  DateTime lastSavedDay;
 
   void cacheWeather(WeatherModel weather);
+  void saveDayIfNotSaved(DateTime timestamp);
   void sendCachedWeathers();
   String getFileNameToCacheWeather(String formattedDate);
 };

@@ -43,7 +43,7 @@ void RestWeatherRepository::sendCachedWeathers() {
 }
 
 void RestWeatherRepository::cacheWeather(WeatherModel weather) {
-  String fileName = getFileNameToCacheWeather(weather.timestamp);
+  String fileName = getFileNameToCacheWeather(weather.timestamp.getFormattedDateTime());
   String json = jsonCoder.encodeWeather(weather);
   bool weatherSaved = sdCardStorage.write(fileName, json);
   if (!weatherSaved) {

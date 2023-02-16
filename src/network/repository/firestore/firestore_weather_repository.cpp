@@ -1,11 +1,12 @@
 #include "firestore_weather_repository.h"
 
 FirestoreWeatherRepository::FirestoreWeatherRepository(FirestoreClient& _client, JsonCoder& _jsonCoder, SdCardStorage& _sdCardStorage)
-    : client(_client), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage) {}
+    : client(_client), jsonCoder(_jsonCoder), sdCardStorage(_sdCardStorage), lastSavedDay(DateTime::now()) {}
 
 bool FirestoreWeatherRepository::sendWeatherData(WeatherModel weather) {
-  bool isSuccessful = client.write(weather);
+  bool isSuccessful = client.saveWeather(weather);
   if (isSuccessful) {
+    saveDayIfNotSaved(weather.timestamp);
     // sendCachedWeathers();  TODO enable when ready
   } else {
     cacheWeather(weather);
@@ -17,8 +18,18 @@ bool FirestoreWeatherRepository::sendRainDetected() {
   // TODO invoke firebase clound function
   Serial.println("Rain detected");
 
-  LOGGER.log("Sending rain detection to firebase failed");
   return false;
+}
+
+void FirestoreWeatherRepository::saveDayIfNotSaved(DateTime timestamp) {
+  DateTime day = timestamp.atMidnight();
+  if (day == lastSavedDay) return;
+
+  bool isSuccessful = client.saveDay(day);
+  Serial.println("Day saved");
+  if (isSuccessful) {
+    lastSavedDay = lastSavedDay;
+  }
 }
 
 void FirestoreWeatherRepository::sendCachedWeathers() {
@@ -30,13 +41,11 @@ void FirestoreWeatherRepository::sendCachedWeathers() {
   bool isSuccessful = false;
   if (isSuccessful) {
     sdCardStorage.removeAllInDirectory(CACHED_WEATHERS_PATH);
-  } else {
-    LOGGER.log("Sending cached weathers to firebase failed");
   }
 }
 
 void FirestoreWeatherRepository::cacheWeather(WeatherModel weather) {
-  String fileName = getFileNameToCacheWeather(weather.timestamp);
+  String fileName = getFileNameToCacheWeather(weather.timestamp.getFormattedDateTime());
   String json = jsonCoder.encodeWeather(weather);
   bool weatherSaved = sdCardStorage.write(fileName, json);
   if (!weatherSaved) {

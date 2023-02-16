@@ -140,7 +140,7 @@ void collectWeatherData() {
 
 void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, PressureModel pressureModel, AirQualityModel airQuality,
                              WindModel wind, RainGaugeModel rainGauge) {
-  WeatherModel weather = WeatherModel(externalTemperature, pressureModel, airQuality, wind, rainGauge, getCurrentTimestamp());
+  WeatherModel weather = WeatherModel(externalTemperature, pressureModel, airQuality, wind, rainGauge, DateTime::now());
   WeatherModel roundedWeather = weatherModelRounder.round(weather);
   String modelToPrint = weatherModelFormatter.format(roundedWeather);
   if (roundedWeather.canBeSendToServer()) {
@@ -153,5 +153,3 @@ void sendWeatherDataToServer(ExternalTemperatureModel externalTemperature, Press
     LOGGER.log(modelToPrint);
   }
 }
-
-String getCurrentTimestamp() { return DateTime::now().getFormattedDate(); }

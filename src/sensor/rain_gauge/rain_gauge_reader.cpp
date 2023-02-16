@@ -35,10 +35,9 @@ void RainGaugeReader::setCallback(RainGaugeCallbacks* _callback) { callback = _c
 void RainGaugeReader::handleRainDetector() {
   if (tips < 3) return;
 
-  long now = DateTime::now().getSecondsFromEpoch();
-  if (now == -1) return;
+  long now = millis();
 
-  if (lastRainfallTime == 0 || now - lastRainfallTime >= RAIN_DETECTOR_DELAY_SECONDS) {
+  if (lastRainfallTime == 0 || now - lastRainfallTime >= RAIN_DETECTOR_DELAY_MILLIS) {
     callback->rainDetected();
   }
 

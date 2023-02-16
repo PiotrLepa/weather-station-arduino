@@ -5,7 +5,7 @@ LoggerImpl LOGGER = LoggerImpl(&SPIFFS);
 LoggerImpl::LoggerImpl(FileManager _fileManager) : fileManager(_fileManager) {}
 
 bool LoggerImpl::begin() {
-  if (!SPIFFS.begin(false)) {
+  if (!SPIFFS.begin(true)) {
     Serial.println("An Error has occurred while mounting SPIFFS");
     return false;
   }
@@ -39,7 +39,7 @@ void LoggerImpl::log(String log) {
 }
 
 String LoggerImpl::formatLogToSave(String log) {
-  String timestamp = DateTime::now().getFormattedDate();
+  String timestamp = DateTime::now().getFormattedDateTime();
   String logPrefix = "";
   if (timestamp != "") {
     logPrefix = timestamp + " ";

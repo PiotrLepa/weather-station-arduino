@@ -7,6 +7,7 @@
 #include "../rain_gauge/rain_gauge_model.h"
 #include "../temperature/temperature_model.h"
 #include "../wind/wind_model.h"
+#include "../../utils/date_time/date_time.h"
 
 struct WeatherModel {
   ExternalTemperatureModel externalTemperature;
@@ -14,10 +15,10 @@ struct WeatherModel {
   AirQualityModel airQuality;
   WindModel wind;
   RainGaugeModel rainGauge;
-  String timestamp;
+  DateTime timestamp;
 
   WeatherModel(ExternalTemperatureModel _externalTemperature, PressureModel _pressure, AirQualityModel _airQuality,
-               WindModel _wind, RainGaugeModel _rainGauge, String _timestamp)
+               WindModel _wind, RainGaugeModel _rainGauge, DateTime _timestamp)
       : externalTemperature(_externalTemperature),
         pressure(_pressure),
         airQuality(_airQuality),
