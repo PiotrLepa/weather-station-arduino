@@ -119,6 +119,7 @@ void wakeUpSensors() {
 }
 
 void collectWeatherData() {
+  LOGGER.log("RSSI: " + String(WiFi.RSSI()));
   collectWeatherDataTimer.stop();
 
   windReader.stopReading();

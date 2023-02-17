@@ -2,6 +2,7 @@
 
 void onWifiConnectedAndIpAddressGot(WiFiEvent_t event, WiFiEventInfo_t info) {
   LOGGER.log("Wifi connected, ip address: " + WiFi.localIP().toString());
+  LOGGER.log("RSSI: " + String(WiFi.RSSI()));
 }
 
 void onWifiDisconnected(WiFiEvent_t event, WiFiEventInfo_t info) { LOGGER.log("Wifi disconnected"); }
