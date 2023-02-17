@@ -29,6 +29,7 @@ bool FirestoreClient::saveWeather(WeatherModel weather) {
   content.set("fields/windSpeedMax/doubleValue", weather.wind.windSpeedMax);
   content.set("fields/windSpeedAvg/doubleValue", weather.wind.windSpeedAvg);
   content.set("fields/precipitation/doubleValue", weather.rainGauge.precipitation);
+  content.set("fields/location/stringValue", "OUTSIDE");
   content.set("fields/timestamp/timestampValue", weather.timestamp.getFormattedDateTime());
 
   bool isSuccessful = Firebase.Firestore.createDocument(&firebaseData, projectId, "", WEATHERS_PATH, content.raw());
@@ -50,7 +51,12 @@ bool FirestoreClient::saveDay(DateTime timestamp) {
 
   bool isSuccessful = Firebase.Firestore.createDocument(&firebaseData, projectId, "", documentPath.c_str(), content.raw());
   if (!isSuccessful) {
-    LOGGER.log("Firestore save day error: " + String(firebaseData.errorReason().c_str()));
+    String errorMessage = String(firebaseData.errorReason().c_str());
+    if (errorMessage == "Document already exists: projects/" + projectId + "/databases/(default)/documents/" + documentPath) {
+      return true;
+    } else {
+      LOGGER.log("Firestore save day error: " + errorMessage);
+    }
   }
 
   return isSuccessful;
